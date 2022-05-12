@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -74,8 +74,8 @@ public class AuthController {
     }
 
 
+    /*@PreAuthorize("hasRole('ADMIN')")----> validacion removida por el momento! -------------------------**/
     @PostMapping("/registrarse")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RequestRegistrarse signUpRequest) {
         if (usuarioRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMensaje("Error: Este nombre de usuario ya está registrado!"));
