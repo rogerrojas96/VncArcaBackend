@@ -16,6 +16,8 @@ public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String username;
+    private String nombre;
+    private String telefono;
     private String email;
 
     @JsonIgnore
@@ -24,11 +26,13 @@ public class UserDetailsImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
+    public UserDetailsImpl(Long id, String username, String email, String password, String nombre, String telefono,
         Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.nombre = nombre;
+        this.telefono = telefono;
         this.password = password;
         this.authorities = authorities;
     }
@@ -42,6 +46,8 @@ public class UserDetailsImpl implements UserDetails {
             usuario.getUsername(), 
             usuario.getEmail(),
             usuario.getPassword(), 
+            usuario.getNombre(),
+            usuario.getTelefono(),
             authorities);
     }
 
@@ -56,6 +62,14 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getTelefono() {
+        return telefono;
     }
 
     @Override
