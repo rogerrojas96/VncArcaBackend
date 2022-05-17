@@ -27,7 +27,7 @@ public class Usuario {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 10)
     private String username;
 
     @NotBlank
@@ -36,8 +36,15 @@ public class Usuario {
     private String email;
 
     @NotBlank
+    private String nombre;
+
+    @NotBlank
+    @Size(min = 7, max = 10)
+    private String telefono;
+
+    @NotBlank
     @Size(max = 120)
-    private String password;
+    private String password;            
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_roles", 
@@ -46,9 +53,11 @@ public class Usuario {
     private Set<Rol> roles = new HashSet<>();
 
 
-    public Usuario(String username, String email, String password) {
+    public Usuario(String username, String email, String nombre, String telefono, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.nombre = nombre;
+        this.telefono = telefono;
     }
 }

@@ -5,7 +5,7 @@ INSERT INTO roles VALUES (3, 'ROLE_VETERINARIO');
 
 --Usuarios
 --pass "admin"
-INSERT INTO usuarios VALUES (1,'admin@gmail.com','$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin');
+INSERT INTO usuarios VALUES (1,'admin@gmail.com','$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin', 'Roy', '0911111111');
 
 --Usuarios y rol
 INSERT INTO usuario_roles VALUES (1,1);
