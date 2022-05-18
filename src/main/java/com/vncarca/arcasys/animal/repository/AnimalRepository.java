@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface AnimalRepository extends JpaRepository<Animal,Long> {
     
     public Page<Animal> findAll(Pageable pageable);
+    public boolean existsById();
 }
