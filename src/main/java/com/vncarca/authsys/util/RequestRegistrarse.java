@@ -25,10 +25,17 @@ public class RequestRegistrarse {
     @Size(max = 50)
     @Email
     private String email;
+
+    @NotBlank
+    private String nombre;
+
+    @NotBlank
+    @Size(min = 7, max = 10)
+    private String telefono;
     
     private Set<String> role;
     
     @NotBlank
     @Size(min = 6, max = 40)
-    private String password;
+    private String password;        
 }
