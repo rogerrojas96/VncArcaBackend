@@ -8,11 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vncarca.arcasys.adopciones.model.Adopcion;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -64,6 +66,10 @@ public class Animal implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private Date fechaNacimiento;
+
+
+    @OneToOne(mappedBy = "animal")
+    private Adopcion adopcion;
 
     //Por momento solo links de imágenes
     @Column(nullable = true)
