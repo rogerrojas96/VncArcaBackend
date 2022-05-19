@@ -1,5 +1,7 @@
 package com.vncarca.arcasys.animal.services;
 
+import java.util.List;
+
 import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.animal.repository.AnimalRepository;
 
@@ -32,6 +34,12 @@ public class AnimalServiceImp implements AnimalService {
     @Override
     public void delete(Long id) {
         animalRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Animal> findAll() {
+        
+        return animalRepository.findAll();
     }
 
 }
