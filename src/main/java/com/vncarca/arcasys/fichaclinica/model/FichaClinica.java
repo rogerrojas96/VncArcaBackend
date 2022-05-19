@@ -7,16 +7,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -93,12 +95,10 @@ public class FichaClinica implements Serializable {
 	 @Column(nullable = false)
 	 private float costo;
 	 
-	 @Column(nullable = false)
-	 private int idHistoria;
-
-	 @ManyToOne
-	 @JoinColumn(name="veterinario_id", nullable=false)
-	 private Veterinario veterinario;
- 
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	private Veterinario veterinario;
+    
 
 }
