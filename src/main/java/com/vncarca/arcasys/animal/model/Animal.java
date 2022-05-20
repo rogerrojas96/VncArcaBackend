@@ -3,8 +3,10 @@ package com.vncarca.arcasys.animal.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -67,8 +69,7 @@ public class Animal implements Serializable {
     @Column(nullable = false)
     private Date fechaNacimiento;
 
-
-    @OneToOne(mappedBy = "animal")
+    @OneToOne(mappedBy = "animal",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Adopcion adopcion;
 
     //Por momento solo links de imágenes

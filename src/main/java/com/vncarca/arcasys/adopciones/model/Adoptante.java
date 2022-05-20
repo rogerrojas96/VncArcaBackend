@@ -10,13 +10,16 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+
+import com.vncarca.arcasys.persona.model.Persona;
 
 @Setter
 @Getter
@@ -31,49 +34,23 @@ public class Adoptante implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @Size(max = 10)
-    private String cedula;
-
-    @Column(nullable = false)
-    private String nombre;
-
-    @Column(nullable = false)
-    private String apellido;
-
-    @Column(nullable = false)
-    private String direccion;
-
-    @Column(nullable = false)
-    private String telefono;
 
     @Column(name = "telefono_familiar" ,nullable = false)
     private String telefonoFamiliar;
 
-    @Column(nullable = false)
-    private String celular;
-
-    @Column(nullable = false)
-    private String correo;
 
     @Column(name = "nickname_facebook" ,nullable = false)
     private String nicknameFacebook;
 
+    @OneToOne
+    @JoinColumn(name="id_persona")
+    private Persona persona;
 
-    @OneToMany(cascade= CascadeType.ALL)
-    @JoinColumn(name="id_adoptante")
-    private List<Adopcion> adopciones;
+    @OneToMany(mappedBy = "adoptante",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List <Adopcion> adopciones; 
 
-
-    public Adoptante(@Size(max = 10) String cedula, String nombre, String apellido, String direccion, String telefono,
-        String telefonoFamiliar, String celular, String correo, String nicknameFacebook) {
-        this.cedula = cedula;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.celular = celular;
-        this.correo = correo;
+    public Adoptante(String telefonoFamiliar,String nicknameFacebook) {
+        
         this.telefonoFamiliar = telefonoFamiliar;
         this.nicknameFacebook = nicknameFacebook;
     }

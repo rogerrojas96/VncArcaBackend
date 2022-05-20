@@ -5,15 +5,15 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.vncarca.arcasys.veterinario.model.Veterinario;
+import com.vncarca.arcasys.adopciones.model.Adoptante;
+import com.vncarca.authsys.model.Usuario;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,4 +54,9 @@ public class Persona implements Serializable {
 	@Column(nullable = false)
 	private String correo;
 
+	@OneToOne(mappedBy = "persona",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Usuario usuario; 
+
+	@OneToOne(mappedBy = "persona",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Adoptante adoptante;
 }

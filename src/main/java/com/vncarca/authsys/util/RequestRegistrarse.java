@@ -2,9 +2,9 @@ package com.vncarca.authsys.util;
 
 import java.util.Set;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,22 +20,10 @@ public class RequestRegistrarse {
     @NotBlank
     @Size(min = 3, max = 20)
     private String username;
- 
-    @NotBlank
-    @Size(max = 50)
-    @Email
-    private String email;
-
-    @NotBlank
-    private String nombre;
-
-    @NotBlank
-    @Size(min = 7, max = 10)
-    private String telefono;
     
     private Set<String> role;
     
     @NotBlank
     @Size(min = 6, max = 40)
-    private String password;        
+    private String password;       
 }

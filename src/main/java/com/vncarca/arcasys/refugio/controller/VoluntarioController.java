@@ -18,8 +18,7 @@ public class VoluntarioController {
 
 
     @GetMapping("/solicitudVoluntariado")
-    protected void doGet(HttpServletResponse response) throws ServletException, IOException {
-        
+    protected void doGet(HttpServletResponse response) throws ServletException, IOException {    
         response.sendRedirect("https://docs.google.com/document/d/1WsoM9fOIOvlSo4omltlUt4nMVnBw-w5x/edit?usp=sharing&ouid=110782275495601692476&rtpof=true&sd=true");
     }
 }

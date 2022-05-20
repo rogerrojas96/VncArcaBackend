@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
+
 @CrossOrigin ({"*"})
 @RestController
 @RequestMapping("/api/auth")
@@ -69,28 +68,19 @@ public class AuthController {
             .body(new ResponseUsuarioInfo(
                 userDetails.getId(),
                 userDetails.getUsername(),
-                userDetails.getEmail(),
-                userDetails.getNombre(),
-                userDetails.getTelefono(),
                 roles));
     }
 
 
-    /*@PreAuthorize("hasRole('ADMIN')")----> validacion removida por el momento! -------------------------**/
+
     @PostMapping("/registrarse")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RequestRegistrarse signUpRequest) {
         if (usuarioRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMensaje("Error: Este nombre de usuario ya está registrado!"));
         }
-        if (usuarioRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new ResponseMensaje("Error: Correo electrónico ya está en uso!"));
-        }
         
         Usuario usuario = new Usuario(
             signUpRequest.getUsername(),
-            signUpRequest.getEmail(),
-            signUpRequest.getNombre(),
-            signUpRequest.getTelefono(),
             encoder.encode(signUpRequest.getPassword()));
 
         Set<String> strRoles = signUpRequest.getRole();

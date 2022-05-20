@@ -14,8 +14,5 @@ import lombok.Setter;
 public class ResponseUsuarioInfo {
     private Long id;
 	private String username;
-	private String email;
-    private String nombre;
-    private String telefono;
 	private List<String> roles;
 }

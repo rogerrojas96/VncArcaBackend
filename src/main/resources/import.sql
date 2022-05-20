@@ -12,7 +12,7 @@ insert into veterinarios (id,cargo)values(1,'Principal')
 insert into veterinarios_personas (veterinario_id, persona_id)values(1,2)
 --Usuarios
 --pass "admin"
-INSERT INTO usuarios (id,email,password,username,nombre,telefono) VALUES (1,'admin@gmail.com','$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin', 'Roy', '0911111111');
+INSERT INTO usuarios (id,password,username) VALUES (1,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin',1);
 
 --Usuarios y rol
 INSERT INTO usuario_roles VALUES (1,1);
