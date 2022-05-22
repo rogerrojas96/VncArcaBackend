@@ -3,20 +3,16 @@ package com.vncarca.arcasys.animal.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vncarca.arcasys.adopciones.model.Adopcion;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -68,9 +64,6 @@ public class Animal implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private Date fechaNacimiento;
-
-    @OneToOne(mappedBy = "animal",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Adopcion adopcion;
 
     //Por momento solo links de imágenes
     @Column(nullable = true)

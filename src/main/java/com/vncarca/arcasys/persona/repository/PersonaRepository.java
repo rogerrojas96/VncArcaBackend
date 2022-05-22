@@ -1,5 +1,7 @@
 package com.vncarca.arcasys.persona.repository;
 
+import java.util.Optional;
+
 import com.vncarca.arcasys.persona.model.Persona;
 
 import org.springframework.data.domain.Page;
@@ -10,5 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona,Long> {
 	public Page<Persona> findAll(Pageable pageable);
-	
+	public boolean existsByCedula(String cedula);
+	public Optional<Persona> findByCedula(String cedula);
 }

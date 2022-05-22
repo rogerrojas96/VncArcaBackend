@@ -1,0 +1,116 @@
+package com.vncarca.arcasys.adopciones.service;
+
+import com.vncarca.arcasys.adopciones.dto.AdoptanteDto;
+import com.vncarca.arcasys.adopciones.model.Adoptante;
+import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
+import com.vncarca.arcasys.persona.model.Persona;
+import com.vncarca.arcasys.persona.repository.PersonaRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class AdoptanteServiceImpl implements IAdoptanteService{
+
+    @Autowired
+    private AdoptanteRepository adoptanteRepository;
+
+    @Autowired
+    private PersonaRepository personaRepository;
+
+
+    @Override
+    public Page<Adoptante> getAllAdoptantes(Pageable pageable) {
+        return adoptanteRepository.findAll(pageable);
+    }
+
+
+    @Override
+    public Adoptante getAdoptantePorCedula(String cedula) {
+        Long idAdoptante = getIdAdoptante(cedula);
+        if (idAdoptante != null){
+            return adoptanteRepository.findById(idAdoptante).get();
+        }
+        return null;
+    }
+
+
+    @Override
+    public Adoptante getAdoptantePorId(Long idAdoptante) {
+        return adoptanteRepository.findById(idAdoptante).get();
+    }
+
+
+    @Override
+    public Adoptante crearAdoptante(AdoptanteDto adoptanteDto) {
+        if(getIdAdoptante(adoptanteDto.getCedula()) == null){
+            Persona persona = null;
+            if(!personaRepository.existsByCedula(adoptanteDto.getCedula())){
+                persona = new Persona();
+                persona.setApellidos(adoptanteDto.getApellidos());
+                persona.setCedula(adoptanteDto.getCedula());
+                persona.setCelular(adoptanteDto.getCelular());
+                persona.setCorreo(adoptanteDto.getCorreo());
+                persona.setDireccion(adoptanteDto.getDireccion());
+                persona.setNombre(adoptanteDto.getNombre());
+                persona.setTelefono(adoptanteDto.getTelefono());
+                personaRepository.save(persona);
+            }else{
+                persona = personaRepository.findByCedula(adoptanteDto.getCedula()).get();
+            }
+            Adoptante adoptante = new Adoptante();
+            adoptante.setNicknameFacebook(adoptanteDto.getNicknameFacebook());
+            adoptante.setTelefonoFamiliar(adoptanteDto.getTelefonoFamiliar());
+            adoptante.setPersona(persona);
+            return adoptanteRepository.save(adoptante);
+        }
+        return null;
+    }
+
+
+    @Override
+    public Adoptante actualizarAdoptante(AdoptanteDto adoptanteDto, Long idAdoptante) {
+        if(adoptanteRepository.existsById(idAdoptante)){
+            Adoptante adoptante = adoptanteRepository.findById(idAdoptante).get();
+            
+            Persona persona = adoptante.getPersona();
+            persona.setApellidos(adoptanteDto.getApellidos());
+            persona.setCedula(adoptanteDto.getCedula());
+            persona.setCelular(adoptanteDto.getCelular());
+            persona.setCorreo(adoptanteDto.getCorreo());
+            persona.setDireccion(adoptanteDto.getDireccion());
+            persona.setNombre(adoptanteDto.getNombre());
+            persona.setTelefono(adoptanteDto.getTelefono());
+            personaRepository.save(persona);
+            
+            adoptante.setNicknameFacebook(adoptanteDto.getNicknameFacebook());
+            adoptante.setTelefonoFamiliar(adoptanteDto.getTelefonoFamiliar());
+            adoptante.setPersona(persona);
+
+            return adoptanteRepository.save(adoptante);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean eliminarAdoptante(Long idAdoptante) {
+        if(adoptanteRepository.existsById(idAdoptante)){
+            adoptanteRepository.deleteById(idAdoptante);
+            return true;
+        }
+        return false;
+    }
+    
+
+    private Long getIdAdoptante(String cedula){
+        if (personaRepository.existsByCedula(cedula)){
+            Persona persona = personaRepository.findByCedula(cedula).get();
+            return adoptanteRepository.getId(persona.getId());
+        }
+        return null;
+    }
+}

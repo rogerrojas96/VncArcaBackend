@@ -5,17 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -46,8 +42,6 @@ public class Adoptante implements Serializable{
     @JoinColumn(name="id_persona")
     private Persona persona;
 
-    @OneToMany(mappedBy = "adoptante",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List <Adopcion> adopciones; 
 
     public Adoptante(String telefonoFamiliar,String nicknameFacebook) {
         
