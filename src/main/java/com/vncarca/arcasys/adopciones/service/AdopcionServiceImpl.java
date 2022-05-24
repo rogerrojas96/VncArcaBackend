@@ -15,8 +15,6 @@ import com.vncarca.arcasys.animal.repository.AnimalRepository;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,8 +34,8 @@ public class AdopcionServiceImpl implements IAdopcionService{
     private PersonaRepository personaRepository;
 
     @Override
-    public Page<Adopcion> getAllAdopciones(Pageable pageable) {
-        return adopcionRepository.findAll(pageable);
+    public List<Adopcion> getAllAdopciones() {
+        return adopcionRepository.findAll();
     }
 
     @Override

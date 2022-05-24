@@ -11,9 +11,6 @@ import com.vncarca.arcasys.persona.repository.PersonaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,8 +27,8 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
 
 
     @Override
-    public Page<Adoptante> getAllAdoptantes(Pageable pageable) {
-        return adoptanteRepository.findAll(pageable);
+    public List<Adoptante> getAllAdoptantes() {
+        return adoptanteRepository.findAll();
     }
 
 

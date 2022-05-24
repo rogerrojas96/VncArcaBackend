@@ -1,14 +1,13 @@
 package com.vncarca.arcasys.adopciones.service;
 
+import java.util.List;
+
 import com.vncarca.arcasys.adopciones.dto.AdoptanteDto;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 public interface IAdoptanteService {
     
-    public Page<Adoptante> getAllAdoptantes(Pageable pageable);
+    public List<Adoptante> getAllAdoptantes();
     public Adoptante getAdoptantePorCedula(String cedula);
     public Adoptante getAdoptantePorId(Long idAdoptante);
     public Adoptante crearAdoptante(AdoptanteDto adoptanteDto);
