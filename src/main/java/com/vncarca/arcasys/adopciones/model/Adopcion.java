@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -41,10 +43,12 @@ public class Adopcion implements Serializable{
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "fecha_adopcion")
     private Date fechaAdopcion;
 
-    @Column(nullable = false)
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false, columnDefinition = "text")
     private String descripcion;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -54,7 +58,7 @@ public class Adopcion implements Serializable{
 
     @OneToOne
     @JoinColumn(name="id_animal")
-    private Animal animal;
+    private Animal animal; 
 
     public Adopcion(Date fechaAdopcion, String descripcion, Adoptante adoptante, Animal animal) {
         this.fechaAdopcion = fechaAdopcion;

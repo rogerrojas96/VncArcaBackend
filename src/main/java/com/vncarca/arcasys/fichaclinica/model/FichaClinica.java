@@ -99,6 +99,4 @@ public class FichaClinica implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private Veterinario veterinario;
-    
-
 }

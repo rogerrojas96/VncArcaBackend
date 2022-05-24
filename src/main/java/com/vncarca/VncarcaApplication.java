@@ -1,8 +1,11 @@
 package com.vncarca;
 
+//import com.vncarca.arcasys.adopciones.repository.AdopcionRepository;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
+import com.vncarca.arcasys.animal.repository.AnimalRepository;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
 import com.vncarca.temporal_utils.adopciones.AdopcionTemporalUtil;
+import com.vncarca.temporal_utils.refugio.RefugioTemporalUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,6 +23,13 @@ public class VncarcaApplication implements CommandLineRunner{
     
     @Autowired
     private AdoptanteRepository adoptanteRepository;
+
+	@Autowired
+	private AnimalRepository animalRepository;
+
+	//@Autowired
+	//private AdopcionRepository adopcionRepository;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(VncarcaApplication.class, args);
@@ -40,9 +50,20 @@ public class VncarcaApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		AdopcionTemporalUtil adopcionTemporal = new AdopcionTemporalUtil();
-		adopcionTemporal.crearAdoptantes(personaRepository, adoptanteRepository);
-		
+
+		AdopcionTemporalUtil adopcionTemporal = new AdopcionTemporalUtil(personaRepository, adoptanteRepository, animalRepository);
+		RefugioTemporalUtil refugioTemporalUtil = new RefugioTemporalUtil();
+
+		/*Creando Adoptantes*/
+		adopcionTemporal.crearAdoptantes();
+
+
+		/*Creando Animales*/
+		refugioTemporalUtil.crearAnimales(animalRepository);
+
+
+		/*Creando Adopciones*/
+		adopcionTemporal.crearAdopcion((long) 1, (long) 1);
+		adopcionTemporal.crearAdopcion((long) 2, (long) 2);
 	}
 }

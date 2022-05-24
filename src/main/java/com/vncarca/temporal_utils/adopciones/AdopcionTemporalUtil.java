@@ -1,14 +1,26 @@
 package com.vncarca.temporal_utils.adopciones;
 
+import java.util.Date;
+
+import com.vncarca.arcasys.adopciones.model.Adopcion;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
+//import com.vncarca.arcasys.adopciones.repository.AdopcionRepository;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
+import com.vncarca.arcasys.animal.repository.AnimalRepository;
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class AdopcionTemporalUtil {
 
+    private PersonaRepository personaRepository;
+    private AdoptanteRepository adoptanteRepository;
+    //private AdopcionRepository adopcionRepository; 
+    private AnimalRepository animalRepository;
 
-    public void crearAdoptantes(PersonaRepository personaRepository, AdoptanteRepository adoptanteRepository){
+    public void crearAdoptantes(){
         
         /* ------------------ Adoptante 1 ------------------ */
         Persona persona = new Persona();
@@ -61,5 +73,17 @@ public class AdopcionTemporalUtil {
          adoptante3.setTelefonoFamiliar("0733333");
          adoptante3.setPersona(persona3);
          adoptanteRepository.save(adoptante3);
+    }
+
+
+    public void crearAdopcion(Long idAdoptante, Long idAnimal){
+
+        Adopcion adopcion = new Adopcion();
+        adopcion.setAdoptante(adoptanteRepository.findById(idAdoptante).get());
+        adopcion.setAnimal(animalRepository.findById(idAnimal).get());
+        adopcion.setDescripcion("descripcion de prueba");
+        adopcion.setFechaAdopcion(new Date());
+        
+        //adopcionRepository.save(adopcion);
     }
 }
