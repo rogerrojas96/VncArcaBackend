@@ -5,6 +5,7 @@ import com.vncarca.arcasys.adopciones.model.Adoptante;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
+import com.vncarca.util.Validacion;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,26 +48,29 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
 
     @Override
     public Adoptante crearAdoptante(AdoptanteDto adoptanteDto) {
-        if(getIdAdoptante(adoptanteDto.getCedula()) == null){
-            Persona persona = null;
-            if(!personaRepository.existsByCedula(adoptanteDto.getCedula())){
-                persona = new Persona();
-                persona.setApellidos(adoptanteDto.getApellidos());
-                persona.setCedula(adoptanteDto.getCedula());
-                persona.setCelular(adoptanteDto.getCelular());
-                persona.setCorreo(adoptanteDto.getCorreo());
-                persona.setDireccion(adoptanteDto.getDireccion());
-                persona.setNombre(adoptanteDto.getNombre());
-                persona.setTelefono(adoptanteDto.getTelefono());
-                personaRepository.save(persona);
-            }else{
-                persona = personaRepository.findByCedula(adoptanteDto.getCedula()).get();
+        String identificador = adoptanteDto.getCedula();
+        if(Validacion.validadorDeCedula(identificador) == true){
+            if(getIdAdoptante(adoptanteDto.getCedula()) == null){
+                Persona persona = null;
+                if(!personaRepository.existsByCedula(adoptanteDto.getCedula())){
+                    persona = new Persona();
+                    persona.setApellidos(adoptanteDto.getApellidos());
+                    persona.setCedula(adoptanteDto.getCedula());
+                    persona.setCelular(adoptanteDto.getCelular());
+                    persona.setCorreo(adoptanteDto.getCorreo());
+                    persona.setDireccion(adoptanteDto.getDireccion());
+                    persona.setNombre(adoptanteDto.getNombre());
+                    persona.setTelefono(adoptanteDto.getTelefono());
+                    personaRepository.save(persona);
+                }else{
+                    persona = personaRepository.findByCedula(adoptanteDto.getCedula()).get();
+                }
+                Adoptante adoptante = new Adoptante();
+                adoptante.setNicknameFacebook(adoptanteDto.getNicknameFacebook());
+                adoptante.setTelefonoFamiliar(adoptanteDto.getTelefonoFamiliar());
+                adoptante.setPersona(persona);
+                return adoptanteRepository.save(adoptante);
             }
-            Adoptante adoptante = new Adoptante();
-            adoptante.setNicknameFacebook(adoptanteDto.getNicknameFacebook());
-            adoptante.setTelefonoFamiliar(adoptanteDto.getTelefonoFamiliar());
-            adoptante.setPersona(persona);
-            return adoptanteRepository.save(adoptante);
         }
         return null;
     }
