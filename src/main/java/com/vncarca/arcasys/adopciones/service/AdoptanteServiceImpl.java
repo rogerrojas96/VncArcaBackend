@@ -1,6 +1,9 @@
 package com.vncarca.arcasys.adopciones.service;
 
+import java.util.List;
+
 import com.vncarca.arcasys.adopciones.dto.AdoptanteDto;
+import com.vncarca.arcasys.adopciones.model.Adopcion;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
 import com.vncarca.arcasys.persona.model.Persona;
@@ -21,6 +24,9 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    @Autowired
+    private IAdopcionService adopcionService;
 
 
     @Override
@@ -99,6 +105,10 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
     @Override
     public boolean eliminarAdoptante(Long idAdoptante) {
         if(adoptanteRepository.existsById(idAdoptante)){
+            List<Adopcion> adopciones = adopcionService.getAdopcionesPorIdAdoptante(idAdoptante);
+            for(Adopcion adopcion : adopciones){
+                adopcionService.eliminarAdopcion(adopcion.getId());
+            }
             adoptanteRepository.deleteById(idAdoptante);
             return true;
         }
@@ -106,7 +116,8 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
     }
     
 
-    private Long getIdAdoptante(String cedula){
+    @Override
+    public Long getIdAdoptante(String cedula){
         if (personaRepository.existsByCedula(cedula)){
             Persona persona = personaRepository.findByCedula(cedula).get();
             return adoptanteRepository.getId(persona.getId());

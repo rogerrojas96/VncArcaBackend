@@ -14,4 +14,5 @@ public interface IAdoptanteService {
     public Adoptante crearAdoptante(AdoptanteDto adoptanteDto);
     public Adoptante actualizarAdoptante(AdoptanteDto adoptanteDto, Long idAdoptante);
     public boolean eliminarAdoptante(Long idAdoptante);
+    public Long getIdAdoptante(String cedula);
 }

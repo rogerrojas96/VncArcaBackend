@@ -40,5 +40,4 @@ public class Veterinario implements Serializable {
 			@JoinColumn(name = "veterinario_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "persona_id", referencedColumnName = "id") })
 	private Persona persona;
-	
 }
