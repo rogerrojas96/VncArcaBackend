@@ -13,9 +13,6 @@ import com.vncarca.arcasys.adopciones.service.IAdoptanteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,10 +38,8 @@ public class AdoptanteController {
 
     @ResponseBody
     @GetMapping("/")
-    public Page<Adoptante> getAllAdoptantes(@RequestParam(required = true) Integer page,
-        @RequestParam(required = true) Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return adoptanteService.getAllAdoptantes(pageable);
+    public ResponseEntity<?> getAllAdoptantes() {
+        return new ResponseEntity<List<Adoptante>>( adoptanteService.getAllAdoptantes(), HttpStatus.OK);
     }
 
 
