@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Fichas Clínicas", description = "Controlador para CRUD de fichas clínicas")
 @RestController
-@RequestMapping("/api/fichas-clinicas")
+@RequestMapping("/fichas-clinicas")
 public class FichaClinicaController {
 	@Autowired
 	FichaClinicaService fichaClinicaService;

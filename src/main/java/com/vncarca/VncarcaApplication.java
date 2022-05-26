@@ -15,33 +15,19 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-public class VncarcaApplication implements CommandLineRunner{
+public class VncarcaApplication implements CommandLineRunner {
 
 	@Autowired
-    private PersonaRepository personaRepository;
-    
-    @Autowired
-    private AdoptanteRepository adoptanteRepository;
+	private PersonaRepository personaRepository;
+
+	@Autowired
+	private AdoptanteRepository adoptanteRepository;
 
 	@Autowired
 	private AnimalRepository animalRepository;
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(VncarcaApplication.class, args);
-	}
-	
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOriginPatterns("*")
-						.allowedMethods("*")
-						.allowedHeaders("*")
-						.allowedOrigins("http://localhost:4200", "http://localhost:9898/**").maxAge(3600);
-			}
-		};
 	}
 
 	@Override
@@ -50,11 +36,10 @@ public class VncarcaApplication implements CommandLineRunner{
 		AdopcionTemporalUtil adopcionTemporal = new AdopcionTemporalUtil(personaRepository, adoptanteRepository);
 		RefugioTemporalUtil refugioTemporalUtil = new RefugioTemporalUtil();
 
-		/*Creando Adoptantes*/
+		/* Creando Adoptantes */
 		adopcionTemporal.crearAdoptantes();
 
-
-		/*Creando Animales*/
+		/* Creando Animales */
 		refugioTemporalUtil.crearAnimales(animalRepository);
 	}
 }

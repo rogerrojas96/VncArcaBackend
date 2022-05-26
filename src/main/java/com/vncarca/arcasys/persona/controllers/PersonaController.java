@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Personas", description = "Controlador para CRUD de personas")
 @RestController
-@RequestMapping("/api/personas")
+@RequestMapping("/personas")
 public class PersonaController {
 	@Autowired
 	PersonaService personaService;

@@ -31,8 +31,8 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Servicios", description = "Controlador para CRUD de servicios ofrecidos por la fundación ARCA")
 @RestController
-@CrossOrigin("*")
-@RequestMapping("/api/servicios")
+
+@RequestMapping("/servicios")
 public class ServicioArcaController {
 
     @Autowired

@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Animales", description = "Controlador para CRUD de animales")
 @RestController
-@RequestMapping("/api/animales")
+@RequestMapping("/animales")
 public class AnimalController {
     @Autowired
     AnimalService animalService;

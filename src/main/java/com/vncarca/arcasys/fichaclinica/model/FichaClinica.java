@@ -17,8 +17,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -99,4 +101,10 @@ public class FichaClinica implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private Veterinario veterinario;
+	
+	@JsonBackReference
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	private Animal animal;
 }
