@@ -1,8 +1,8 @@
-package com.vncarca.arcasys.vacuna.services;
+package com.vncarca.arcasys.carnetVacunacion.vacuna.services;
 
 import java.util.List;
 
-import com.vncarca.arcasys.vacuna.model.Vacuna;
+import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

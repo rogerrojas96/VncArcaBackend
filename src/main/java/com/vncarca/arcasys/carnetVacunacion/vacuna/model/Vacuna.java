@@ -1,4 +1,4 @@
-package com.vncarca.arcasys.vacuna.model;
+package com.vncarca.arcasys.carnetVacunacion.vacuna.model;
 
 import java.io.Serializable;
 

@@ -49,6 +49,11 @@ public class PersonaController {
 		return pagePersonas;
 	}
 
+	@GetMapping("/")
+	public List<Persona> getPersonas(){
+		 return personaService.findAll();
+	}
+
 	// EndPoint registrar Persona
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
