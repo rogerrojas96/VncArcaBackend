@@ -1,7 +1,7 @@
 --Roles
---INSERT INTO roles VALUES (1, 'ROLE_ADMIN');
---INSERT INTO roles VALUES (2, 'ROLE_DEFAULT_USER');
---INSERT INTO roles VALUES (3, 'ROLE_VETERINARIO');
+INSERT INTO roles VALUES (1, 'ROLE_ADMIN');
+INSERT INTO roles VALUES (2, 'ROLE_DEFAULT_USER');
+INSERT INTO roles VALUES (3, 'ROLE_VETERINARIO');
 
 --Personas para ingresar en el sistema
 insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661524','Roy','Morocho','San Joaquin','0453535','0980385997','admin@gmail.com');
@@ -19,10 +19,10 @@ insert into veterinarios_personas (veterinario_id, persona_id)values(2,3)
 
 --Usuarios
 --pass "admin"
---INSERT INTO usuarios (id,password,username) VALUES (1,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin',1);
+INSERT INTO usuarios (email,enabled,password,username,persona_id) VALUES ('admin@gmail.com',True,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin',1);
 
 --Usuarios y rol
---INSERT INTO usuario_roles VALUES (1,1);
+INSERT INTO usuarios_roles VALUES (1,1);
 
 --FichasClinicas
 insert into vncarcadb.fichas_clinicas (fecha_ingreso,motivo_consulta,hallazgos,temperatura,conjuntiva,frecuencia_cardiaca,frecuencia_respiratoria,TRC,mucosas,esterilizacion ,alimentacion,pronostico,diagnostico_diferencial,costo,veterinario_id,animal_id) values ('2019-06-18','dolor estomacal','ulceras en intestino',37.5,'Normal',130,15,'Bien', 'Normal',true,123.3,'Aun falta', 'Pendiente',54.3,1,1),('2020-06-18','dolor Respiratorio','Pulmones con mucosa',38,'Alta',130,15,'Bien', 'Alta',false,123.3,'Aun falta', 'Pendiente',54.3,2,1);

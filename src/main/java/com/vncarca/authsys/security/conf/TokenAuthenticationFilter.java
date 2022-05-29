@@ -47,10 +47,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private CustomUserDetailsServiceImpl customUserDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-            FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = getJwtToken(httpServletRequest, true);
+            String jwt = getJwtToken(httpServletRequest, false);
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 
                 String username = tokenProvider.getUsernameFromToken(jwt);
@@ -63,12 +62,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            else if(!tokenProvider.validateToken(jwt)){
-                httpServletResponse.addHeader("Message","Invalid Token");
-            }
-        } catch (Exception  e) {
+
+        } catch (Exception e) {
             logger.error("Erroral crear token: {}", (Object[]) e.getStackTrace());
-            
+
             // ErrorResponse errorResponse = new
             // ErrorResponse(HttpStatus.BAD_REQUEST,"Credenciales vacias");
             // httpServletResponse.getWriter().write(convertObjectToJson(errorResponse));
@@ -87,8 +84,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(HEADER_STRING);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX + " ")) {
-            String accessToken = bearerToken.substring(7);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX+" ")) {
+            String accessToken = bearerToken.substring(7,bearerToken.length());
             if (accessToken == null)
                 return null;
 

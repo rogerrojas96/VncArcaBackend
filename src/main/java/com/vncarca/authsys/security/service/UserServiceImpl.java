@@ -15,6 +15,7 @@ import com.vncarca.authsys.security.exceptions.GlobalExceptionHandler;
 import com.vncarca.authsys.security.model.Usuario;
 import com.vncarca.authsys.security.repository.UserRepository;
 import com.vncarca.authsys.security.util.CookieUtil;
+import com.vncarca.authsys.security.util.SecurityCipher;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -61,13 +62,13 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
 
             Token newAccessToken = tokenProvider.generateAccessToken(usuario.getUsername(), authorities);
-
+            String encryptedToken = SecurityCipher.encrypt(newAccessToken.getTokenValue());
             addAccessTokenCookie(responseHeaders, newAccessToken);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return ResponseEntity.ok().headers(responseHeaders)
-                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(), newAccessToken.getTokenValue(),
+                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(),encryptedToken,
                             authorities, customUserDetails.getUsuario().getPersona()));
 
         } catch (Exception e) {
