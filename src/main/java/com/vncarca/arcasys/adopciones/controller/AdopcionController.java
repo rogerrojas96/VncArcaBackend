@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RequestMapping("/adopciones")
-
+@CrossOrigin("*")
 @RestController
 public class AdopcionController {
    

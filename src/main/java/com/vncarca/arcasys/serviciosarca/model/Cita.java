@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vncarca.arcasys.persona.model.Persona;
+import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -39,6 +39,10 @@ public class Cita {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    @Column(name = "nombre_cliente")
+    private String nombreCliente;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "America/Guayaquil")
@@ -60,6 +64,6 @@ public class Cita {
     /* --------------------------- RELACIONES --------------------------- */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @JoinColumn(name="id_persona")
-    private Persona persona;
+    @JoinColumn(name="id_veterinario")
+    private Veterinario veterinario;
 }
