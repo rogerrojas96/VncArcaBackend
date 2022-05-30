@@ -48,7 +48,7 @@ public class Cita {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "America/Guayaquil")
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_cita")
+    @Column(name = "fecha_cita", unique = true)
     private Date fechaCita;
 
     @NotBlank
