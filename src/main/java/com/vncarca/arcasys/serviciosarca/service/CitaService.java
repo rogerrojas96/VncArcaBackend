@@ -1,5 +1,8 @@
 package com.vncarca.arcasys.serviciosarca.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +49,12 @@ public class CitaService implements ICitaService{
 
 
     @Override
-    public List<Cita> getCitasPorFechaAgenda(Date fechaAgenda) {
-        return citaRepository.getCitasPorFecha(fechaAgenda);
+    public List<Cita> getCitasPorFechaAgenda(String fechaAgenda) {
+        LocalDate fecha = LocalDate.parse(fechaAgenda);
+        int dia = fecha.getDayOfMonth();
+        int mes = fecha.getMonthValue();
+        int anio = fecha.getYear();
+        return citaRepository.getCitasPorFecha(dia, mes, anio);
     }
 
 
@@ -64,18 +71,18 @@ public class CitaService implements ICitaService{
 
 
     @Override
-    public Cita crearCita(CitaDto citaDto, List<ServicioArca> servicios, Long idVeterinario) {
-        if(!citaRepository.existsByFechaCita(citaDto.getFechaCita()) && veterinarioRepository.existsById(idVeterinario)){
+    public Cita crearCita(CitaDto citaDto, Long idVeterinario) {
+        if(!citaRepository.existsByFechaCita(getDate(citaDto.getFechaCita())) && veterinarioRepository.existsById(idVeterinario)){
             Cita cita = new Cita();
             cita.setEstado(citaDto.isEstado());
-            cita.setFechaCita(citaDto.getFechaCita());
+            cita.setFechaCita(getDate(citaDto.getFechaCita()));
             cita.setMotivo(citaDto.getMotivo());
             cita.setNombreCliente(citaDto.getNombreCliente());
             cita.setVeterinario(veterinarioRepository.findById(idVeterinario).get());
 
             cita = citaRepository.save(cita);
 
-            for (ServicioArca servicioArca : servicios) {
+            for (ServicioArca servicioArca : citaDto.getServicios()) {
                 if(servicioArcaRepository.existsById(servicioArca.getId())){
                     DetalleCita detalleCita = new DetalleCita();
                     detalleCita.setCita(cita);
@@ -90,29 +97,29 @@ public class CitaService implements ICitaService{
 
 
     @Override
-    public Cita modificarCita(CitaDto citaDto, List<ServicioArca> servicios, Long idCita, Long idVeterinario) {
+    public Cita modificarCita(CitaDto citaDto, Long idCita, Long idVeterinario) {
         Veterinario veterinario = veterinarioRepository.findById(idVeterinario).orElse(null);
         Cita cita = citaRepository.findById(idCita).orElse(null);
         if(cita != null && veterinario != null){
             List<DetalleCita> detalleCitas = detalleCitaRepository.getDetallesCita(cita.getId());
             cita.setEstado(citaDto.isEstado());
-            cita.setFechaCita(citaDto.getFechaCita());
+            cita.setFechaCita(getDate(citaDto.getFechaCita()));
             cita.setMotivo(citaDto.getMotivo());
             cita.setNombreCliente(citaDto.getNombreCliente());
             cita.setVeterinario(veterinarioRepository.findById(idVeterinario).get());
             cita = citaRepository.save(cita);
 
-            for (DetalleCita detalleCita : detalleCitas) {
-                detalleCitaRepository.deleteById(detalleCita.getId());
-            }
 
-            for (ServicioArca servicioArca : servicios) {
+            for (ServicioArca servicioArca : citaDto.getServicios()) {
                 if(servicioArcaRepository.existsById(servicioArca.getId())){
                     DetalleCita detalleCita = new DetalleCita();
                     detalleCita.setCita(cita);
                     detalleCita.setServicioArca(servicioArcaRepository.findById(servicioArca.getId()).get());
                     detalleCitaRepository.save(detalleCita);
                 }
+            }
+            for (DetalleCita detalleCita : detalleCitas) {
+                detalleCitaRepository.deleteById(detalleCita.getId());
             }
             return cita;
         }
@@ -123,9 +130,24 @@ public class CitaService implements ICitaService{
     @Override
     public boolean eliminarCita(Long idCita) {
         if(citaRepository.existsById(idCita)){
+            List<DetalleCita> detalleCitas = detalleCitaRepository.getDetallesCita(idCita);
             citaRepository.deleteById(idCita);
+            for (DetalleCita detalleCita : detalleCitas) {
+                detalleCitaRepository.deleteById(detalleCita.getId());
+            }
             return true;
         }
         return false;
+    }
+
+
+
+    private Date getDate(String fecha){
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try{
+            return formato.parse(fecha);
+        }catch(ParseException e){
+            return null;
+        }
     }
 }

@@ -1,16 +1,15 @@
 package com.vncarca.arcasys.serviciosarca.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import com.vncarca.arcasys.serviciosarca.dto.CitaDto;
 import com.vncarca.arcasys.serviciosarca.model.Cita;
 import com.vncarca.arcasys.serviciosarca.model.DetalleCita;
-import com.vncarca.arcasys.serviciosarca.model.ServicioArca;
 import com.vncarca.arcasys.serviciosarca.service.ICitaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +31,6 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Citas", description = "Controlador para CRUD de agendamiento de citas")
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/citas")
 public class CitaController {
     
@@ -59,8 +57,19 @@ public class CitaController {
 
     @ResponseBody
     @GetMapping("/fecha/{fechaAgenda}")
-    public ResponseEntity<List<Cita>> getCitasPorFechaAgenda(@PathVariable Date fechaAgenda){
-        return new ResponseEntity<>(citaService.getCitasPorFechaAgenda(fechaAgenda), HttpStatus.OK);
+    public ResponseEntity<?> getCitasPorFechaAgenda(@PathVariable String fechaAgenda){
+        response.clear();
+        try{
+            List<Cita> citas = citaService.getCitasPorFechaAgenda(fechaAgenda);
+            response.put("mensaje", "Ok!");
+            response.put("citas", citas);
+            status = HttpStatus.OK;
+        }catch(DataAccessException e){
+            response.put("mensaje", "Ha ocurrido un error en el servidor al intentar buscar citas por fecha!");
+            response.put("error", e.getMostSpecificCause().getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(response, status);
     }
 
 
@@ -80,12 +89,12 @@ public class CitaController {
 
     @ResponseBody
     @PostMapping("/{idVeterinario}")
-    public ResponseEntity<?> crearCita(@Valid @RequestBody CitaDto citaDto, @Valid @RequestBody List<ServicioArca> servicios, 
-            @PathVariable Long idVeterinario, BindingResult result){
+    public ResponseEntity<?> crearCita(@Valid @RequestBody CitaDto citaDto,
+            BindingResult result, @PathVariable Long idVeterinario){
         response.clear();
         if(!result.hasErrors()){
             try{
-                cita = citaService.crearCita(citaDto, servicios, idVeterinario);
+                cita = citaService.crearCita(citaDto, idVeterinario);
                 if(cita != null){
                     response.put("mensaje", "cita creada con exito!");
                     response.put("cita", cita);
@@ -98,23 +107,24 @@ public class CitaController {
                 response.put("mensaje", "Ha ocurrido un error en el servidor al intentar crear la cita!");
                 response.put("error", e.getMostSpecificCause().getMessage());
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
+            } 
         }else{
             response.put( "errors", getErrors(result));
              status = HttpStatus.BAD_REQUEST;
         }
         return new ResponseEntity<Map<String, Object>>(response, status);
     }
+    
 
 
     @ResponseBody
-    @PutMapping("/{idCita}")
-    public ResponseEntity<?> modificarCita(@Valid @RequestBody CitaDto citaDto, @Valid @RequestBody List<ServicioArca> servicios,  
-            @PathVariable Long idCita,  @PathVariable Long idVeterinario, BindingResult result){
+    @PutMapping("/{idCita}/{idVeterinario}")
+    public ResponseEntity<?> modificarCita(@Valid @RequestBody CitaDto citaDto, BindingResult result,
+            @PathVariable Long idCita,  @PathVariable Long idVeterinario){
         response.clear();
         if(!result.hasErrors()){
             try{
-                cita = citaService.modificarCita(citaDto, servicios, idCita, idVeterinario);
+                cita = citaService.modificarCita(citaDto, idCita, idVeterinario);
                 if(cita != null){
                     response.put("mensaje", "cita actualizada con exito!");
                     response.put("cita", cita);
@@ -124,7 +134,7 @@ public class CitaController {
                     status = HttpStatus.BAD_REQUEST;
                 }
             }catch(DataAccessException e){
-                response.put("mensaje", "Ha ocurrido un error en el servidor al intentar actualizar el servicio! ");
+                response.put("mensaje", "Ha ocurrido un error en el servidor al intentar actualizar la cita! ");
                 response.put("error", e.getMostSpecificCause().getMessage());
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
@@ -133,6 +143,28 @@ public class CitaController {
             status = HttpStatus.BAD_REQUEST;
         }
         return new ResponseEntity<Map<String, Object>>(response, status);
+    }
+
+
+    @ResponseBody
+    @DeleteMapping("/{idCita}")
+    public ResponseEntity<?> eliminarCita(Long idCita) {
+        response.clear();
+        try{
+            boolean eliminado = citaService.eliminarCita(idCita);
+            if(eliminado){
+                response.put("mensaje", "Cita eliminada con exito!");
+                status = HttpStatus.OK;
+            }else{
+                response.put("mensaje", "No existe la cita con id: "+idCita.toString());
+                status = HttpStatus.BAD_REQUEST;
+            }
+        }catch(DataAccessException e){
+            response.put("mensaje", "Ha ocurrido un error en el servidor al intentar eliminar la cita! ");
+            response.put("error", e.getMostSpecificCause().getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return new ResponseEntity<Map<String, Object>>(response, status); 
     }
 
 

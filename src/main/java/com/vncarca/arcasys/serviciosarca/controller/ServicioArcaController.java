@@ -16,7 +16,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +30,6 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Servicios", description = "Controlador para CRUD de servicios ofrecidos por la fundación ARCA")
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/servicios")
 public class ServicioArcaController {
 

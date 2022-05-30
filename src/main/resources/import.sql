@@ -38,3 +38,25 @@ INSERT INTO vncarcadb.carnet_vacunaciones (fecha_aplicacion,fecha_proxima_aplica
 	
 --Animales
 insert into vncarcadb.animales (id,nombre,especie,caracteristicas,sexo,color,edad,raza,tamanyo,peso,fecha_nacimiento ,foto) values (1,'Tito','canino','qwerty','MACHO','Marron',3,'Mestizo','22',3, '2019-06-18','https://img.myloview.es/vinilos/perro-mestizo-sin-hogar-mirando-a-ti-400-141109517.jpg');
+
+
+--Servicios de Arca:
+insert into vncarcadb.servicios(descripcion, nombre, precio) values('Consulta general del animalito', 'Consulta Medica General', 20)
+insert into vncarcadb.servicios(descripcion, nombre, precio) values('Consulta para cirugia', 'Consulta Medica para Cirugia', 20)
+insert into vncarcadb.servicios(descripcion, nombre, precio) values('Desparacitacion de animalitos', 'Desparacitaciones', 5)
+insert into vncarcadb.servicios(descripcion, nombre, precio) values('Vacunacion de animalitos', 'Vacunas', 5.5)
+insert into vncarcadb.servicios(descripcion, nombre, precio) values('Esterilizacion de animalitos', 'Esterilizacion', 15.5)
+
+--Citas
+ insert into vncarcadb.citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario) values(true, '2022-06-01 07:30:00', 'Consulta general', 'Jose Perez', 1)
+ insert into vncarcadb.citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario) values(true, '2022-06-01 09:30:00', 'Consulta cirugia', 'Martha Guaraca', 1)
+ insert into vncarcadb.citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario) values(true, '2022-06-01 14:30:00', 'Desparacitacion', 'Roberto Machado', 1)
+ insert into vncarcadb.citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario) values(true, '2022-06-01 16:30:00', 'Esterilizacion', 'Julia Peralta', 1)
+ insert into vncarcadb.citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario) values(true, '2022-06-02 16:30:00', 'Vacunacion', 'Ana Tenesaca', 1)
+
+ --Detalle de citas
+ insert into vncarcadb.detalles_citas(id_cita, id_servicio) values(1, 1)
+ insert into vncarcadb.detalles_citas(id_cita, id_servicio) values(2, 2)
+ insert into vncarcadb.detalles_citas(id_cita, id_servicio) values(3, 3)
+ insert into vncarcadb.detalles_citas(id_cita, id_servicio) values(4, 5)
+ insert into vncarcadb.detalles_citas(id_cita, id_servicio) values(5, 4)
