@@ -36,7 +36,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Veterinarios", description = "Controlador para CRUD de veterinarios")
 @RestController
-@RequestMapping("/api/veterinario")
+@RequestMapping("/veterinario")
 public class VeterinarioController {
 	@Autowired
     VeterinarioService veterinarioService;

@@ -1,4 +1,5 @@
-package com.vncarca.arcasys.animal.controllers;
+package com.vncarca.arcasys.carnetVacunacion.vacuna.controller;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.vncarca.arcasys.animal.model.Animal;
-import com.vncarca.arcasys.animal.services.AnimalService;
+import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
+import com.vncarca.arcasys.carnetVacunacion.vacuna.services.VacunaServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -31,34 +32,34 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+@Api(tags = "Vacunas", description = "Controlador para CRUD de vacunas")
+@RestController()
+@RequestMapping("/vacunas")
+public class VacunaController {
+	@Autowired
+    VacunaServices vacunaService;
 
-@Api(tags = "Animales", description = "Controlador para CRUD de animales")
-@RestController
-@RequestMapping("/animales")
-public class AnimalController {
-    @Autowired
-    AnimalService animalService;
-
-    // EndPoint listar animales
+    // EndPoint listar vacunas
     @ResponseBody
     @GetMapping("/page")
-    public Page<Animal> getAnimals(@RequestParam(required = true) Integer page,
+    public Page<Vacuna> getVacunas(@RequestParam(required = true) Integer page,
             @RequestParam(required = true) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Animal> pageAnimals = animalService.findAll(pageable);
-        return pageAnimals;
+        Page<Vacuna> pageVacunas = vacunaService.findAll(pageable);
+        return pageVacunas;
     }
-    @GetMapping("/")
-	public List<Animal> getAnimales(){
-		 return animalService.findAll();
-	}
 
-    // EndPoint registrar Animal
+	@GetMapping("/")
+	public List<Vacuna> getVacunas(){
+		 return vacunaService.findAll();
+	}
+    
+	// EndPoint registrar Vacuna
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Valid @RequestBody Animal animal, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody Vacuna vacuna, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
-        Animal newAnimal = null;
+        Vacuna newVacuna = null;
 
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream().map(err -> {
@@ -68,25 +69,25 @@ public class AnimalController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
         try {
-            newAnimal = animalService.save(animal);
+            newVacuna = vacunaService.save(vacuna);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error al guardar Animal en el servidor");
+            response.put("mensaje", "Error al guardar Vacuna en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("mensaje", "Animal guardada ani exito");
-        response.put("animal", newAnimal);
+        response.put("mensaje", "Vacuna guardada vacu exito");
+        response.put("vacuna", newVacuna);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
-    // EndPoint Actualizar Animal
+    // EndPoint Actualizar Vacuna
     @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Animal animal, BindingResult result,
+    public ResponseEntity<?> update(@Valid @RequestBody Vacuna vacuna, BindingResult result,
             @PathVariable Long id) {
-        Animal ani = animalService.findById(id);
+        Vacuna vacu = vacunaService.findById(id);
 
-        Animal animalUpdate = null;
+        Vacuna vacunaUpdate = null;
 
         Map<String, Object> response = new HashMap<>();
         if (result.hasErrors()) {
@@ -97,38 +98,38 @@ public class AnimalController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
 
-        if (ani == null) {
-            response.put("mensaje", "Error al actualizar, el Animal ani ID: ".concat(id.toString())
+        if (vacu == null) {
+            response.put("mensaje", "Error al actualizar, el Vacuna vacu ID: ".concat(id.toString())
                     .concat(" no existe en el servidor"));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
         try {
-            ani = animal;
+            vacu = vacuna;
 
-            animalUpdate = animalService.save(ani);
+            vacunaUpdate = vacunaService.save(vacu);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error al actualizar el Animal en el servidor");
+            response.put("mensaje", "Error al actualizar el Vacuna en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("mensaje", "Animal actualizada ani exito");
-        response.put("animal", animalUpdate);
+        response.put("mensaje", "Vacuna actualizada vacu exito");
+        response.put("vacuna", vacunaUpdate);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
-    // EndPoint Eliminar Animal
+    // EndPoint Eliminar Vacuna
     @ResponseBody
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            animalService.delete(id);
+            vacunaService.delete(id);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error al eliminar el Animal en el servidor");
+            response.put("mensaje", "Error al eliminar el Vacuna en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("mensaje", "Animal eliminado con exito");
+        response.put("mensaje", "Vacuna eliminado con exito");
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
@@ -136,21 +137,21 @@ public class AnimalController {
     @ResponseBody
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        Animal Animal = null;
+        Vacuna Vacuna = null;
         Map<String, Object> response = new HashMap<>();
 
         try {
-            Animal = animalService.findById(id);
+            Vacuna = vacunaService.findById(id);
         } catch (DataAccessException e) {
-            response.put("mensaje", "Error en la consulta de Animal en el servidor");
+            response.put("mensaje", "Error en la consulta de Vacuna en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if (Animal == null) {
-            response.put("mensaje", "El Animal con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
+        if (Vacuna == null) {
+            response.put("mensaje", "El Vacuna con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Animal>(Animal, HttpStatus.OK);
+        return new ResponseEntity<Vacuna>(Vacuna, HttpStatus.OK);
     }
 
 }
