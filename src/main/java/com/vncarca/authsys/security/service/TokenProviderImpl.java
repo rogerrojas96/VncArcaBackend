@@ -2,14 +2,12 @@ package com.vncarca.authsys.security.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.vncarca.authsys.security.dto.Token;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;

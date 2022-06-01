@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -51,8 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers("/api/auth/login").permitAll()
-                .antMatchers("/api/test/**", "/v2/api-docs", "/configuration/**", "/swagger*/**", "/swagger-ui.html",
-                        "/webjars/**")
+                .antMatchers("/api/v2/api-docs", "/api/configuration/**", "/api/swagger*/**", "/api/swagger-ui.html",
+                        "/api/webjars/**")
                 .permitAll()
                 .anyRequest().authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(restAuthenticationEntryPoint).and()

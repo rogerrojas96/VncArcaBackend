@@ -9,7 +9,7 @@ import com.vncarca.authsys.security.model.Usuario;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ResponseEntity<?> login(LoginRequest loginRequest);
+    ResponseEntity<?> login(LoginRequest loginRequest)  throws Exception ;
     List<Usuario> findAll();
     Usuario findOne(String username);
     UserDto getUserProfile();

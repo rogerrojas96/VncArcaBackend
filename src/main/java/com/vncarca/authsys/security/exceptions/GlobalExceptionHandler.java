@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -113,13 +114,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 				errorResponse, new HttpHeaders(), errorResponse.getStatus());
 	}
 
-	@ExceptionHandler({ Exception.class })
-	public ResponseEntity<Object> handleAll(Exception ex) {
-		ErrorResponses errorResponse = new ErrorResponses(
-				HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(), "Ocurrio un error :(");
-		return new ResponseEntity<Object>(
-				errorResponse, new HttpHeaders(), errorResponse.getStatus());
-	}
+	// @ExceptionHandler({ Exception.class })
+	// public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
+	// 	ErrorResponses errorResponse = new ErrorResponses(
+	// 			HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(),  ex.getLocalizedMessage());
+	// 	return new ResponseEntity<Object>(
+	// 			errorResponse, new HttpHeaders(), errorResponse.getStatus());
+	// }
 
 	// // Exceptions mas específicas
 	// @ExceptionHandler(NullPointerException.class)
@@ -129,12 +130,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	// status);
 	// }
 
-	// @ExceptionHandler(BadCredentialsException.class)
-	// public ResponseEntity<Object> handleBadCredentialsExceptions(Exception e) {
-	// HttpStatus status = HttpStatus.UNAUTHORIZED;
-	// return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
-	// status);
-	// }
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<Object> handleBadCredentialsExceptions(Exception e) {
+	HttpStatus status = HttpStatus.UNAUTHORIZED;
+	return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
+	status);
+	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleIllegalArgumentExceptions(Exception e) {

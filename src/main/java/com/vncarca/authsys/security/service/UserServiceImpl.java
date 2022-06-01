@@ -11,7 +11,6 @@ import com.vncarca.authsys.security.dto.LoginRequest;
 import com.vncarca.authsys.security.dto.LoginResponse;
 import com.vncarca.authsys.security.dto.Token;
 import com.vncarca.authsys.security.dto.UserDto;
-import com.vncarca.authsys.security.exceptions.GlobalExceptionHandler;
 import com.vncarca.authsys.security.model.Usuario;
 import com.vncarca.authsys.security.repository.UserRepository;
 import com.vncarca.authsys.security.util.CookieUtil;
@@ -45,13 +44,13 @@ public class UserServiceImpl implements UserService {
     private CookieUtil cookieUtil;
 
     @Override
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         Usuario usuario = userRepository
                 .findByusernameOrEmail(loginRequest.getUsername(), loginRequest.getUsername()).orElseThrow(
                         () -> new IllegalArgumentException("Usuario no registrado"));
-        try {
+    
 
             Authentication authentication = authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 
@@ -62,26 +61,18 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
 
             Token newAccessToken = tokenProvider.generateAccessToken(usuario.getUsername(), authorities);
-            String encryptedToken = SecurityCipher.encrypt(newAccessToken.getTokenValue());
-            addAccessTokenCookie(responseHeaders, newAccessToken);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return ResponseEntity.ok().headers(responseHeaders)
-                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(),encryptedToken,
-                            authorities, customUserDetails.getUsuario().getPersona()));
-
-        } catch (Exception e) {
-            return null;
-        }
-
+                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(),newAccessToken, customUserDetails.getUsuario().getPersona()));
     }
 
     private Authentication authenticate(String username, String password) throws Exception {
         try {
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new Exception("User diseabled", e);
+            throw new Exception("User disabled", e);
         } catch (BadCredentialsException e) {
             throw new Exception("Lo sentimos, las credenciales que estás usando no son válidas.", e);
         }

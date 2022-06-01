@@ -1,12 +1,9 @@
 package com.vncarca.authsys.security.service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 import com.vncarca.authsys.security.dto.Token;
-
-import org.springframework.security.core.GrantedAuthority;
 
 
 public interface TokenProvider {

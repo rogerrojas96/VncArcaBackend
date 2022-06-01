@@ -12,7 +12,7 @@ public class CookieUtil {
 
     public HttpCookie createAccessTokenCookie(String token, Long duration) {
         String encryptedToken = SecurityCipher.encrypt(token);
-        return ResponseCookie.from(accessTokenCookieName, encryptedToken)
+        return ResponseCookie.from(accessTokenCookieName, token)
                 .maxAge(duration)
                 .httpOnly(true)
                 .path("/")
