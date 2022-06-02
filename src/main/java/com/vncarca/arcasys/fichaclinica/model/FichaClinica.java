@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,10 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -95,10 +92,11 @@ public class FichaClinica implements Serializable {
 	private float costo;
 
 	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne()
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private Veterinario veterinario;
 
+	
 	// @JsonBackReference
 	// @NotNull
 	// @ManyToOne(fetch = FetchType.LAZY)
