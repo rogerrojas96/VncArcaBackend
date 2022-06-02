@@ -2,30 +2,39 @@ package com.vncarca.arcasys.animal.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "animales")
 public class Animal implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -65,24 +74,17 @@ public class Animal implements Serializable {
     @Column(nullable = false)
     private Date fechaNacimiento;
 
-    //Por momento solo links de imágenes
+    // Por momento solo links de imágenes
     @Column(nullable = true)
     private String foto;
+   
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "animal_id")
+	private List<FichaClinica> fichasClinicas;
 
-    public Animal(Long id, String nombre, String especie, String caracteristicas, String sexo, String color, int edad,
-            String raza, String tamanyo, float peso, Date fechaNacimiento, String foto) {
-        this.id = id;
-        this.nombre = nombre;
-        this.especie = especie;
-        this.caracteristicas = caracteristicas;
-        this.sexo = sexo;
-        this.color = color;
-        this.edad = edad;
-        this.raza = raza;
-        this.tamanyo = tamanyo;
-        this.peso = peso;
-        this.fechaNacimiento = fechaNacimiento;
-        this.foto = foto;
-    }
-
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "animal_id")
+	private List<CarnetVacunacion> historialVacunaciones;
 }

@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Fichas Clínicas", description = "Controlador para CRUD de fichas clínicas")
 @RestController
-@RequestMapping("/api/fichas-clinicas")
+@RequestMapping("/fichas-clinicas")
 public class FichaClinicaController {
 	@Autowired
 	FichaClinicaService fichaClinicaService;
@@ -42,11 +42,15 @@ public class FichaClinicaController {
 	 // EndPoint listar fichaClinicaes
 	 @ResponseBody
 	 @GetMapping("/page")
-	 public Page<FichaClinica> getFichaClinicas(@RequestParam(required = true) Integer page,
+	 public Page<FichaClinica> getFichasClinicas(@RequestParam(required = true) Integer page,
 			 @RequestParam(required = true) Integer size) {
 		 Pageable pageable = PageRequest.of(page, size);
 		 Page<FichaClinica> pageFichaClinicas = fichaClinicaService.findAll(pageable);
 		 return pageFichaClinicas;
+	 }
+	 @GetMapping("/")
+	 public List<FichaClinica> getFichasClinicas(){
+		  return fichaClinicaService.findAll();
 	 }
  
 	 // EndPoint registrar FichaClinica

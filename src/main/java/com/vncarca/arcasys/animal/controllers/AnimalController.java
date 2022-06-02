@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Animales", description = "Controlador para CRUD de animales")
 @RestController
-@RequestMapping("/api/animales")
+@RequestMapping("/animales")
 public class AnimalController {
     @Autowired
     AnimalService animalService;
@@ -48,6 +48,10 @@ public class AnimalController {
         Page<Animal> pageAnimals = animalService.findAll(pageable);
         return pageAnimals;
     }
+    @GetMapping("/")
+	public List<Animal> getAnimales(){
+		 return animalService.findAll();
+	}
 
     // EndPoint registrar Animal
     @PostMapping("/")

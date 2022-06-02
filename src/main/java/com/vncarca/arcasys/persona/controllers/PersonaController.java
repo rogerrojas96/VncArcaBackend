@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Personas", description = "Controlador para CRUD de personas")
 @RestController
-@RequestMapping("/api/personas")
+@RequestMapping("/personas")
 public class PersonaController {
 	@Autowired
 	PersonaService personaService;
@@ -47,6 +47,11 @@ public class PersonaController {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Persona> pagePersonas = personaService.findAll(pageable);
 		return pagePersonas;
+	}
+
+	@GetMapping("/")
+	public List<Persona> getPersonas(){
+		 return personaService.findAll();
 	}
 
 	// EndPoint registrar Persona

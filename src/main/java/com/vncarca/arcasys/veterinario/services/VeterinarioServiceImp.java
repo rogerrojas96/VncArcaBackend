@@ -2,7 +2,6 @@ package com.vncarca.arcasys.veterinario.services;
 
 import java.util.List;
 
-import com.vncarca.arcasys.persona.repository.PersonaRepository;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 import com.vncarca.arcasys.veterinario.repository.VeterinarioRepository;
 
