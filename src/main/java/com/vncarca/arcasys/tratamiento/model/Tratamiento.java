@@ -66,7 +66,4 @@ public class Tratamiento  implements Serializable{
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private Medicacion medicacion;
 
-
-    
-
 }

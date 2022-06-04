@@ -39,17 +39,22 @@ import io.swagger.annotations.Api;
 public class MedicamentoController {
 	@Autowired
 	MedicamentoService medicamentoService;
-	  
+
     @ResponseBody
     @GetMapping("/page")
 	public Page<Medicamento> getMedicamentos(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size){
+			@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String nombre){
     	Pageable pageable = PageRequest.of(page, size);
-    	Page<Medicamento> pageMedicamentos = medicamentoService.findAll(pageable);
-    	return pageMedicamentos;
-    	
+        Page<Medicamento> pageMedicamento=null;
+
+        if (nombre.isEmpty() || nombre==null) {
+			pageMedicamento = medicamentoService.findAll(pageable);
+		} else {
+			pageMedicamento = medicamentoService.findAllByNombreComercial(pageable, nombre.toUpperCase());
+		}
+    	return pageMedicamento;
     }
-    
+
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Valid @RequestBody Medicamento medicamento, BindingResult result){
@@ -61,7 +66,7 @@ public class MedicamentoController {
             }).collect(Collectors.toList());
             response.put("errors", errors);
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
-    
+
     	}
         try {
             newMedicamento = medicamentoService.save(medicamento);
@@ -76,7 +81,7 @@ public class MedicamentoController {
     }
 
 
-    
+
 
 
     // EndPoint Actualizar Medicamento
@@ -155,8 +160,7 @@ public class MedicamentoController {
 
 }
 
-    
-    
-    
-    
-    
+
+
+
+

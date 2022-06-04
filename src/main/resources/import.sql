@@ -35,7 +35,7 @@ INSERT INTO vacuna (descripcion,nombre,tipo) VALUES ('Vacuna 1','Vacu','Tipo de 
 INSERT INTO carnet_vacunaciones (fecha_aplicacion,fecha_proxima_aplicacion,vacuna_id,animal_id) VALUES ('2022-05-26','2022-06-26',1,1),('2022-05-30','2022-06-12',2,1);
 
 
-	
+
 --Animales
 insert into animales (id,nombre,especie,caracteristicas,sexo,color,edad,raza,tamanyo,peso,fecha_nacimiento ,foto) values (1,'Tito','canino','qwerty','MACHO','Marron',3,'Mestizo','22',3, '2019-06-18','https://img.myloview.es/vinilos/perro-mestizo-sin-hogar-mirando-a-ti-400-141109517.jpg');
 insert into animales (id,nombre,especie,caracteristicas,sexo,color,edad,raza,tamanyo,peso,fecha_nacimiento ,foto) values (2,'Roco','gato','qwerty','MACHO','Marron',3,'Mestizo','22',3, '2019-06-18','https://www.purina-latam.com/sites/g/files/auxxlc391/files/styles/large/public/purina-para-que-sirven-los-bigotes-de-los-gatos.png?itok=gr5dH8dL');
@@ -84,3 +84,5 @@ insert into servicios(descripcion, nombre, precio) values('Esterilizacion de ani
  insert into detalles_citas(id_cita, id_servicio) values(3, 3)
  insert into detalles_citas(id_cita, id_servicio) values(4, 5)
  insert into detalles_citas(id_cita, id_servicio) values(5, 4)
+
+INSERT INTO vncarcadb.medicamento (cantidad,nombre_comercial,nombre_generico,precio) VALUES(1,'ejemplo comercial','ejemplo generico',23.45),(12,'ejemplo comercial 2','ejemplo generico 2',32.43);
