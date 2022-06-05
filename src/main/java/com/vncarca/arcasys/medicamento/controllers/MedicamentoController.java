@@ -50,7 +50,7 @@ public class MedicamentoController {
         if (nombre.isEmpty() || nombre==null) {
 			pageMedicamento = medicamentoService.findAll(pageable);
 		} else {
-			pageMedicamento = medicamentoService.findAllByNombreComercial(pageable, nombre.toUpperCase());
+			pageMedicamento = medicamentoService.findAllByNombreComercialContainingOrNombreGenericoContaining(pageable, nombre.toUpperCase(),nombre.toUpperCase());
 		}
     	return pageMedicamento;
     }

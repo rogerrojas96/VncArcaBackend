@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 
 public interface MedicamentoService {
 	public Page<Medicamento> findAll(Pageable pageable);
-	public Page<Medicamento> findAllByNombreComercial(Pageable pageable,String nombre);
+	public Page<Medicamento> findAllByNombreComercialContainingOrNombreGenericoContaining(Pageable pageable,String nombreComercial,String nombreGenerico);
 	// METODO PARA GUARDAR LOS DATOS DE UN Medicamento
 	public Medicamento save(Medicamento medicamento);
 	// METODO PARA OBTENER LOS DATOS DE UN Medicamento POR ID

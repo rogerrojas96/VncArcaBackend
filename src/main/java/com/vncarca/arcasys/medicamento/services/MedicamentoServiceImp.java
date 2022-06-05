@@ -33,8 +33,8 @@ public class MedicamentoServiceImp implements MedicamentoService{
 		medicamentoRepository.deleteById(id);
 	}
 	@Override
-	public Page<Medicamento> findAllByNombreComercial(Pageable pageable, String nombre) {
-		return medicamentoRepository.findAllByNombreComercial(pageable,nombre);
+	public Page<Medicamento> findAllByNombreComercialContainingOrNombreGenericoContaining(Pageable pageable, String nombreComercial,String nombreGenerico) {
+		return medicamentoRepository.findAllByNombreComercialContainingOrNombreGenericoContaining(pageable,nombreComercial,nombreGenerico);
 	}
 
 }

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MedicamentoRepository extends JpaRepository<Medicamento, Long>{
 	public Page<Medicamento> findAll(Pageable pageable);
-	public Page<Medicamento> findAllByNombreComercial(Pageable pageable,String nombre);
+	public Page<Medicamento> findAllByNombreComercialContainingOrNombreGenericoContaining(Pageable pageable,String nombreComercial,String nombreGenerico);
 
 }
