@@ -1,5 +1,6 @@
 package com.vncarca.arcasys.medicamento.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Medicamentos", description = "Controlador para CRUD de medicamentos")
 @RestController
-@RequestMapping("/api/medicamentos")
+@RequestMapping("/medicamentos")
 
 public class MedicamentoController {
 	@Autowired
@@ -54,9 +55,19 @@ public class MedicamentoController {
 		}
     	return pageMedicamento;
     }
+    // @GetMapping("/")
+	// public List<Medicamento> getMedicamentos(){
+	// 	 return medicamentoService.findAll();
+	// }
+
     @GetMapping("/")
-	public List<Medicamento> getMedicamentos(){
+	public List<Medicamento> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "") String nombre ){
+
+        if (nombre.isEmpty() || nombre==null) {
 		 return medicamentoService.findAll();
+		} else {
+		 return medicamentoService.findByNombreComercialContainingOrNombreGenericoContaining(nombre.toUpperCase(),nombre.toUpperCase());
+		}
 	}
 
     @PostMapping("/")

@@ -43,5 +43,10 @@ public class MedicamentoServiceImp implements MedicamentoService{
 	public List<Medicamento> findAll() {
 		return medicamentoRepository.findAll();
 	}
+	@Override
+	public List<Medicamento> findByNombreComercialContainingOrNombreGenericoContaining(String nombreComercial,
+			String nombreGenerico) {
+		return medicamentoRepository.findByNombreComercialContainingOrNombreGenericoContaining(nombreComercial, nombreGenerico);
+	}
 
 }
