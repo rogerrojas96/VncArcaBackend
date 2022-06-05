@@ -1,12 +1,15 @@
 package com.vncarca.arcasys.medicamento.services;
 
-import com.vncarca.arcasys.medicamento.model.Medicamento;
+import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.vncarca.arcasys.medicamento.model.Medicamento;
 
 public interface MedicamentoService {
 	public Page<Medicamento> findAll(Pageable pageable);
+	public List<Medicamento> findAll();
 	public Page<Medicamento> findAllByNombreComercialContainingOrNombreGenericoContaining(Pageable pageable,String nombreComercial,String nombreGenerico);
 	// METODO PARA GUARDAR LOS DATOS DE UN Medicamento
 	public Medicamento save(Medicamento medicamento);

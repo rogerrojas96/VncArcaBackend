@@ -54,6 +54,10 @@ public class MedicamentoController {
 		}
     	return pageMedicamento;
     }
+    @GetMapping("/")
+	public List<Medicamento> getMedicamentos(){
+		 return medicamentoService.findAll();
+	}
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
