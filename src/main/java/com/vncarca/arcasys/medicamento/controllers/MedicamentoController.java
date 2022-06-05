@@ -55,13 +55,13 @@ public class MedicamentoController {
 		}
     	return pageMedicamento;
     }
-    // @GetMapping("/")
-	// public List<Medicamento> getMedicamentos(){
-	// 	 return medicamentoService.findAll();
-	// }
-
     @GetMapping("/")
-	public List<Medicamento> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "") String nombre ){
+	public List<Medicamento> getMedicamentos(){
+		 return medicamentoService.findAll();
+	}
+
+    @GetMapping("/find")
+	public List<Medicamento> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "",name = "nombre") String nombre ){
 
         if (nombre.isEmpty() || nombre==null) {
 		 return medicamentoService.findAll();
