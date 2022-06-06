@@ -35,7 +35,7 @@ public class TokenProviderImpl implements TokenProvider {
         Date now = new Date();
         Long duration = now.getTime() + JWT_EXPIRATION;
         Date expiryDate = new Date(duration);
-        
+
         String token = Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(now).claim(AUTHORITIES_KEY, authorities)
@@ -61,18 +61,23 @@ public class TokenProviderImpl implements TokenProvider {
     @Override
     public boolean validateToken(String token) {
         try {
+
             Jwts.parser().setSigningKey(JWT_SECRET).parse(token);
             return true;
         } catch (SignatureException ex) {
             ex.printStackTrace();
+            System.out.println("SignatureException");
         } catch (MalformedJwtException ex) {
             ex.printStackTrace();
+            System.out.println("MalformedJwtException");
         } catch (ExpiredJwtException ex) {
-            ex.printStackTrace();
+             throw new ExpiredJwtException(null, null, "JWT Expirado", ex.getCause());
         } catch (UnsupportedJwtException ex) {
             ex.printStackTrace();
+            System.out.println("UnsupportedJwtException");
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
+            System.out.println("No se puede obtener el token JWT");
         }
         return false;
     }

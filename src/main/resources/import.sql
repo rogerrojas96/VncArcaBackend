@@ -8,6 +8,7 @@ insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo)
 	--Persona para ser Veterinarios
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661525','Estiven','Quishpi','Av Americas','0453536','0980385998','veterianario@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661526','Christian','Torres','9 de octubre','0453537','0980385999','veterianario2@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661527','Daniel','Rivera','27 de febrero','0453538','0980385100','user@gmail.com');
 
 --Veterinarios
 insert into veterinarios (id,cargo)values(1,'Principal')
@@ -19,10 +20,15 @@ insert into veterinarios_personas (veterinario_id, persona_id)values(2,3)
 
 --Usuarios
 --pass "admin"
-INSERT INTO usuarios (email,enabled,password,username,persona_id) VALUES ('admin@gmail.com',True,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin',1);
+INSERT INTO usuarios (enabled,password,username,persona_id) VALUES (True,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','admin',1);
+INSERT INTO usuarios (enabled,password,username,persona_id) VALUES (True,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','veterinario1',2);
+INSERT INTO usuarios (enabled,password,username,persona_id) VALUES (True,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','veterinario2',3);
+INSERT INTO usuarios (enabled,password,username,persona_id) VALUES (False,'$2a$10$9s26MbY0/Zl3aXQaAqrH0ObKHHDAq6NplfnBBH77510c1juIvpR8m','user',4);
 
 --Usuarios y rol
 INSERT INTO usuarios_roles VALUES (1,1);
+INSERT INTO usuarios_roles VALUES (4,2);
+INSERT INTO usuarios_roles VALUES (2,3);
 
 
 --Vacunas

@@ -14,6 +14,8 @@ import com.vncarca.authsys.security.service.CustomUserDetailsServiceImpl;
 import com.vncarca.authsys.security.service.TokenProvider;
 import com.vncarca.authsys.security.util.SecurityCipher;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,35 +50,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         try {
             String jwt = getJwtToken(httpServletRequest, false);
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-
                 String username = tokenProvider.getUsernameFromToken(jwt);
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
-
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
         } catch (Exception e) {
-            logger.error("Erroral crear token: {}", (Object[]) e.getStackTrace());
-
-            // ErrorResponse errorResponse = new
-            // ErrorResponse(HttpStatus.BAD_REQUEST,"Credenciales vacias");
-            // httpServletResponse.getWriter().write(convertObjectToJson(errorResponse));
+            httpServletRequest.setAttribute(e.getClass().getCanonicalName(), e.getMessage());
+            logger.error("Error, token: {}", e.getMessage());
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
-    }
-
-    public String convertObjectToJson(Object object) throws JsonProcessingException {
-        if (object == null) {
-            return null;
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
