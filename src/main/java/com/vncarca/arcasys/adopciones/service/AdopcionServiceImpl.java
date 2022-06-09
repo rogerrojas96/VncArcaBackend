@@ -90,7 +90,7 @@ public class AdopcionServiceImpl implements IAdopcionService{
         Animal animal = null;
 
         if (adopcionRepository.existsById(idAdopcion)){
-            adopcion = adopcionRepository.getById(idAdopcion);
+            adopcion = adopcionRepository.findById(idAdopcion).get();
             animal = adopcion.getAnimal();
             if(idAnimal != animal.getId() && !adopcionRepository.existsByAnimal(
                 animalRepository.findById(idAnimal).orElse(null))){

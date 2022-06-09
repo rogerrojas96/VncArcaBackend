@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -24,11 +25,20 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<Object> handleExpiredJwtExceptions(ExpiredJwtException e) {
+	HttpStatus status = HttpStatus.UNAUTHORIZED;
+	ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
+	return new ResponseEntity<Object>(errorResponse,
+	status);
+	}
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -136,11 +146,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
 	status);
 	}
+	@ExceptionHandler(DisabledException.class)
+	public ResponseEntity<Object> handleDisabledExceptionExceptions(Exception e) {
+	HttpStatus status = HttpStatus.UNAUTHORIZED;
+	return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
+	status);
+	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleIllegalArgumentExceptions(Exception e) {
 	HttpStatus status = HttpStatus.BAD_REQUEST;
-	ErrorResponses errorResponse = new ErrorResponses(HttpStatus.BAD_REQUEST, null, e.getMessage());
+	ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
 	return new ResponseEntity<Object>(errorResponse,
 	status);
 	}

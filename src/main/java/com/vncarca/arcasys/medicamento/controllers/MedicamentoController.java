@@ -1,5 +1,6 @@
 package com.vncarca.arcasys.medicamento.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,22 +35,41 @@ import io.swagger.annotations.Api;
 
 @Api(tags = "Medicamentos", description = "Controlador para CRUD de medicamentos")
 @RestController
-@RequestMapping("/api/medicamentos")
+@RequestMapping("/medicamentos")
 
 public class MedicamentoController {
 	@Autowired
 	MedicamentoService medicamentoService;
-	  
+
     @ResponseBody
     @GetMapping("/page")
 	public Page<Medicamento> getMedicamentos(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size){
+			@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String nombre){
     	Pageable pageable = PageRequest.of(page, size);
-    	Page<Medicamento> pageMedicamentos = medicamentoService.findAll(pageable);
-    	return pageMedicamentos;
-    	
+        Page<Medicamento> pageMedicamento=null;
+
+        if (nombre.isEmpty() || nombre==null) {
+			pageMedicamento = medicamentoService.findAll(pageable);
+		} else {
+			pageMedicamento = medicamentoService.findAllByNombreComercialContainingOrNombreGenericoContaining(pageable, nombre.toUpperCase(),nombre.toUpperCase());
+		}
+    	return pageMedicamento;
     }
-    
+    @GetMapping("/")
+	public List<Medicamento> getMedicamentos(){
+		 return medicamentoService.findAll();
+	}
+
+    @GetMapping("/find")
+	public List<Medicamento> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "",name = "nombre") String nombre ){
+
+        if (nombre.isEmpty() || nombre==null) {
+		 return medicamentoService.findAll();
+		} else {
+		 return medicamentoService.findByNombreComercialContainingOrNombreGenericoContaining(nombre.toUpperCase(),nombre.toUpperCase());
+		}
+	}
+
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Valid @RequestBody Medicamento medicamento, BindingResult result){
@@ -61,7 +81,7 @@ public class MedicamentoController {
             }).collect(Collectors.toList());
             response.put("errors", errors);
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
-    
+
     	}
         try {
             newMedicamento = medicamentoService.save(medicamento);
@@ -76,7 +96,7 @@ public class MedicamentoController {
     }
 
 
-    
+
 
 
     // EndPoint Actualizar Medicamento
@@ -155,8 +175,7 @@ public class MedicamentoController {
 
 }
 
-    
-    
-    
-    
-    
+
+
+
+

@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +41,7 @@ public class PersonaController {
 	PersonaService personaService;
 
 	// EndPoint listar personas por pagina
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	@GetMapping("/page")
 	public Page<Persona> getPersonas(@RequestParam(required = true) Integer page,
@@ -49,12 +51,14 @@ public class PersonaController {
 		return pagePersonas;
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
 	public List<Persona> getPersonas(){
 		 return personaService.findAll();
 	}
 
 	// EndPoint registrar Persona
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Persona persona, BindingResult result) {
@@ -81,6 +85,7 @@ public class PersonaController {
 	}
 
 	// EndPoint Actualizar Persona
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody Persona persona, BindingResult result,
@@ -118,6 +123,7 @@ public class PersonaController {
 	}
 
 	// EndPoint Eliminar Persona
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -134,6 +140,7 @@ public class PersonaController {
 	}
 
 	// EndPoint Buscar por ID
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
