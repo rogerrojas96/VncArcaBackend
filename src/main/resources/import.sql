@@ -8,6 +8,12 @@ insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo)
 	--Persona para ser Veterinarios
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661525','Estiven','Quishpi','Av Americas','0453536','0980385998','veterianario@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661526','Christian','Torres','9 de octubre','0453537','0980385999','veterianario2@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0205661525','Rubén','Tacuri','Av Americas','0453536','0980385998','veterianario3@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0305661526','Marco','Santander','9 de octubre','0453537','0980385999','veterianario4@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0405661525','Martha','Palacios','Av Americas','0453536','0980385998','veterianario5@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0505661526','María','Urgiles','9 de octubre','0453537','0980385999','veterianario6@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0605661525','Joseline','Pezantes','Av Americas','0453536','0980385998','veterianario7@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0705661526','Sthefany','Argudo','9 de octubre','0453537','0980385999','veterianario8@gmail.com');
 
 --Veterinarios
 insert into veterinarios (id,cargo)values(1,'Principal')
@@ -84,3 +90,12 @@ insert into servicios(descripcion, nombre, precio) values('Esterilizacion de ani
  insert into detalles_citas(id_cita, id_servicio) values(3, 3)
  insert into detalles_citas(id_cita, id_servicio) values(4, 5)
  insert into detalles_citas(id_cita, id_servicio) values(5, 4)
+
+
+ --Donaciones
+ insert into donaciones(cantidad, descripcion, id_persona) values(100.50, "Donacion de prueba", 3);
+ insert into donaciones(cantidad, descripcion, id_persona) values(200.60, "Donacion de prueba", 3);
+ insert into donaciones(cantidad, descripcion, id_persona) values(50.70, "Donacion de prueba", 4);
+ insert into donaciones(cantidad, descripcion, id_persona) values(300.80, "Donacion de prueba", 5);
+ insert into donaciones(cantidad, descripcion, id_persona) values(30.90, "Donacion de prueba", 4);
+ insert into donaciones(cantidad, descripcion, id_persona) values(150.00, "Donacion de prueba", 2);
