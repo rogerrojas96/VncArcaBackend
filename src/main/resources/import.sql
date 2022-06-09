@@ -84,3 +84,11 @@ insert into servicios(descripcion, nombre, precio) values('Esterilizacion de ani
  insert into detalles_citas(id_cita, id_servicio) values(3, 3)
  insert into detalles_citas(id_cita, id_servicio) values(4, 5)
  insert into detalles_citas(id_cita, id_servicio) values(5, 4)
+
+ --Medicamento
+ INSERT INTO medicamento (id, nombre_comercial, nombre_generico, cantidad, precio) VALUES ( 1, 'vinamina B', 'vb', 4, 0.30)
+ INSERT INTO medicamento (id, nombre_comercial, nombre_generico, cantidad, precio) VALUES ( 3, 'vinamina c', 'vc', 4, 0.30)
+
+ --Medicacion
+ INSERT INTO medicacion (id, descripcion_md, dosis, frecuencia, duracion, fecha_caducidad, id_medicamento) VALUES ( 1, 'vitamina para los huesos', '2', 'despues del almuerzo', '15 dias', '2022-06-02 16:30:00', 1 )
+ INSERT INTO medicacion (id, descripcion_md, dosis, frecuencia, duracion, fecha_caducidad, id_medicamento) VALUES ( 2, 'vitamina para el estomago', '20', 'despues del almuerzo', '20 dias', '2022-06-02 16:30:00', 2 )
