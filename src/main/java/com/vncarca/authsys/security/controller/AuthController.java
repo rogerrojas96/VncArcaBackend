@@ -3,7 +3,7 @@ package com.vncarca.authsys.security.controller;
 import javax.validation.Valid;
 
 import com.vncarca.authsys.security.dto.LoginRequest;
-import com.vncarca.authsys.security.service.UserService;
+import com.vncarca.authsys.security.service.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,16 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private AuthService userService;
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest
-            
     ) throws Exception{
-        
         return userService.login(loginRequest );
     }
-
-    
-
 }

@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 public class CustomUserDetails implements UserDetails {
-    
+
     private final Usuario usuario;
 
     @Override

@@ -16,12 +16,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.authsys.security.dto.UserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,17 +32,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @NotNull
     @Column(length = 50, unique = true, nullable = false)
     private String username;
 
-    @Email
-    @Column(length = 100, unique = true, nullable = false)
-    private String email;
-
+    @NotBlank
+    @NotNull
     @Column(length = 200, nullable = false)
     private String password;
 
@@ -59,11 +61,4 @@ public class Usuario implements Serializable {
     @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true), uniqueConstraints = {
             @UniqueConstraint(columnNames = { "usuario_id", "rol_id" }) })
     public Set<Rol> roles;
-
-    public UserDto toUserDto() {
-        UserDto userDto = new UserDto();
-        userDto.setEmail(this.email);
-        userDto.setId(this.id);
-        return userDto;
-    }
 }

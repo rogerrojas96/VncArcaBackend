@@ -14,20 +14,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
     private Logger logger = LoggerFactory.getLogger(CustomUserDetailsServiceImpl.class);
-	
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Usuario usuario = userRepository.findByusernameOrEmail(s,s).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el email: " + s));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario usuario = userRepository.findByusername(username).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el email: " + username));
         if(usuario == null) {
-			logger.error("Error en el login: no existe el usuario '"+s+"' en el sistema!");
-			throw new UsernameNotFoundException("Error en el login: no existe el usuario '"+s+"' en el sistema!");
+			logger.error("Error en el login: no existe el usuario '"+username+"' en el sistema!");
+			throw new UsernameNotFoundException("Error en el login: no existe el usuario '"+username+"' en el sistema!");
 		}
-        
+
         return new CustomUserDetails(usuario);
     }
-    
+
 }
 

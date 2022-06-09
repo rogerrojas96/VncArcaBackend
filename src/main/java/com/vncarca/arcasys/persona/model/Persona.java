@@ -8,7 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,24 +30,42 @@ public class Persona implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+    @Size(min = 10, max = 10)
+	@NotBlank
+	@NotNull
+	@Column(nullable = false,length = 10, unique = true)
 	private String cedula;
 
+	@NotBlank
+	@NotNull
 	@Column(nullable = false)
 	private String nombre;
 
+	@NotBlank
+	@NotNull
 	@Column(nullable = false)
 	private String apellidos;
 
+	@NotBlank
+	@NotNull
 	@Column(nullable = false)
 	private String direccion;
 
-	@Column(nullable = false)
+
+    @Size(min = 7, max = 9)
+	@NotBlank
+	@NotNull
+	@Column(nullable = false,length = 9)
 	private String telefono;
 
-	@Column(nullable = false)
+    @Size(min = 9, max = 10)
+	@NotBlank
+	@Column(nullable = false ,length = 10)
 	private String celular;
 
-	@Column(nullable = false, unique = true)
-	private String correo;
+	@NotBlank
+	@NotNull
+	@Email
+    @Column(length = 100, unique = true, nullable = false)
+    private String correo;
 }
