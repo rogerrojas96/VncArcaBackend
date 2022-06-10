@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PersonaRepository extends JpaRepository<Persona,Long> {
-	public Page<Persona> findAll(Pageable pageable);
+public interface PersonaRepository extends JpaRepository<Persona, Long> {
 	public boolean existsByCedula(String cedula);
+
 	public Optional<Persona> findByCedula(String cedula);
 }

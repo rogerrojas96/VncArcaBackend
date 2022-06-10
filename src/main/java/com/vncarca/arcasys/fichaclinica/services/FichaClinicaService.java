@@ -18,6 +18,8 @@ public interface FichaClinicaService {
 	// public List<FichaClinicaDTO> findAllDTO();
 	public List<FichaClinica> findAll();
 
+	public List<FichaClinicaDTO> findByanimalId(Long id);
+
 	public FichaClinica findById(Long id);
 
 	public void delete(Long id);

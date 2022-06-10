@@ -66,7 +66,7 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 		FichaClinicaDTO fichaClinicaDTO = new FichaClinicaDTO();
 		fichaClinicaDTO.setId(fichaClinica.getId());
 		fichaClinicaDTO.setAlimentacion(fichaClinica.getAlimentacion());
-		fichaClinicaDTO.setAnimal(AnimalToDTO(fichaClinica.getAnimal()));
+		// fichaClinicaDTO.setAnimal(AnimalToDTO(fichaClinica.getAnimal()));
 		fichaClinicaDTO.setConjuntiva(fichaClinica.getConjuntiva());
 		fichaClinicaDTO.setCosto(fichaClinica.getCosto());
 		fichaClinicaDTO.setDiagnosticoDiferencial(fichaClinica.getDiagnosticoDiferencial());
@@ -109,6 +109,12 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 		animalDto.setLugarEstancia(animal.getLugarEstancia());
 		animalDto.setSexo(animal.getSexo());
 		return animalDto;
+	}
+
+	@Override
+	public List<FichaClinicaDTO> findByanimalId(Long id) {
+
+		return fichaClinicaRepository.findByanimalId(id).stream().map(this::fichaClinicaToDTO).collect(Collectors.toList());
 	}
 
 }
