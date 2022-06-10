@@ -28,7 +28,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(
-                        Arrays.asList(apiKey()))
+                        List.of(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.vncarca"))
                 .paths(PathSelectors.any())

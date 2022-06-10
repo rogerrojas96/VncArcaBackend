@@ -3,22 +3,27 @@ package com.vncarca.arcasys.fichaclinica.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,12 +72,6 @@ public class FichaClinica implements Serializable {
 	@Column(nullable = false)
 	private String mucosas;
 
-	// @Column(nullable = false)
-	// private String vacunas;
-
-	// @Column(nullable = false)
-	// private String desparacitaciones;
-
 	@Column(nullable = false)
 	private Boolean esterilizacion;
 
@@ -82,8 +81,15 @@ public class FichaClinica implements Serializable {
 	@Column(nullable = false)
 	private String pronostico;
 
-	// @Column(nullable = false)
-	// private String examenesSolicitados;
+	/*
+	 * El usuario podrá clasificar a los animales rescatados (pacientes internos o
+	 * externos)
+	 */
+	@Column(nullable = false)
+	private String tipoPaciente;
+
+	@Column(nullable = false)
+	private String examenes_solicitados;
 
 	@Column(nullable = false)
 	private String diagnosticoDiferencial;
@@ -92,14 +98,14 @@ public class FichaClinica implements Serializable {
 	private float costo;
 
 	@NotNull
-	@ManyToOne()
+	@ManyToOne
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private Veterinario veterinario;
 
-	
-	// @JsonBackReference
-	// @NotNull
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	// private Animal animal;
+	@NotNull
+	@NotBlank
+	@ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "animal_id", nullable = false, insertable = false, updatable = false)
+	private Animal animal;
+
 }
