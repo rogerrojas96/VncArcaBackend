@@ -3,6 +3,7 @@ package com.vncarca.arcasys.animal.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -36,121 +37,122 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("/animales")
 public class AnimalController {
-    @Autowired
-    AnimalService animalService;
+	@Autowired
+	AnimalService animalService;
 
-    // EndPoint listar animales
-    @ResponseBody
-    @GetMapping("/page")
-    public Page<Animal> getAnimals(@RequestParam(required = true) Integer page,
-            @RequestParam(required = true) Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Animal> pageAnimals = animalService.findAll(pageable);
-        return pageAnimals;
-    }
-    @GetMapping("/")
-	public List<Animal> getAnimales(){
-		 return animalService.findAll();
+	// EndPoint listar animales
+	@ResponseBody
+	@GetMapping("/page")
+	public Page<Animal> getAnimals(@RequestParam(required = true) Integer page,
+			@RequestParam(required = true) Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Animal> pageAnimals = animalService.findAll(pageable);
+		return pageAnimals;
 	}
 
-    // EndPoint registrar Animal
-    @PostMapping("/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Valid @RequestBody Animal animal, BindingResult result) {
-        Map<String, Object> response = new HashMap<>();
-        Animal newAnimal = null;
+	@GetMapping("/")
+	public List<Animal> getAnimales() {
+		return animalService.findAll();
+	}
 
-        if (result.hasErrors()) {
-            List<String> errors = result.getFieldErrors().stream().map(err -> {
-                return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
-            }).collect(Collectors.toList());
-            response.put("errors", errors);
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
-        }
-        try {
-            newAnimal = animalService.save(animal);
-        } catch (DataAccessException e) {
-            response.put("mensaje", "Error al guardar Animal en el servidor");
-            response.put("error", e.getMostSpecificCause().getMessage());
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        response.put("mensaje", "Animal guardada ani exito");
-        response.put("animal", newAnimal);
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
-    }
+	// EndPoint registrar Animal
+	@PostMapping("/")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> create(@Valid @RequestBody Animal animal, BindingResult result) {
+		Map<String, Object> response = new HashMap<>();
+		Animal newAnimal = null;
 
-    // EndPoint Actualizar Animal
-    @ResponseBody
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Animal animal, BindingResult result,
-            @PathVariable Long id) {
-        Animal ani = animalService.findById(id);
+		if (result.hasErrors()) {
+			List<String> errors = result.getFieldErrors().stream().map(err -> {
+				return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
+			}).collect(Collectors.toList());
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
+		try {
+			newAnimal = animalService.save(animal);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al guardar Animal en el servidor");
+			response.put("error", e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put("mensaje", "Animal guardada ani exito");
+		response.put("animal", newAnimal);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+	}
 
-        Animal animalUpdate = null;
+	// EndPoint Actualizar Animal
+	@ResponseBody
+	@PutMapping("/{id}")
+	public ResponseEntity<?> update(@Valid @RequestBody Animal animal, BindingResult result,
+			@PathVariable Long id) {
+		Animal ani = animalService.findById(id);
+		Animal animalUpdate = null;
+		if (!Objects.equals(id, animal.getId())) {
+			throw new IllegalArgumentException("IDs no coinciden");
+		}
+		Map<String, Object> response = new HashMap<>();
+		if (result.hasErrors()) {
+			List<String> errors = result.getFieldErrors().stream().map(err -> {
+				return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
+			}).collect(Collectors.toList());
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
 
-        Map<String, Object> response = new HashMap<>();
-        if (result.hasErrors()) {
-            List<String> errors = result.getFieldErrors().stream().map(err -> {
-                return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
-            }).collect(Collectors.toList());
-            response.put("errors", errors);
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
-        }
+		if (ani == null) {
+			response.put("mensaje", "Error al actualizar, el Animal ani ID: ".concat(id.toString())
+					.concat(" no existe en el servidor"));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		try {
+			ani = animal;
+			animalUpdate = animalService.save(ani);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al actualizar el Animal en el servidor");
+			response.put("error", e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put("mensaje", "Animal actualizada ani exito");
+		response.put("animal", animalUpdate);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+	}
 
-        if (ani == null) {
-            response.put("mensaje", "Error al actualizar, el Animal ani ID: ".concat(id.toString())
-                    .concat(" no existe en el servidor"));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-        }
-        try {
-            ani = animal;
+	// EndPoint Eliminar Animal
+	@ResponseBody
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			animalService.delete(id);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error al eliminar el Animal en el servidor");
+			response.put("error", e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put("mensaje", "Animal eliminado con exito");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+	}
 
-            animalUpdate = animalService.save(ani);
-        } catch (DataAccessException e) {
-            response.put("mensaje", "Error al actualizar el Animal en el servidor");
-            response.put("error", e.getMostSpecificCause().getMessage());
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        response.put("mensaje", "Animal actualizada ani exito");
-        response.put("animal", animalUpdate);
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
-    }
+	// EndPoint Buscar por ID
+	@ResponseBody
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getById(@PathVariable Long id) {
+		Animal Animal = null;
+		Map<String, Object> response = new HashMap<>();
 
-    // EndPoint Eliminar Animal
-    @ResponseBody
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            animalService.delete(id);
-        } catch (DataAccessException e) {
-            response.put("mensaje", "Error al eliminar el Animal en el servidor");
-            response.put("error", e.getMostSpecificCause().getMessage());
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        response.put("mensaje", "Animal eliminado con exito");
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-    }
-
-    // EndPoint Buscar por ID
-    @ResponseBody
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        Animal Animal = null;
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            Animal = animalService.findById(id);
-        } catch (DataAccessException e) {
-            response.put("mensaje", "Error en la consulta de Animal en el servidor");
-            response.put("error", e.getMostSpecificCause().getMessage());
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if (Animal == null) {
-            response.put("mensaje", "El Animal con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Animal>(Animal, HttpStatus.OK);
-    }
+		try {
+			Animal = animalService.findById(id);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error en la consulta de Animal en el servidor");
+			response.put("error", e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		if (Animal == null) {
+			response.put("mensaje", "El Animal con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Animal>(Animal, HttpStatus.OK);
+	}
 
 }

@@ -2,7 +2,10 @@ package com.vncarca.arcasys.veterinario.services;
 
 import java.util.List;
 
+import com.vncarca.arcasys.persona.model.Persona;
+import com.vncarca.arcasys.persona.model.PersonaDto;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
+import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 import com.vncarca.arcasys.veterinario.repository.VeterinarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +48,20 @@ public class VeterinarioServiceImp implements VeterinarioService {
 		veterinarioRepository.deleteById(id);
 	}
 
+	private VeterinarioDTO convertVeterinarioDTO(Veterinario veterinario) {
+		VeterinarioDTO veterinarioDTO = new VeterinarioDTO();
+		veterinarioDTO.setId(veterinario.getId());
+		veterinarioDTO.setCargo(veterinario.getCargo());
+		veterinarioDTO.setNombreCompleto(veterinario.getPersona().toString());
+		veterinarioDTO.setCedula(veterinario.getPersona().getCedula());
+		return veterinarioDTO;
+	}
+
+	private PersonaDto ConvertPersonaDTO(Persona persona) {
+		PersonaDto personaDto = new PersonaDto();
+		personaDto.setApellidos(persona.getApellidos());
+		personaDto.setCedula(persona.getCedula());
+		personaDto.setNombre(persona.getNombre());
+		return personaDto;
+	}
 }

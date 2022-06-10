@@ -1,8 +1,11 @@
 package com.vncarca.arcasys.animal.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,75 +19,117 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@Entity
+@Data
+@Entity(name = "Animales")
 @Table(name = "animales")
 public class Animal implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String nombre;
+	@NotNull
+	@NotBlank
+	@Column(nullable = false)
+	private String nombre;
 
-    @Column(nullable = false)
-    private String especie;
+	@NotBlank
+	@NotNull
+	@Column(nullable = false)
+	private String especie;
 
-    @Column(nullable = false)
-    private String caracteristicas;
+	@NotBlank
+	@NotNull
+	@Column(nullable = false)
+	private String colorCaracteristicas;
 
-    @Column(nullable = false)
-    private String sexo;
+	@NotBlank
+	@NotNull
+	@Column(nullable = false)
+	private String sexo;
 
-    @Column(nullable = false)
-    private String color;
+	@Positive
+	@NotNull
+	@Column(nullable = false)
+	private int edad;
 
-    @Column(nullable = true)
-    private int edad;
+	@NotNull
+	@NotBlank
+	@Column(nullable = false)
+	private String raza;
 
-    @Column(nullable = false)
-    private String raza;
+	@NotBlank
+	@NotNull
+	private String tamanyo;
 
-    @Column(nullable = true)
-    private String tamanyo;
+	/*
+	 * El usuario podrá registrar el lugar en donde se encuentran los animales.
+	 * (Clínica, Refugio)
+	 */
+	@NotNull
+	@NotBlank
+	@Column(nullable = false)
+	private String lugarEstancia;
 
-    @Column(nullable = false)
-    private float peso;
+	/*
+	 * El usuario podrá registrar los animales que son rescatados ya sea por
+	 * llamadas particulares o por el 911
+	 */
+	@NotBlank
+	@NotNull
+	private String procedencia;
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
-    private Date fechaNacimiento;
+	@NotBlank
+	@NotNull
+	@Column(nullable = false)
+	private String observacionesProcedencia;
 
-    // Por momento solo links de imágenes
-    @Column(nullable = true)
-    private String foto;
-   
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "animal_id")
-	private List<FichaClinica> fichasClinicas;
+	@NotNull
+	@NotBlank
+	@Column(nullable = false)
+	private float peso;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "animal_id")
-	private List<CarnetVacunacion> historialVacunaciones;
+	@NotNull
+	@NotBlank
+	@Column(nullable = true)
+	private String foto;
+
+	@NotNull
+	@NotBlank
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
+	private Date fechaNacimiento;
+
+	// // @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal", orphanRemoval =
+	// true, fetch = FetchType.LAZY, targetEntity = FichaClinica.class)
+	// private Set<FichaClinica> fichasClinicas;
+
+	// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	// @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval
+	// = true, targetEntity = CarnetVacunacion.class)
+	// @JoinColumn(name = "animal_id")
+	// private Set<CarnetVacunacion> historialVacunaciones;
+
 }
