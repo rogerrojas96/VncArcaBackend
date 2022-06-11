@@ -4,23 +4,24 @@ package com.vncarca.arcasys.tratamiento.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vncarca.arcasys.medicacion.model.Medicacion;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -47,23 +48,25 @@ public class Tratamiento  implements Serializable{
 	@Column(nullable = false)
 	private Date fechaAplicacion;
 
-    @Column(nullable = false)
-	private String descripcion_tr;
+	@NotBlank
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "text")
+	private String descripcion;
 
-    @Column(nullable = false)
+	@NotBlank
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "text")
 	private String indicaciones;
 
+	@NotBlank
     @Column(nullable = false)
 	private String estado;
 
     @NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	private FichaClinica id_FichaClinica;
-
-    @NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	private Medicacion medicacion;
-
+	@JoinColumn(name="id_ficha_clinica")
+	private FichaClinica idFichaClinica;
 }

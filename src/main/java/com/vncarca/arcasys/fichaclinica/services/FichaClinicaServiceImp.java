@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
+import com.vncarca.arcasys.tratamiento.model.Tratamiento;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,5 +44,6 @@ FichaClinicaRepository fichaClinicaRepository;
 		
 		fichaClinicaRepository.deleteById(id);
 	}
+	
 	
 }

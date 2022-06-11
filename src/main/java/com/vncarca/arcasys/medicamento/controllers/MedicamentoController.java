@@ -55,11 +55,14 @@ public class MedicamentoController {
 		}
     	return pageMedicamento;
     }
+
+    // Trae a todos los medicamentos
     @GetMapping("/")
 	public List<Medicamento> getMedicamentos(){
 		 return medicamentoService.findAll();
 	}
 
+    //Buscar medicamento por nombre
     @GetMapping("/find")
 	public List<Medicamento> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "",name = "nombre") String nombre ){
 
@@ -70,6 +73,7 @@ public class MedicamentoController {
 		}
 	}
 
+    //EndPoint crear tratamiento
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Valid @RequestBody Medicamento medicamento, BindingResult result){

@@ -8,8 +8,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-
+import com.vncarca.arcasys.fichaclinica.services.FichaClinicaService;
 import com.vncarca.arcasys.tratamiento.model.Tratamiento;
+import com.vncarca.arcasys.tratamiento.model.TratamientoDto;
 import com.vncarca.arcasys.tratamiento.services.TratamientoService;
 
 
@@ -42,7 +43,8 @@ import io.swagger.annotations.Api;
 public class TratamientoController {
     @Autowired
 	TratamientoService tratamientoService;
-
+	@Autowired
+	FichaClinicaService fichaClinicaService;
 
     
 	 // EndPoint listar Tratamientos
@@ -60,9 +62,9 @@ public class TratamientoController {
 	 }
  
 	 // EndPoint registrar Tratamiento
-	 @PostMapping("/")
+	 @PostMapping("/{idFicha}")
 	 @ResponseStatus(HttpStatus.CREATED)
-	 public ResponseEntity<?> create(@Valid @RequestBody Tratamiento tratamiento, BindingResult result) {
+	 public ResponseEntity<?> create(@Valid @RequestBody TratamientoDto tratamientoDto, BindingResult result, @PathVariable Long idFicha) {
 		 Map<String, Object> response = new HashMap<>();
 		 Tratamiento newTratamiento = null;
  
@@ -74,24 +76,26 @@ public class TratamientoController {
 			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		 }
 		 try {
-			 newTratamiento = tratamientoService.save(tratamiento);
+			 newTratamiento = tratamientoService.save(tratamientoDto, idFicha);
+			 if(newTratamiento !=null){
+				response.put("mensaje", "Creado con exito");
+				response.put("Tratamiento", newTratamiento);
+				return new ResponseEntity<>(response, HttpStatus.CREATED);
+			 }
+			 response.put("mensaje", "No existe una ficha clinica con id: "+ idFicha.toString());
+			 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 		 } catch (DataAccessException e) {
 			 response.put("mensaje", "Error al guardar Tratamiento en el servidor");
 			 response.put("error", e.getMostSpecificCause().getMessage());
 			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		 }
-		 response.put("mensaje", "Tratamiento guardada fichaCli exito");
-		 response.put("tratamiento: ", newTratamiento);
-		 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	 }
  
 	 // EndPoint Actualizar Tratamiento
 	 @ResponseBody
-	 @PutMapping("/{id}")
-	 public ResponseEntity<?> update(@Valid @RequestBody Tratamiento tratamiento, BindingResult result,
-			 @PathVariable Long id) {
-		 Tratamiento tratamiento2 = tratamientoService.findById(id);
- 
+	 @PutMapping("/{idTratamiento}/{idFicha}")
+	 public ResponseEntity<?> update(@Valid @RequestBody TratamientoDto tratamientoDto, BindingResult result,
+			 @PathVariable Long idTratamiento, @PathVariable Long idFicha) {
 		 Tratamiento tratamientoUpdate = null;
  
 		 Map<String, Object> response = new HashMap<>();
@@ -102,24 +106,21 @@ public class TratamientoController {
 			 response.put("errors", errors);
 			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		 }
- 
-		 if (tratamiento2 == null) {
-			 response.put("mensaje", "Error al actualizar, el Tratamiento tratamiento2 ID: ".concat(id.toString())
-					 .concat(" no existe en el servidor"));
-			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		 }
 		 try {
-			 tratamiento2 = tratamiento;
- 
-			 tratamientoUpdate = tratamientoService.save(tratamiento2);
+			 tratamientoUpdate = tratamientoService.update(tratamientoDto, idTratamiento, idFicha);
+			if(tratamientoUpdate != null){
+				response.put("mensaje", "Actualizado con exito");
+			  	response.put("Tratamiento", tratamientoUpdate);
+			 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+			}else{
+				response.put("Mensaje", "Id de tratamiento o ficha clinica incorrectos");
+			 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 		 } catch (DataAccessException e) {
 			 response.put("mensaje", "Error al actualizar el Tratamiento en el servidor");
 			 response.put("error", e.getMostSpecificCause().getMessage());
 			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		 }
-		 response.put("mensaje", "Tratamiento actualizada tratamiento2 exito");
-		 response.put("tratamiento", tratamientoUpdate);
-		 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	 }
  
 	 // EndPoint Eliminar Tratamiento
@@ -127,36 +128,63 @@ public class TratamientoController {
 	 @DeleteMapping("/{id}")
 	 public ResponseEntity<?> delete(@PathVariable Long id) {
 		 Map<String, Object> response = new HashMap<>();
+		 
 		 try {
-			 tratamientoService.delete(id);
+			 boolean isEliminado = tratamientoService.delete(id);
+			 if(isEliminado){
+				response.put("mensaje", "Eliminado con exito");
+			 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+			}else{
+				response.put("Mensaje", "Id de tratamiento incorrecto");
+			 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 		 } catch (DataAccessException e) {
 			 response.put("mensaje", "Error al eliminar el tratamiento en el servidor");
 			 response.put("error", e.getMostSpecificCause().getMessage());
 			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		 }
-		 response.put("mensaje", "Tratamiento eliminado con exito");
-		 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	 }
  
 	 // EndPoint Buscar por ID
 	 @ResponseBody
 	 @GetMapping("/{id}")
 	 public ResponseEntity<?> getById(@PathVariable Long id) {
-		 Tratamiento Tratamiento = null;
+		 Tratamiento tratamiento = null;
 		 Map<String, Object> response = new HashMap<>();
  
 		 try {
-			 Tratamiento = tratamientoService.findById(id);
+			 tratamiento = tratamientoService.findById(id);
+			 if(tratamiento != null){
+			  	response.put("Tratamiento", tratamiento);
+			 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+			}else{
+				response.put("Mensaje", "Id de tratamiento incorrecto");
+			 	return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 		 } catch (DataAccessException e) {
 			 response.put("mensaje", "Error en la consulta de Tratamiento en el servidor");
 			 response.put("error", e.getMostSpecificCause().getMessage());
 			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		 }
-		 if (Tratamiento == null) {
-			 response.put("mensaje", "El Tratamiento con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
-			 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		 }
-		 return new ResponseEntity<Tratamiento>(Tratamiento, HttpStatus.OK);
 	 }
- 
+
+	 // EndPoint Buscar por ID de Ficha Clinica
+	 @ResponseBody
+	 @GetMapping("/ficha/{idFichaClinica}")
+	 public ResponseEntity<?> findByFichaClinica(@PathVariable Long idFichaClinica){
+		List<Tratamiento> tratamientos = null;
+		Map<String, Object> response = new HashMap<>();
+		try {
+			tratamientos = tratamientoService.findByFichaClinica(idFichaClinica);
+		} catch (DataAccessException e) {
+			response.put("mensaje", "Error en la consulta de Tratamiento en el servidor");
+			response.put("error", e.getMostSpecificCause().getMessage());
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		if (tratamientos == null) {
+			response.put("mensaje", "El Tratamiento con ID: ".concat(idFichaClinica.toString()).concat(" no existe en el servidor"));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(tratamientos, HttpStatus.OK);
+	 }
 }
