@@ -23,9 +23,7 @@ import javax.validation.Payload;
 public @interface Enum {
 	String regexp();
 
-	String customMessage() default "contine valor no válido, debe ser {regexp}";
-
-	public String message() default "Valor no válido.";
+	String message() default "contine valor no válido, debe ser {regexp}";
 
 	public abstract Class<?>[] groups() default {};
 

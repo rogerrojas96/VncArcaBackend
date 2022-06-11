@@ -1,6 +1,7 @@
 package com.vncarca.authsys.security.exceptions;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -20,7 +21,7 @@ public class ErrorResponse {
 	private String status;
 	private String message;
 	private String stackTrace;
-
+	private List<String> errors;
 
 	public ErrorResponse() {
 		timestamp = new Date();
@@ -32,6 +33,7 @@ public class ErrorResponse {
 		this.status = httpStatus.name();
 		this.message = message;
 	}
+
 	public ErrorResponse(HttpStatus httpStatus) {
 		this();
 		this.code = httpStatus.value();
@@ -43,5 +45,9 @@ public class ErrorResponse {
 		this.stackTrace = stackTrace;
 	}
 
+	public ErrorResponse(HttpStatus httpStatus, String message, List<String> errors) {
+		this(httpStatus, message);
+		this.errors = errors;
+	}
 
 }
