@@ -1,21 +1,16 @@
 package com.vncarca.arcasys.animal.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,9 +21,6 @@ import javax.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -108,9 +100,10 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private float peso;
 
-	@NotNull
 	@NotBlank
-	@Column(nullable = true)
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "text", nullable = true)
 	private String foto;
 
 	@NotNull

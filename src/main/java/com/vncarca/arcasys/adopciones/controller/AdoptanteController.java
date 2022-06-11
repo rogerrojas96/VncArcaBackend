@@ -11,6 +11,8 @@ import com.vncarca.arcasys.adopciones.dto.AdoptanteDto;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
 import com.vncarca.arcasys.adopciones.service.IAdoptanteService;
 
+import io.swagger.annotations.Api;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,8 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Adoptantes", description = "Controlador para CRUD de adoptantes")
 @RestController
-
 @RequestMapping("/adoptantes")
 public class AdoptanteController {
     
