@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,8 @@ import javax.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vncarca.arcasys.enums.Enum;
+import com.vncarca.arcasys.enums.Types;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,9 +59,9 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private String colorCaracteristicas;
 
-	@NotBlank
 	@NotNull
 	@Column(nullable = false)
+	@Enum(enumClass = Types.SEXO.class, regexp = "MACHO o HEMBRA")
 	private String sexo;
 
 	@NotNull
@@ -78,22 +82,22 @@ public class Animal implements Serializable {
 	 * (Clínica, Refugio)
 	 */
 	@NotNull
-	@NotBlank
 	@Column(nullable = false)
+	@Enum(enumClass = Types.ESTANCIA.class, regexp = "CLINICA o REFUGIO")
 	private String lugarEstancia;
 
 	/*
 	 * El usuario podrá registrar los animales que son rescatados ya sea por
 	 * llamadas particulares o por el 911
 	 */
-	@NotBlank
 	@NotNull
+	@Enum(enumClass = Types.PROCEDENCIA.class, regexp = "PARTICULAR o ECU911")
+	@Column(nullable = true)
 	private String procedencia;
 
 	@Lob
 	@NotBlank
 	@NotNull
-	@Basic(fetch = FetchType.LAZY)
 	@Column(nullable = false)
 	private String observacionesProcedencia;
 

@@ -2,12 +2,14 @@ package com.vncarca.authsys.security.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -31,20 +34,30 @@ import io.jsonwebtoken.ExpiredJwtException;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@ExceptionHandler(DataAccessException.class)
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<Object> handleDataAccessException(DataAccessException e, WebRequest webRequest) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ErrorResponses errorResponse = new ErrorResponses(status, e.getMessage().intern().split(";")[0],
+				e.getMostSpecificCause().getMessage());
+		return new ResponseEntity<Object>(errorResponse,
+				status);
+	}
 
 	@ExceptionHandler(ExpiredJwtException.class)
 	public ResponseEntity<Object> handleExpiredJwtExceptions(ExpiredJwtException e) {
-	HttpStatus status = HttpStatus.UNAUTHORIZED;
-	ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
-	return new ResponseEntity<Object>(errorResponse,
-	status);
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
+		return new ResponseEntity<Object>(errorResponse,
+				status);
 	}
+
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		List<String> errors = new ArrayList<String>();
 		for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-			errors.add(error.getField() + ": " + error.getDefaultMessage());
+			errors.add("El campo '" + error.getField() + "' " + error.getDefaultMessage());
 		}
 		for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
 			errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
@@ -126,10 +139,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	// @ExceptionHandler({ Exception.class })
 	// public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
-	// 	ErrorResponses errorResponse = new ErrorResponses(
-	// 			HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(),  ex.getLocalizedMessage());
-	// 	return new ResponseEntity<Object>(
-	// 			errorResponse, new HttpHeaders(), errorResponse.getStatus());
+	// ErrorResponses errorResponse = new ErrorResponses(
+	// HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(),
+	// ex.getLocalizedMessage());
+	// return new ResponseEntity<Object>(
+	// errorResponse, new HttpHeaders(), errorResponse.getStatus());
 	// }
 
 	// // Exceptions mas específicas
@@ -142,23 +156,32 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<Object> handleBadCredentialsExceptions(Exception e) {
-	HttpStatus status = HttpStatus.UNAUTHORIZED;
-	return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
-	status);
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
+				status);
 	}
+
 	@ExceptionHandler(DisabledException.class)
 	public ResponseEntity<Object> handleDisabledExceptionExceptions(Exception e) {
-	HttpStatus status = HttpStatus.UNAUTHORIZED;
-	return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
-	status);
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
+				status);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> handleIllegalArgumentExceptions(Exception e) {
-	HttpStatus status = HttpStatus.BAD_REQUEST;
-	ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
-	return new ResponseEntity<Object>(errorResponse,
-	status);
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
+		return new ResponseEntity<Object>(errorResponse,
+				status);
+	}
+
+	@ExceptionHandler(NoSuchElementException.class)
+	public ResponseEntity<Object> handleNoSuchElementExceptions(Exception e) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		ErrorResponses errorResponse = new ErrorResponses(status, null, e.getMessage());
+		return new ResponseEntity<Object>(errorResponse,
+				status);
 	}
 
 	// @ExceptionHandler({ AccessDeniedException.class })
@@ -183,7 +206,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	// return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage(),
 	// stackTrace), status);
 	// }
-
 
 	public static List<String> getExceptionMessageChain(Throwable throwable) {
 		List<String> result = new ArrayList<String>();
