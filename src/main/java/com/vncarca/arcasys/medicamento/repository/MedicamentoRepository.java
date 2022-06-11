@@ -14,5 +14,4 @@ public interface MedicamentoRepository extends JpaRepository<Medicamento, Long>{
 	public Page<Medicamento> findAll(Pageable pageable);
 	public Page<Medicamento> findAllByNombreComercialContainingOrNombreGenericoContaining(Pageable pageable,String nombreComercial,String nombreGenerico);
 	public List<Medicamento> findByNombreComercialContainingOrNombreGenericoContaining(String nombreComercial,String nombreGenerico);
-
 }
