@@ -24,6 +24,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.Animal;
+import com.vncarca.arcasys.enums.Enum;
+import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import lombok.Getter;
@@ -87,6 +89,7 @@ public class FichaClinica implements Serializable {
 	 * externos)
 	 */
 	@Column(nullable = false)
+	@Enum(enumClass = Types.TIPO_PACIENTE.class, regexp = "INTERNO o EXTERNO")
 	private String tipoPaciente;
 
 	@Column(nullable = false)
