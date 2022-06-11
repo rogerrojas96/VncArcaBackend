@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity(name = "Animales")
+@Entity
 @Table(name = "animales")
 public class Animal implements Serializable {
 
@@ -49,6 +49,7 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private String especie;
 
+	@Lob
 	@NotBlank
 	@NotNull
 	@Column(nullable = false)
@@ -59,7 +60,6 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private String sexo;
 
-	@Positive
 	@NotNull
 	@Column(nullable = false)
 	private int edad;
@@ -90,39 +90,44 @@ public class Animal implements Serializable {
 	@NotNull
 	private String procedencia;
 
+	@Lob
 	@NotBlank
 	@NotNull
+	@Basic(fetch = FetchType.LAZY)
 	@Column(nullable = false)
 	private String observacionesProcedencia;
 
 	@NotNull
-	@NotBlank
+	@Positive
 	@Column(nullable = false)
 	private float peso;
 
-	@NotBlank
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "text", nullable = true)
+	
+	@Column(nullable = true)
+	private Boolean adoptado;
+
+	@Lob
+	@NotNull
+	@Basic(fetch = FetchType.LAZY)
+	@Column(columnDefinition = "text")
 	private String foto;
 
 	@NotNull
-	@NotBlank
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Date fechaNacimiento;
 
-	// // @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	// @NotNull
+	// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal", orphanRemoval =
-	// true, fetch = FetchType.LAZY, targetEntity = FichaClinica.class)
-	// private Set<FichaClinica> fichasClinicas;
+	// true, fetch = FetchType.EAGER, targetEntity = FichaClinica.class)
+	// private List<FichaClinica> fichasClinicas = new ArrayList<>();
 
 	// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	// @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval
-	// = true, targetEntity = CarnetVacunacion.class)
-	// @JoinColumn(name = "animal_id")
+	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal", fetch =
+	// FetchType.EAGER, orphanRemoval = true, targetEntity = CarnetVacunacion.class)
 	// private Set<CarnetVacunacion> historialVacunaciones;
 
 }

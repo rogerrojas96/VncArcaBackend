@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vncarca.arcasys.medicacion.dto.MedicacionDto;
 import com.vncarca.arcasys.medicacion.model.Medicacion;
 
-import com.vncarca.arcasys.medicacion.services.MedicacionServiceImp;
+import com.vncarca.arcasys.medicacion.services.IMedicacionService;
 
 import io.swagger.annotations.Api;
 @Api(tags = "Medicaciones", description = "Controlador para CRUD medicaciones")
@@ -35,7 +35,7 @@ import io.swagger.annotations.Api;
 
 public class MedicacionController {
     @Autowired
-    private MedicacionServiceImp medicacionServiceImp;
+    private IMedicacionService medicacionService;
     private Map<String, Object> response = new HashMap<>();
     private Medicacion medicacion;
     private HttpStatus status;
@@ -43,30 +43,44 @@ public class MedicacionController {
     @ResponseBody
     @GetMapping("/")
     public ResponseEntity<List<Medicacion>> getAllMedicacions(){
-        return new ResponseEntity<>(medicacionServiceImp.getAllMedicacions(), HttpStatus.OK);
+        return new ResponseEntity<>(medicacionService.getAllMedicacions(), HttpStatus.OK);
     }
     
     @ResponseBody
     @GetMapping("/{idMedicacion}")
-    public ResponseEntity<Medicacion> getMedicacionPorId(@PathVariable Long idMedicacion){
-        return new ResponseEntity<>(medicacionServiceImp.getMedicacionPorId(idMedicacion), HttpStatus.OK);
+    public ResponseEntity<?> getMedicacionPorId(@PathVariable Long idMedicacion){
+        response.clear();
+        try{
+            medicacion = medicacionService.getMedicacionPorId(idMedicacion);
+            if(medicacion != null){
+                response.put("medicacion", medicacion);
+                status = HttpStatus.OK;
+            }else{
+                response.put("mensaje", "No existe la medicacion: "+ idMedicacion.toString()+" ");
+                status = HttpStatus.BAD_REQUEST;
+            }
+        }catch(DataAccessException e){
+            response.put("mensaje", "Ha ocurrido un error en el servidor al intentar crear la medicacion!");
+            response.put("error", e.getMostSpecificCause().getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        } 
+        return new ResponseEntity<>(response, status);
     }
 
     
     @ResponseBody
-    @PostMapping("/{idMedicamento}")
-    public ResponseEntity<?> crearMedicacion(@Valid 
-            BindingResult result, @PathVariable Long idMedicamento){
+    @PostMapping("/{idMedicamento}/{idTratamiento}")
+    public ResponseEntity<?> crearMedicacion(@Valid @RequestBody MedicacionDto medicacionDto, BindingResult result, @PathVariable Long idMedicamento, @PathVariable Long idTratamiento){
         response.clear();
         if(!result.hasErrors()){
             try{
-                medicacion = medicacionServiceImp.crearMedicacion(medicacion, idMedicamento);
+                medicacion = medicacionService.crearMedicacion(medicacionDto, idMedicamento, idTratamiento);
                 if(medicacion != null){
                     response.put("mensaje", "medicacion creada con exito!");
                     response.put("medicacion", medicacion);
                     status = HttpStatus.CREATED;
                 }else{
-                    response.put("mensaje", "No existe el medicamento: "+idMedicamento.toString()+" ");
+                    response.put("mensaje", "No existe el id de medicacion o tratamiento");
                     status = HttpStatus.BAD_REQUEST;
                 }
             }catch(DataAccessException e){
@@ -82,44 +96,12 @@ public class MedicacionController {
     }
 
 
-
-
-    
-    @ResponseBody
-    @PutMapping("/{idMedicacion}/{idMedicamento}")
-    public ResponseEntity<?> modificarMedicacion(@Valid @RequestBody Medicacion medicacion, BindingResult result,
-            @PathVariable Long idMedicacion,  @PathVariable Long idMedicamento){
-        response.clear();
-        if(!result.hasErrors()){
-            try{
-                medicacion = medicacionServiceImp.modificarMedicacion(medicacion, idMedicacion, idMedicamento);
-                if(medicacion != null){
-                    response.put("mensaje", "medicacion actualizada con exito!");
-                    response.put("medicacion", medicacion);
-                    status = HttpStatus.CREATED;
-                }else{
-                    response.put("mensaje", "No existe la medicacion con id: "+idMedicacion.toString()+" o no existe el medicamento con id: "+idMedicamento.toString());
-                    status = HttpStatus.BAD_REQUEST;
-                }
-            }catch(DataAccessException e){
-                response.put("mensaje", "Ha ocurrido un error en el servidor al intentar actualizar la medicacion! ");
-                response.put("error", e.getMostSpecificCause().getMessage());
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-        }else{
-            response.put( "errors", getErrors(result));
-            status = HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<Map<String, Object>>(response, status);
-    }
-
-
     @ResponseBody
     @DeleteMapping("/{idMedicacion}")
     public ResponseEntity<?> eliminarMedicacion(Long idMedicacion) {
         response.clear();
         try{
-            boolean eliminado = medicacionServiceImp.eliminarMedicacion(idMedicacion);
+            boolean eliminado = medicacionService.eliminarMedicacion(idMedicacion);
             if(eliminado){
                 response.put("mensaje", "Medicacion eliminada con exito!");
                 status = HttpStatus.OK;
@@ -146,6 +128,4 @@ public class MedicacionController {
             }
         ).collect(Collectors.toList());
     }
-
-    
 }

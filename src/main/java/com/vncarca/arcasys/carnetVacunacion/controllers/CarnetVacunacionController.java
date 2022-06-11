@@ -1,8 +1,15 @@
-package com.vncarca.arcasys.fichaclinica.controllers;
+/**
+* Created by Roy Morocho.
+* User: steve
+* Date: 10 jun 2022
+* Time: 15:06:12
+*/
+package com.vncarca.arcasys.carnetVacunacion.controllers;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -27,52 +34,45 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
-import com.vncarca.arcasys.fichaclinica.services.FichaClinicaService;
+import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
+import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacionDTO;
+import com.vncarca.arcasys.carnetVacunacion.services.CarnetVacunacionService;
 
 import io.swagger.annotations.Api;
 
-@Api(tags = "Fichas Clínicas", description = "Controlador para CRUD de fichas clínicas")
+@Api(tags = "Carnets de Vacunación", description = "Controlador para CRUD de Carnets de vacunación")
 @RestController
-@RequestMapping("/fichas-clinicas")
-public class FichaClinicaController {
+@RequestMapping("/carnet-vacunacion")
+public class CarnetVacunacionController {
 	@Autowired
-	FichaClinicaService fichaClinicaService;
+	CarnetVacunacionService carnetVacunacionService;
 
-	// EndPoint listar fichaClinicaes
+	// EndPoint listar carnetsVacunaciones
 	@ResponseBody
 	@GetMapping("/page")
-	public Page<FichaClinica> getFichasClinicas(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size,
-			@RequestParam(required = false, defaultValue = "") String tipoPaciente) {
+	public Page<CarnetVacunacion> getCarnetsVacunaciones(@RequestParam(required = true) Integer page,
+			@RequestParam(required = true) Integer size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return (tipoPaciente == null || tipoPaciente.isEmpty()) ? fichaClinicaService.findAll(pageable)
-				: fichaClinicaService.findBytipoPacienteContaining(pageable, tipoPaciente.toUpperCase());
+		Page<CarnetVacunacion> pageCarnetsVacunaciones = carnetVacunacionService.findAll(pageable);
+		return pageCarnetsVacunaciones;
 	}
 
-	// @GetMapping("/")
-	// public List<FichaClinicaDTO> getFichasClinicas() {
-
-	// return fichaClinicaService.findAll();
-	// }
-
 	@GetMapping("/")
-	public List<FichaClinica> getFichasClinicas() {
-		return fichaClinicaService.findAll();
+	public List<CarnetVacunacion> getcarnetsVacunaciones() {
+		return carnetVacunacionService.findAll();
 	}
 
 	@GetMapping("/findByAnimalId/{id}")
-	public List<FichaClinicaDTO> getFichasClinicasByAnimalId(@RequestParam(required = true) Long id) {
-		return fichaClinicaService.findByanimalId(id);
+	public List<CarnetVacunacionDTO> getFichasClinicasByAnimalId(@RequestParam(required = true) Long id) {
+		return carnetVacunacionService.findByanimalId(id);
 	}
 
-	// EndPoint registrar FichaClinica
+	// EndPoint registrar CarnetVacunacion
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@Valid @RequestBody FichaClinica fichaClinica, BindingResult result) {
+	public ResponseEntity<?> create(@Valid @RequestBody CarnetVacunacion carnetVacunacion, BindingResult result) {
 		Map<String, Object> response = new HashMap<>();
-		FichaClinica newFichaClinica = null;
+		CarnetVacunacion newcarnetVacunacion = null;
 
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(err -> {
@@ -82,26 +82,27 @@ public class FichaClinicaController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		try {
-			newFichaClinica = fichaClinicaService.save(fichaClinica);
+			newcarnetVacunacion = carnetVacunacionService.save(carnetVacunacion);
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al guardar FichaClinica en el servidor");
+			response.put("mensaje", "Error al guardar CarnetVacunacion en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("mensaje", "FichaClinica guardada fichaCli exito");
-		response.put("fichaClinica", newFichaClinica);
+		response.put("mensaje", "CarnetVacunacion guardada con exito");
+		response.put("carnetVacunacion", newcarnetVacunacion);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	// EndPoint Actualizar FichaClinica
+	// EndPoint Actualizar CarnetVacunacion
 	@ResponseBody
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody FichaClinica fichaClinica, BindingResult result,
+	public ResponseEntity<?> update(@Valid @RequestBody CarnetVacunacion carnetVacunacion, BindingResult result,
 			@PathVariable Long id) {
-		FichaClinica fichaCli = fichaClinicaService.findById(id);
-
-		FichaClinica fichaClinicaUpdate = null;
-
+		CarnetVacunacion carnetVac = carnetVacunacionService.findById(id);
+		CarnetVacunacion carnetVacunacionUpdate = null;
+		if (!Objects.equals(id, carnetVacunacion.getId())) {
+			throw new IllegalArgumentException("IDs no coinciden");
+		}
 		Map<String, Object> response = new HashMap<>();
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(err -> {
@@ -111,38 +112,37 @@ public class FichaClinicaController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 
-		if (fichaCli == null) {
-			response.put("mensaje", "Error al actualizar, el FichaClinica fichaCli ID: ".concat(id.toString())
+		if (carnetVac == null) {
+			response.put("mensaje", "Error al actualizar, el CarnetVacunacion carnetVac ID: ".concat(id.toString())
 					.concat(" no existe en el servidor"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		try {
-			fichaCli = fichaClinica;
-
-			fichaClinicaUpdate = fichaClinicaService.save(fichaCli);
+			carnetVac = carnetVacunacion;
+			carnetVacunacionUpdate = carnetVacunacionService.save(carnetVac);
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al actualizar el FichaClinica en el servidor");
+			response.put("mensaje", "Error al actualizar el CarnetVacunacion en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("mensaje", "FichaClinica actualizada fichaCli exito");
-		response.put("fichaClinica", fichaClinicaUpdate);
+		response.put("mensaje", "CarnetVacunacion actualizada carnetVac exito");
+		response.put("carnetVacunacion", carnetVacunacionUpdate);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	// EndPoint Eliminar FichaClinica
+	// EndPoint Eliminar CarnetVacunacion
 	@ResponseBody
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		Map<String, Object> response = new HashMap<>();
 		try {
-			fichaClinicaService.delete(id);
+			carnetVacunacionService.delete(id);
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al eliminar el FichaClinica en el servidor");
+			response.put("mensaje", "Error al eliminar el CarnetVacunacion en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("mensaje", "FichaClinica eliminado con exito");
+		response.put("mensaje", "CarnetVacunacion eliminado con exito");
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
@@ -150,21 +150,21 @@ public class FichaClinicaController {
 	@ResponseBody
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
-		FichaClinica FichaClinica = null;
+		CarnetVacunacion CarnetVacunacion = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			FichaClinica = fichaClinicaService.findById(id);
+			CarnetVacunacion = carnetVacunacionService.findById(id);
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error en la consulta de FichaClinica en el servidor");
+			response.put("mensaje", "Error en la consulta de CarnetVacunacion en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		if (FichaClinica == null) {
-			response.put("mensaje", "El FichaClinica con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
+		if (CarnetVacunacion == null) {
+			response.put("mensaje", "El CarnetVacunacion con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<FichaClinica>(FichaClinica, HttpStatus.OK);
+		return new ResponseEntity<CarnetVacunacion>(CarnetVacunacion, HttpStatus.OK);
 	}
 
 }

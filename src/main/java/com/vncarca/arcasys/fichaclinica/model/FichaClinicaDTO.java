@@ -8,12 +8,16 @@ package com.vncarca.arcasys.fichaclinica.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vncarca.arcasys.animal.model.AnimalDTO;
 import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class FichaClinicaDTO {
 	private Long id;
 	private Date fechaIngreso;

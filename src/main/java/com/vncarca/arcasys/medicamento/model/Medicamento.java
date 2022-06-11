@@ -37,5 +37,4 @@ public class Medicamento implements Serializable{
 
 	@Column(nullable = false)
     private float precio;
-
 }
