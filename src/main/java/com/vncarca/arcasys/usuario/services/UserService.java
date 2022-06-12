@@ -9,18 +9,21 @@ import com.vncarca.arcasys.usuario.model.UserDto;
 import com.vncarca.authsys.security.model.Usuario;
 
 public interface UserService {
-    public Usuario save(Usuario usuario);
+	public Usuario save(Usuario usuario);
 
-    public Page<Usuario> findAll(Pageable pageable);
-    public Page<Usuario> findByusername(Pageable pageable,String username);
+	public Page<Usuario> findAll(Pageable pageable);
 
-    public List<Usuario> findAll();
+	public Page<Usuario> findByusername(Pageable pageable, String username);
 
-    public Usuario findById(Long id);
+	public List<Usuario> findAll();
 
-    public void delete(Long id);
+	public Usuario findById(Long id);
 
-    public UserDto getUserProfile();
+	public void delete(Long id);
 
-    public void patchPassword(String password, Long id);
+	public void changeStatus(Long id);
+
+	public UserDto getUserProfile();
+
+	public void patchPassword(String password, Long id);
 }

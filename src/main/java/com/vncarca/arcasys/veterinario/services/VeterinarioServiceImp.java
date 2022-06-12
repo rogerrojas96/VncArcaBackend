@@ -1,5 +1,6 @@
 package com.vncarca.arcasys.veterinario.services;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.vncarca.arcasys.persona.model.Persona;
@@ -63,5 +64,11 @@ public class VeterinarioServiceImp implements VeterinarioService {
 		personaDto.setCedula(persona.getCedula());
 		personaDto.setNombre(persona.getNombre());
 		return personaDto;
+	}
+
+	@Override
+	public Page<Veterinario> findByCedula(Pageable pageable, Collection<String> cedula) {
+
+		return veterinarioRepository.findByPersona_cedulaIn(pageable, cedula);
 	}
 }

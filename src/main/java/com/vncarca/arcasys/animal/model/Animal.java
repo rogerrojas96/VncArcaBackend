@@ -106,7 +106,6 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private float peso;
 
-	
 	@Column(nullable = true)
 	private Boolean adoptado;
 

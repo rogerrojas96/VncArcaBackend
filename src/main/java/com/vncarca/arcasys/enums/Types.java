@@ -20,6 +20,6 @@ public class Types {
 	}
 
 	public enum ESTANCIA {
-		CLINICA, REFUGIO
+		CLINICA, REFUGIO, HOGAR
 	}
 }

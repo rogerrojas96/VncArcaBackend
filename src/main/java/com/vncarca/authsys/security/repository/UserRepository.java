@@ -15,11 +15,17 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends JpaRepository<Usuario, Long> {
-    Optional<Usuario> findByusername(String username);
-    Page<Usuario> findByusername(Pageable pageable,String username);
+	Optional<Usuario> findByusername(String username);
 
-    @Transactional()
+	Page<Usuario> findByusername(Pageable pageable, String username);
+
+	@Transactional()
 	@Modifying
 	@Query("update Usuario u set u.password = ?1 where u.id = ?2")
 	public void patchPassword(String password, Long id);
+
+	@Transactional()
+	@Modifying
+	@Query("update Usuario u set u.enabled = ?1 where u.id = ?2")
+	public void setStatus(Boolean enabled, Long id);
 }
