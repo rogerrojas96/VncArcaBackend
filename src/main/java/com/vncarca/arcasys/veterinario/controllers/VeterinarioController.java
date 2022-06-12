@@ -49,7 +49,7 @@ public class VeterinarioController {
 		if (cedula.isEmpty() || cedula == null) {
 			pageVeterinarios = veterinarioService.findAll(pageable);
 		} else {
-			pageVeterinarios = veterinarioService.findByCedula(pageable, List.of(cedula));
+			pageVeterinarios = veterinarioService.findByCedula(pageable, cedula);
 		}
 		return pageVeterinarios;
 	}

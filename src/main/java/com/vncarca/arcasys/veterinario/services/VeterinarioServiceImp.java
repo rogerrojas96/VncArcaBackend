@@ -67,8 +67,13 @@ public class VeterinarioServiceImp implements VeterinarioService {
 	}
 
 	@Override
-	public Page<Veterinario> findByCedula(Pageable pageable, Collection<String> cedula) {
+	public Page<Veterinario> findByCedula(Pageable pageable, String cedula) {
 
-		return veterinarioRepository.findByPersona_cedulaIn(pageable, cedula);
+		return veterinarioRepository.findByPersona_cedulaIs(pageable, cedula);
+	}
+
+	@Override
+	public Page<Veterinario> findByCedulaLike(Pageable pageable, String cedula) {
+		return veterinarioRepository.findByPersona_cedulaContaining(pageable, cedula);
 	}
 }
