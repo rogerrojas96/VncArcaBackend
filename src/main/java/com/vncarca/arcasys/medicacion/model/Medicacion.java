@@ -35,7 +35,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="medicacion")
+@Table(name="medicaciones")
 public class Medicacion implements Serializable {
     private static final long serialVersionUID=1L;
 
