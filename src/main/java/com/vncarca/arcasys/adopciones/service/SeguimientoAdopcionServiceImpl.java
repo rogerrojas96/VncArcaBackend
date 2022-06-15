@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,8 @@ import com.vncarca.arcasys.adopciones.repository.SeguimientoAdopcionRepository;
 @Service
 public class SeguimientoAdopcionServiceImpl implements ISeguimientoAdopcionService{
 
-    //@Value("${spring.mail.username}")
-    private String correoArca = "arcaanimalitos@gmail.com";
-
+    @Value("${spring.mail.username}")
+    private String correoArca;
 
     private final String ASUNTO_CORREO = "Seguimiento de animales adoptados en la Fundación ARCA.";
 

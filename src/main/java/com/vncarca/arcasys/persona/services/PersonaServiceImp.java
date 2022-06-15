@@ -1,6 +1,7 @@
 package com.vncarca.arcasys.persona.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
@@ -36,7 +37,8 @@ public class PersonaServiceImp implements PersonaService {
 	@Override
 	public Persona findById(Long id) {
 
-		return personaRepository.findById(id).orElse(null);
+		return personaRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+				"Persona con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override

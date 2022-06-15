@@ -2,6 +2,7 @@ package com.vncarca.arcasys.usuario.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,75 +24,82 @@ public class UserServiceImp implements UserService {
 	UserRepository userRepository;
 
 	@Override
-    public UserDto getUserProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        Usuario user = userRepository
-                .findByusername(customUserDetails.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Usuario no registrado : " + customUserDetails.getUsername()));
-        return ConvertUserDTO(user);
-    }
+	public UserDto getUserProfile() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		Usuario user = userRepository
+				.findByusername(customUserDetails.getUsername())
+				.orElseThrow(() -> new IllegalArgumentException(
+						"Usuario no registrado : " + customUserDetails.getUsername()));
+		return ConvertUserDTO(user);
+	}
 
-    @Override
-    public List<Usuario> findAll() {
-        List<Usuario> list = new ArrayList<>();
-        userRepository.findAll().iterator().forEachRemaining(list::add);
-        return list;
-    }
+	@Override
+	public List<Usuario> findAll() {
+		List<Usuario> list = new ArrayList<>();
+		userRepository.findAll().iterator().forEachRemaining(list::add);
+		return list;
+	}
 
-    @Override
-    public Usuario save(Usuario usuario) {
+	@Override
+	public Usuario save(Usuario usuario) {
 
-        return userRepository.save(usuario);
-    }
+		return userRepository.save(usuario);
+	}
 
-    @Override
-    public Page<Usuario> findAll(Pageable pageable) {
+	@Override
+	public Page<Usuario> findAll(Pageable pageable) {
 
-        return userRepository.findAll(pageable);
-    }
+		return userRepository.findAll(pageable);
+	}
 
-    @Override
-    public Usuario findById(Long id) {
+	@Override
+	public Usuario findById(Long id) {
 
-        return userRepository.findById(id).orElse(null);
-    }
+		return userRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+				"Persona con ID: " + id.toString() + " no existe en el servidor"));
+	}
 
-    @Override
-    public void delete(Long id) {
-    }
+	@Override
+	public void delete(Long id) {
+		userRepository.deleteById(id);
+	}
 
-    @Override
-    public Page<Usuario> findByusername(Pageable pageable, String username) {
-        return userRepository.findByusername(pageable,username);
-    }
+	@Override
+	public void changeStatus(Long id) {
+		Boolean enabled = findById(id).getEnabled();
+		userRepository.setStatus(!enabled, id);
+	}
 
-    @Override
-    public void patchPassword(String password, Long id) {
-      userRepository.patchPassword(password,id);
+	@Override
+	public Page<Usuario> findByusername(Pageable pageable, String username) {
+		return userRepository.findByusername(pageable, username);
+	}
 
-    }
+	@Override
+	public void patchPassword(String password, Long id) {
+		userRepository.patchPassword(password, id);
 
-    private UserDto ConvertUserDTO(Usuario user){
-    UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setPersonaDto(ConvertPersonaDTO(user.getPersona()));
-    return userDto;
-    }
+	}
 
-    private PersonaDto ConvertPersonaDTO(Persona persona){
-    PersonaDto personaDto = new PersonaDto();
-        personaDto.setApellidos(persona.getApellidos());
-        personaDto.setCedula(persona.getCedula());
-        personaDto.setCelular(persona.getCelular());
-        personaDto.setCorreo(persona.getCorreo());
-        personaDto.setDireccion(persona.getDireccion());
-        personaDto.setNombre(persona.getNombre());
-        personaDto.setTelefono(persona.getTelefono());
-    return personaDto;
- }
+	private UserDto ConvertUserDTO(Usuario user) {
+		UserDto userDto = new UserDto();
+		userDto.setId(user.getId());
+		userDto.setUsername(user.getUsername());
+		userDto.setPersonaDto(ConvertPersonaDTO(user.getPersona()));
+		return userDto;
+	}
 
+	private PersonaDto ConvertPersonaDTO(Persona persona) {
+		PersonaDto personaDto = new PersonaDto();
+		personaDto.setApellidos(persona.getApellidos());
+		personaDto.setCedula(persona.getCedula());
+		personaDto.setCelular(persona.getCelular());
+		personaDto.setCorreo(persona.getCorreo());
+		personaDto.setDireccion(persona.getDireccion());
+		personaDto.setNombre(persona.getNombre());
+		personaDto.setTelefono(persona.getTelefono());
+		return personaDto;
+	}
 
 }

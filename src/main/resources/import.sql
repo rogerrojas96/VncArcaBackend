@@ -6,17 +6,17 @@ INSERT INTO roles VALUES (3, 'ROLE_VETERINARIO');
 --Personas para ingresar en el sistema
 insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661524','Roy','Morocho','San Joaquin','0453535','0980385997','admin@gmail.com');
 	--Persona para ser Veterinarios
-	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661527','Daniel','Rivera','27 de febrero','0453538','0980385100','eduardo.mendieta.t@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661527','Daniel','Rivera','27 de febrero','0453538','0980385100','dani@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661525','Estiven','Quishpi','Av Americas','0453536','0980385998','veterianario@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105661526','Christian','Torres','9 de octubre','0453537','0980385999','veterianario2@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0105736326','Rubén','Tacuri','Av Americas','0453536','0980385998','veterianario3@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0200982163','Marco','Santander','9 de octubre','0453537','0980385999','veterianario4@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0913537742','Martha','Palacios','Av Americas','0453536','0980385998','veterianario5@gmail.com');
-	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0401197298','María','Urgiles','9 de octubre','0453537','0980385999','eduardo.mendieta.t@gmail.com');
-	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0702648551','Joseline','Pezantes','Av Americas','0453536','0980385998','veterianario7@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0401197298','María','Urgiles','9 de octubre','0453537','0980385999','mary@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('0702648551','Joseline','Pezantes','Av Americas','0453536','0980385998','eduardo.mendieta.t@gmail.com');
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo) values ('1103756134','Sthefany','Argudo','9 de octubre','0453537','0980385999','veterianario8@gmail.com');
 
---Veterinarios
+--Veterinarios	
 insert into veterinarios (id,cargo)values(1,'Principal')
 insert into veterinarios (id,cargo)values(2,'Suplente')
 
@@ -43,15 +43,15 @@ INSERT INTO vacuna (descripcion,nombre,tipo) VALUES ('Vacuna 1','Vacu','Tipo de 
 
 
 --Animales
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://img.myloview.es/vinilos/perro-mestizo-sin-hogar-mirando-a-ti-400-141109517.jpg', 'CLINICA', 'qwerty', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://www.purina-latam.com/sites/g/files/auxxlc391/files/styles/large/public/purina-para-que-sirven-los-bigotes-de-los-gatos.png?itok=gr5dH8dL', 'CLINICA', 'chico', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://i.ytimg.com/vi/C7Au9sr0yDU/maxresdefault.jpg', 'CLINICA', 'tito', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://static.dw.com/image/60584047_303.jpg', 'CLINICA', 'rex', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/portrait-of-labradoodle-with-humorous-expression-royalty-free-image-690356759-1542399719.jpg', 'CLINICA', 'pichu', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://estaticos.muyinteresante.es/media/cache/1140x_thumb/uploads/images/gallery/59c4f5655bafe82c692a7052/gato-marron_0.jpg', 'CLINICA', 'samael', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://res.cloudinary.com/dktx1oojk/image/upload/f_auto,q_90,w_1000,c_scale/web/globalassets/es/consejos/perro-consejos-5.jpg', 'CLINICA', 'tommy', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://www.tqpets.com.ec/wp-content/uploads/2018/08/personalidades-gatos-01.jpg', 'CLINICA', 'sancho', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
-INSERT INTO vncarcadb.animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://www.eltiempo.com/files/image_640_428/uploads/2021/11/28/61a3a0ac562fa.jpeg', 'CLINICA', 'chavo', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://img.myloview.es/vinilos/perro-mestizo-sin-hogar-mirando-a-ti-400-141109517.jpg', 'CLINICA', 'qwerty', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://www.purina-latam.com/sites/g/files/auxxlc391/files/styles/large/public/purina-para-que-sirven-los-bigotes-de-los-gatos.png?itok=gr5dH8dL', 'CLINICA', 'chico', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://i.ytimg.com/vi/C7Au9sr0yDU/maxresdefault.jpg', 'CLINICA', 'tito', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://static.dw.com/image/60584047_303.jpg', 'CLINICA', 'rex', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/portrait-of-labradoodle-with-humorous-expression-royalty-free-image-690356759-1542399719.jpg', 'CLINICA', 'pichu', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://estaticos.muyinteresante.es/media/cache/1140x_thumb/uploads/images/gallery/59c4f5655bafe82c692a7052/gato-marron_0.jpg', 'CLINICA', 'samael', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://res.cloudinary.com/dktx1oojk/image/upload/f_auto,q_90,w_1000,c_scale/web/globalassets/es/consejos/perro-consejos-5.jpg', 'CLINICA', 'tommy', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://www.tqpets.com.ec/wp-content/uploads/2018/08/personalidades-gatos-01.jpg', 'CLINICA', 'sancho', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
+INSERT INTO animales (color_caracteristicas, edad, especie, fecha_nacimiento, foto, lugar_estancia, nombre, observaciones_procedencia, peso, procedencia, raza, sexo, tamanyo, adoptado) VALUES('Marron', 3, 'canino', '2019-06-18', 'https://www.eltiempo.com/files/image_640_428/uploads/2021/11/28/61a3a0ac562fa.jpeg', 'CLINICA', 'chavo', 'Encontrado en un bosque, etc.', 3.0, 'PARTICULAR', 'Mestizo', 'MACHO', '22',False);
 
 --FichasClinicas
 insert into fichas_clinicas (fecha_ingreso,motivo_consulta,hallazgos,temperatura,conjuntiva,frecuencia_cardiaca,frecuencia_respiratoria,TRC,mucosas,esterilizacion ,alimentacion,pronostico,diagnostico_diferencial,examenes_solicitados,tipo_paciente,costo,veterinario_id,animal_id) values ('2019-06-18','dolor estomacal','ulceras en intestino',37.5,'Normal',130,15,'Bien', 'Normal',true,123.3,'Aun falta', 'Pendiente','Creo que seria solo un text aria, pero habria que ver que dicen', 'INTERNO',54.3,1,1),('2020-06-18','dolor Respiratorio','Pulmones con mucosa',38,'Alta',130,15,'Bien', 'Alta',false,123.3,'Aun falta', 'Pendiente','Creo que seria solo un text aria, pero habria que ver que dicen','INTERNO',54.3,2,1);
@@ -82,14 +82,25 @@ insert into servicios(descripcion, nombre, precio) values('Esterilizacion de ani
  insert into detalles_citas(id_cita, id_servicio) values(5, 4)
 
 
- --Medicamento
- INSERT INTO medicamento (id, nombre_comercial, nombre_generico, cantidad, precio) VALUES ( 1, 'vinamina B', 'vb', 4, 0.30)
- INSERT INTO medicamento (id, nombre_comercial, nombre_generico, cantidad, precio) VALUES ( 3, 'vinamina c', 'vc', 4, 0.30)
+ --Medicamentos
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(100, 'Medicamento Comercial 1', 'Medicamento Genérico 1', 10.5);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(200, 'Medicamento Comercial 2', 'Medicamento Genérico 2', 20.5);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(60, 'Medicamento Comercial 3', 'Medicamento Genérico 3', 5.5);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(75, 'Medicamento Comercial 4', 'Medicamento Genérico 4', 10);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(92, 'Medicamento Comercial 5', 'Medicamento Genérico 5', 11.7);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(151, 'Medicamento Comercial 6', 'Medicamento Genérico 6', 12.57);
 
- --Medicacion
- INSERT INTO medicacion (id, descripcion_md, dosis, frecuencia, duracion, fecha_caducidad, id_medicamento) VALUES ( 1, 'vitamina para los huesos', '2', 'despues del almuerzo', '15 dias', '2022-06-02 16:30:00', 1 )
- INSERT INTO medicacion (id, descripcion_md, dosis, frecuencia, duracion, fecha_caducidad, id_medicamento) VALUES ( 2, 'vitamina para el estomago', '20', 'despues del almuerzo', '20 dias', '2022-06-02 16:30:00', 2 )
+ --Tratamientos
+ insert into tratamientos(descripcion, estado, fecha_aplicacion, indicaciones, id_ficha_clinica) values('Descripcion 1', 'Activo', '2022-10-10', 'Indicación 1', 1);
+ insert into tratamientos(descripcion, estado, fecha_aplicacion, indicaciones, id_ficha_clinica) values('Descripcion 2', 'Terminado', '2022-10-09', 'Indicación 2', 2);
 
+ --Medicaciones
+ insert into medicaciones(descripcion_md, dosis, duracion, fecha_caducidad, frecuencia, id_medicamento, id_tratamiento) values('descripcion_md 1', '5', 'duracion 1', '2022-11-12', 'frecuencia 1', 1, 1);
+ insert into medicaciones(descripcion_md, dosis, duracion, fecha_caducidad, frecuencia, id_medicamento, id_tratamiento) values('descripcion_md 2', '4', 'duracion 2', '2022-11-13', 'frecuencia 2', 2, 1);
+ insert into medicaciones(descripcion_md, dosis, duracion, fecha_caducidad, frecuencia, id_medicamento, id_tratamiento) values('descripcion_md 3', '3', 'duracion 3', '2022-11-14', 'frecuencia 3', 3, 1);
+ insert into medicaciones(descripcion_md, dosis, duracion, fecha_caducidad, frecuencia, id_medicamento, id_tratamiento) values('descripcion_md 4', '2', 'duracion 4', '2022-11-15', 'frecuencia 4', 4, 2);
+ insert into medicaciones(descripcion_md, dosis, duracion, fecha_caducidad, frecuencia, id_medicamento, id_tratamiento) values('descripcion_md 5', '1', 'duracion 5', '2022-11-16', 'frecuencia 5', 5, 2);
+ insert into medicaciones(descripcion_md, dosis, duracion, fecha_caducidad, frecuencia, id_medicamento, id_tratamiento) values('descripcion_md 6', '0', 'duracion 6', '2022-11-17', 'frecuencia 6', 6, 2);
 
  --Donaciones
  insert into donaciones(cantidad, descripcion, id_persona) values(100.50, "Donacion de prueba", 3);
@@ -99,10 +110,7 @@ insert into servicios(descripcion, nombre, precio) values('Esterilizacion de ani
  insert into donaciones(cantidad, descripcion, id_persona) values(30.90, "Donacion de prueba", 4);
  insert into donaciones(cantidad, descripcion, id_persona) values(150.00, "Donacion de prueba", 2);
 
---Medicamentos
-INSERT INTO medicamento (cantidad,nombre_comercial,nombre_generico,precio) VALUES(1,'ejemplo comercial','ejemplo generico',23.45),(12,'ejemplo comercial 2','ejemplo generico 2',32.43);
-
---Adoptantes
+--Adoptantes	
 insert into adoptantes(nickname_facebook, telefono_familiar, id_persona) values('Mary Urgiles', '0911111111', 8);
 insert into adoptantes(nickname_facebook, telefono_familiar, id_persona) values('Tu nenita', '0922222222', 9);
 insert into adoptantes(nickname_facebook, telefono_familiar, id_persona) values('Teffa', '0933333333', 10);
