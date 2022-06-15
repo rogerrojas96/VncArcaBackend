@@ -2,11 +2,11 @@ package com.vncarca.arcasys.fichaclinica.services;
 
 import java.util.List;
 
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
 
 public interface FichaClinicaService {
 	public Page<FichaClinica> findAll(Pageable pageable);
