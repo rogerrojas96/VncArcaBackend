@@ -3,6 +3,10 @@ package com.vncarca.arcasys.fichaclinica.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
+import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.animal.model.AnimalDTO;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
-import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.model.PersonaDto;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
@@ -116,7 +118,6 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 
 		return fichaClinicaRepository.findByanimalId(id).stream().map(this::fichaClinicaToDTO).collect(Collectors.toList());
 	}
-
 }
 
 // List<FichaClinicaDTO> list = new
