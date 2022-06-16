@@ -12,6 +12,7 @@ import com.vncarca.arcasys.adopciones.repository.AdopcionRepository;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
 import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.animal.repository.AnimalRepository;
+import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class AdopcionServiceImpl implements IAdopcionService{
         Animal animal = animalRepository.findById(idAnimal).orElse(null);
         Adoptante adoptante = adoptanteRepository.findById(idAdoptante).orElse(null);
         if(adoptante !=null && animal != null && !adopcionRepository.existsByAnimal(animal)){ 
+            animal.setAdoptado(true);
+            animal.setLugarEstancia(Types.ESTANCIA.HOGAR.toString());
+            animal = animalRepository.save(animal);
             Adopcion adopcion = new Adopcion();
             adopcion.setAdoptante(adoptante);
             adopcion.setAnimal(animal);
@@ -78,6 +82,11 @@ public class AdopcionServiceImpl implements IAdopcionService{
     @Override
     public boolean eliminarAdopcion(Long idAdopcion) {
         if(adopcionRepository.existsById(idAdopcion)){
+            Adopcion adopcion = adopcionRepository.findById(idAdopcion).get();
+            Animal animal = adopcion.getAnimal();
+            animal.setAdoptado(false);
+            animal.setLugarEstancia(Types.ESTANCIA.REFUGIO.toString());
+            animalRepository.save(animal);
             adopcionRepository.deleteById(idAdopcion);
             return true;
         }
