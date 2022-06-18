@@ -137,23 +137,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 				errorResponse, new HttpHeaders(), errorResponse.getStatus());
 	}
 
-	// @ExceptionHandler({ Exception.class })
-	// public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
-	// ErrorResponses errorResponse = new ErrorResponses(
-	// HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage(),
-	// ex.getLocalizedMessage());
-	// return new ResponseEntity<Object>(
-	// errorResponse, new HttpHeaders(), errorResponse.getStatus());
-	// }
-
-	// // Exceptions mas específicas
-	// @ExceptionHandler(NullPointerException.class)
-	// public ResponseEntity<Object> handleNullPointerExceptions(Exception e) {
-	// HttpStatus status = HttpStatus.BAD_REQUEST;
-	// return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
-	// status);
-	// }
-
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<Object> handleBadCredentialsExceptions(Exception e) {
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
@@ -183,29 +166,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(errorResponse,
 				status);
 	}
-
-	// @ExceptionHandler({ AccessDeniedException.class })
-	// public ResponseEntity<Object> handleAccessDeniedException(Exception e,
-	// WebRequest request) {
-
-	// HttpStatus status = HttpStatus.FORBIDDEN;
-	// return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage()),
-	// status);
-	// }
-
-	// @ExceptionHandler({ InternalServerError.class })
-	// public ResponseEntity<Object> handleInternalServerErrorExceptions(Exception
-	// e) {
-
-	// HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-	// StringWriter stringWriter = new StringWriter();
-	// PrintWriter printWriter = new PrintWriter(stringWriter);
-	// e.printStackTrace(printWriter);
-	// String stackTrace = stringWriter.toString();
-
-	// return new ResponseEntity<Object>(new ErrorResponse(status, e.getMessage(),
-	// stackTrace), status);
-	// }
 
 	public static List<String> getExceptionMessageChain(Throwable throwable) {
 		List<String> result = new ArrayList<String>();

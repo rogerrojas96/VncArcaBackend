@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,7 +21,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.vncarca.authsys.security.service.CustomUserDetailsServiceImpl;
 import com.vncarca.authsys.security.service.TokenProvider;
-import com.vncarca.authsys.security.util.SecurityCipher;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	private static final Logger logger = LoggerFactory.getLogger(RestAuthenticationEntryPoint.class);
@@ -46,7 +44,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			FilterChain filterChain) throws ServletException, IOException {
 		try {
-			String jwt = getJwtToken(httpServletRequest, false);
+			String jwt = getJwtFromRequest(httpServletRequest);
 			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 				String username = tokenProvider.getUsernameFromToken(jwt);
 				UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
@@ -71,29 +69,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			String accessToken = bearerToken.substring(7, bearerToken.length());
 			if (accessToken == null)
 				return null;
-			// return SecurityCipher.decrypt(accessToken);
 			return accessToken;
 		}
 		return null;
-	}
-
-	private String getJwtFromCookie(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			if (JWT_COOKIE_NAME.equals(cookie.getName())) {
-				String accessToken = cookie.getValue();
-				if (accessToken == null)
-					return null;
-				return SecurityCipher.decrypt(accessToken);
-			}
-		}
-		return null;
-	}
-
-	private String getJwtToken(HttpServletRequest request, boolean fromCookie) {
-		if (fromCookie)
-			return getJwtFromCookie(request);
-
-		return getJwtFromRequest(request);
 	}
 }

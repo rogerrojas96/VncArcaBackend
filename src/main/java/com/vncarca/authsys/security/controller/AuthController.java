@@ -13,17 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthService userService;
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest
-    ) throws Exception{
-        return userService.login(loginRequest );
-    }
+	@Autowired
+	private AuthService userService;
+
+	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+		return userService.login(loginRequest);
+	}
 }
