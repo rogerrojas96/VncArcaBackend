@@ -8,8 +8,10 @@ import java.util.List;
 import com.vncarca.arcasys.adopciones.dto.AdopcionDto;
 import com.vncarca.arcasys.adopciones.model.Adopcion;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
+import com.vncarca.arcasys.adopciones.model.SeguimientoAdopcion;
 import com.vncarca.arcasys.adopciones.repository.AdopcionRepository;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
+import com.vncarca.arcasys.adopciones.repository.SeguimientoAdopcionRepository;
 import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.animal.repository.AnimalRepository;
 import com.vncarca.arcasys.enums.Types;
@@ -33,6 +35,10 @@ public class AdopcionServiceImpl implements IAdopcionService{
 
     @Autowired
     private PersonaRepository personaRepository;
+
+
+    @Autowired
+    private SeguimientoAdopcionRepository seguimientoRepository;
 
     @Override
     public List<Adopcion> getAllAdopciones() {
@@ -86,7 +92,13 @@ public class AdopcionServiceImpl implements IAdopcionService{
             Animal animal = adopcion.getAnimal();
             animal.setAdoptado(false);
             animal.setLugarEstancia(Types.ESTANCIA.REFUGIO.toString());
-            animalRepository.save(animal);
+            animal = animalRepository.save(animal);
+            List<SeguimientoAdopcion> seguimientos =  seguimientoRepository.getSeguimientosPorIdAdopcion(idAdopcion);
+            if(seguimientos != null){
+                for(SeguimientoAdopcion seguimiento  : seguimientos){
+                    seguimientoRepository.deleteById(seguimiento.getId());
+                }
+            }
             adopcionRepository.deleteById(idAdopcion);
             return true;
         }

@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,7 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.Animal;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,8 +49,7 @@ public class Adopcion implements Serializable{
     @Column(nullable = false, columnDefinition = "text")
     private String descripcion;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@ManyToOne
     @JoinColumn(name="id_adoptante")
     private Adoptante adoptante;
 

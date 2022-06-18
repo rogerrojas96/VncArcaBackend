@@ -3,7 +3,6 @@ package com.vncarca.arcasys.serviciosarca.model;
 import java.util.Date;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +17,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -59,8 +57,7 @@ public class Cita {
 
 
     /* --------------------------- RELACIONES --------------------------- */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @ManyToOne
     @JoinColumn(name="id_veterinario")
     private Veterinario veterinario;
 }

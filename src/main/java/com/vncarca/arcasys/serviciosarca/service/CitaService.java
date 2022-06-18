@@ -34,8 +34,6 @@ public class CitaService implements ICitaService{
     @Autowired
     private ServicioArcaRepository servicioArcaRepository;
 
-
-
     @Override
     public List<Cita> getAllCitas() {
         return citaRepository.findAll();
@@ -131,10 +129,10 @@ public class CitaService implements ICitaService{
     public boolean eliminarCita(Long idCita) {
         if(citaRepository.existsById(idCita)){
             List<DetalleCita> detalleCitas = detalleCitaRepository.getDetallesCita(idCita);
-            citaRepository.deleteById(idCita);
             for (DetalleCita detalleCita : detalleCitas) {
                 detalleCitaRepository.deleteById(detalleCita.getId());
             }
+            citaRepository.deleteById(idCita);
             return true;
         }
         return false;
