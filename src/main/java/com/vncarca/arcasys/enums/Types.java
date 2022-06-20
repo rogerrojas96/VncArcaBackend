@@ -22,4 +22,8 @@ public class Types {
 	public enum ESTANCIA {
 		CLINICA, REFUGIO, HOGAR
 	}
+
+	public enum ESTERILIZACION {
+		SI, NO
+	}
 }

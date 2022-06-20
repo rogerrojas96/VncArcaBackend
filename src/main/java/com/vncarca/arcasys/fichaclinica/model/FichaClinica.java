@@ -5,10 +5,8 @@ import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -75,8 +73,10 @@ public class FichaClinica implements Serializable {
 	@Column(nullable = false)
 	private String mucosas;
 
+	@NotNull
 	@Column(nullable = false)
-	private Boolean esterilizacion;
+	@Enum(enumClass = Types.ESTERILIZACION.class, regexp = "SI o NO")
+	private String esterilizacion;
 
 	@Column(nullable = false)
 	private float alimentacion;
