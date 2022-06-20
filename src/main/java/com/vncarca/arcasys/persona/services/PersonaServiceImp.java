@@ -45,4 +45,9 @@ public class PersonaServiceImp implements PersonaService {
 	public void delete(Long id) {
 		personaRepository.deleteById(id);
 	}
+
+	@Override
+	public Page<Persona> findByCedula(Pageable pageable, String cedula) {
+		return personaRepository.findByCedula(pageable, cedula);
+	}
 }
