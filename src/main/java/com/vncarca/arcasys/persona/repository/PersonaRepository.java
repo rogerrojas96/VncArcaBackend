@@ -14,4 +14,5 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 	public boolean existsByCedula(String cedula);
 
 	public Optional<Persona> findByCedula(String cedula);
+	public Page<Persona> findByCedula(Pageable pageable, String cedula);
 }

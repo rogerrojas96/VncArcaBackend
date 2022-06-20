@@ -2,8 +2,11 @@ package com.vncarca.authsys.security.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.vncarca.authsys.security.model.Rol;
@@ -29,11 +32,17 @@ public class RoleServicesImp implements RoleService {
 
 	@Override
 	public Rol findById(Long id) {
-		return rolRepository.findById(id).orElse(null);
+		return rolRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+				"Rol con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
 	public void delete(Long id) {
 		rolRepository.deleteById(id);
+	}
+
+	@Override
+	public Page<Rol> findAll(Pageable pageable) {
+		return rolRepository.findAll(pageable);
 	}
 }

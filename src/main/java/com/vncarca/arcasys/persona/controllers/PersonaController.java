@@ -43,9 +43,14 @@ public class PersonaController {
 	@ResponseBody
 	@GetMapping("/page")
 	public Page<Persona> getPersonas(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size) {
+			@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String cedula) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Persona> pagePersonas = personaService.findAll(pageable);
+		Page<Persona> pagePersonas = null;
+		if (cedula.isEmpty() || cedula == null) {
+			pagePersonas = personaService.findAll(pageable);
+		} else {
+			pagePersonas = personaService.findByCedula(pageable, cedula);
+		}
 		return pagePersonas;
 	}
 

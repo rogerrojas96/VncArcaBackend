@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface PersonaService {
 	public Page<Persona> findAll(Pageable pageable);
+	public Page<Persona> findByCedula(Pageable pageable, String cedula);
 	public List<Persona> findAll();
 	public Persona save(Persona persona);
 	public Persona findById(Long id);

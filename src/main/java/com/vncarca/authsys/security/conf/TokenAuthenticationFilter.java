@@ -2,31 +2,25 @@ package com.vncarca.authsys.security.conf;
 
 import java.io.IOException;
 
-import javax.security.auth.login.CredentialException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vncarca.authsys.security.service.CustomUserDetailsServiceImpl;
-import com.vncarca.authsys.security.service.TokenProvider;
-import com.vncarca.authsys.security.util.SecurityCipher;
-
-import io.jsonwebtoken.ExpiredJwtException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.vncarca.authsys.security.service.CustomUserDetailsServiceImpl;
+import com.vncarca.authsys.security.service.TokenProvider;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	private static final Logger logger = LoggerFactory.getLogger(RestAuthenticationEntryPoint.class);
@@ -50,12 +44,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			FilterChain filterChain) throws ServletException, IOException {
 		try {
-			String jwt = getJwtToken(httpServletRequest, false);
+			String jwt = getJwtFromRequest(httpServletRequest);
 			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
 				String username = tokenProvider.getUsernameFromToken(jwt);
 				UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 				if (!userDetails.isEnabled()) {
-					throw new CredentialException();
+					throw new DisabledException("Tu cuenta ha sido deshabilitada");
 				}
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
@@ -75,29 +69,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			String accessToken = bearerToken.substring(7, bearerToken.length());
 			if (accessToken == null)
 				return null;
-			// return SecurityCipher.decrypt(accessToken);
 			return accessToken;
 		}
 		return null;
-	}
-
-	private String getJwtFromCookie(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		for (Cookie cookie : cookies) {
-			if (JWT_COOKIE_NAME.equals(cookie.getName())) {
-				String accessToken = cookie.getValue();
-				if (accessToken == null)
-					return null;
-				return SecurityCipher.decrypt(accessToken);
-			}
-		}
-		return null;
-	}
-
-	private String getJwtToken(HttpServletRequest request, boolean fromCookie) {
-		if (fromCookie)
-			return getJwtFromCookie(request);
-
-		return getJwtFromRequest(request);
 	}
 }
