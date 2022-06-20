@@ -33,32 +33,34 @@ import lombok.NoArgsConstructor;
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotBlank
-    @NotNull
-    @Column(length = 50, unique = true, nullable = false)
-    private String username;
+	@NotBlank
+	@NotNull
+	@Column(length = 50, unique = true, nullable = false)
+	private String username;
 
-    @NotBlank
-    @NotNull
-    @Column(length = 200, nullable = false)
-    private String password;
+	@NotBlank
+	@NotNull
+	@Column(length = 200, nullable = false)
+	private String password;
 
-    @NotNull
-    private Boolean enabled;
+	@NotNull
+	@Column(nullable = false)
+	private Boolean enabled;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    private Persona persona;
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@JoinColumn(name = "persona_id", nullable = false)
+	private Persona persona;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true), uniqueConstraints = {
-            @UniqueConstraint(columnNames = { "usuario_id", "rol_id" }) })
-    public Set<Rol> roles;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true), uniqueConstraints = {
+			@UniqueConstraint(columnNames = { "usuario_id", "rol_id" }) })
+	public Set<Rol> roles;
 }

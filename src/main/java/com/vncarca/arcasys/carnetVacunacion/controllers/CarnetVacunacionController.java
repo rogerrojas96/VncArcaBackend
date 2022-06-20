@@ -7,9 +7,11 @@
 package com.vncarca.arcasys.carnetVacunacion.controllers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacionDTO;
 import com.vncarca.arcasys.carnetVacunacion.services.CarnetVacunacionService;
+import com.vncarca.notificaciones.models.Alarm;
+import com.vncarca.notificaciones.models.Event;
+import com.vncarca.notificaciones.services.AlarmService;
 
 import io.swagger.annotations.Api;
 
@@ -46,6 +52,9 @@ import io.swagger.annotations.Api;
 public class CarnetVacunacionController {
 	@Autowired
 	CarnetVacunacionService carnetVacunacionService;
+
+	@Autowired
+	AlarmService alarmService;
 
 	// EndPoint listar carnetsVacunaciones
 	@ResponseBody
@@ -69,6 +78,7 @@ public class CarnetVacunacionController {
 
 	// EndPoint registrar CarnetVacunacion
 	@PostMapping("/")
+	@SendTo()
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody CarnetVacunacion carnetVacunacion, BindingResult result) {
 		Map<String, Object> response = new HashMap<>();
@@ -83,6 +93,10 @@ public class CarnetVacunacionController {
 		}
 		try {
 			newcarnetVacunacion = carnetVacunacionService.save(carnetVacunacion);
+			Alarm a = new Alarm(false, "Vacunacion", newcarnetVacunacion.getFechaProximaAplicacion(),
+					newcarnetVacunacion.getAnimal());
+			alarmService.save(a);
+			// Event e = new Event(new HashSet<>(List.of(a)));
 		} catch (DataAccessException e) {
 			response.put("mensaje", "Error al guardar CarnetVacunacion en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());
