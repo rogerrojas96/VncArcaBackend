@@ -29,7 +29,7 @@ public class FichaClinicaDTO {
 	private float frecuenciaRespiratoria;
 	private String TRC;
 	private String mucosas;
-	private Boolean esterilizacion;
+	private String esterilizacion;
 	private float alimentacion;
 	private String pronostico;
 	private String diagnosticoDiferencial;
