@@ -89,7 +89,7 @@ public class AdopcionController {
 
     @ResponseBody
     @GetMapping("/{id}")
-    public ResponseEntity<?> etAdopcionPorId(@PathVariable Long id){
+    public ResponseEntity<?> getAdopcionPorId(@PathVariable Long id){
         Map<String, Object> response = new HashMap<>();
         Adopcion adopcion = null;
         try {

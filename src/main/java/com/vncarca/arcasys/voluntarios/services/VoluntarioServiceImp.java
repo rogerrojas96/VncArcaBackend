@@ -1,6 +1,5 @@
 package com.vncarca.arcasys.voluntarios.services;
 
-import org.aspectj.weaver.patterns.PerObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,15 +49,15 @@ public class VoluntarioServiceImp implements VoluntarioService {
     }
 
     @Override
-    public Voluntario save(VoluntarioDto voluntarioDto, Long idPersona) {
-        Persona persona = personaRepository.findById(idPersona).orElse(null);
-        if (persona != null) {
-            Voluntario voluntario = new Voluntario();
-            voluntario.setActividad(voluntarioDto.getActividad());
-            voluntario.setPersona(persona);
-            voluntario.setTipo(voluntarioDto.getTipo());
-            return voluntariorepository.save(voluntario);
-        }
+    public Voluntario save(VoluntarioDto voluntarioDto) {
+        Voluntario voluntario = null;
+        Persona persona = personaRepository.findByCedula(voluntarioDto.getCedula()).orElse(null);
+        if (persona == null) 
+            persona = personaRepository.save(toPersona(voluntarioDto));
+        else
+            voluntario = voluntariorepository.findByPersona(persona).orElse(null);
+        if(voluntario == null)
+            return voluntariorepository.save(toVoluntario(voluntarioDto, persona));
         return null;
     }
 
@@ -66,11 +65,37 @@ public class VoluntarioServiceImp implements VoluntarioService {
     public Voluntario update(VoluntarioDto voluntarioDto, Long idVoluntario) {
         Voluntario voluntario = voluntariorepository.findById(idVoluntario).orElse(null);
         if (voluntario != null) {
-            voluntario.setActividad(voluntarioDto.getActividad());
-            voluntario.setTipo(voluntarioDto.getTipo());
-            return voluntariorepository.save(voluntario);
+            Persona persona = toPersona(voluntarioDto);
+            persona.setId(voluntario.getPersona().getId());
+            persona = personaRepository.save(persona);
+            voluntario = toVoluntario(voluntarioDto, persona);
+            voluntario.setId(idVoluntario);
+            voluntario = voluntariorepository.save(voluntario);
         }
-        return null;
+        return voluntario;
+    }
+
+
+    /** --------------------------- METODOS AUXILIARES --------------------------- */
+    private Persona toPersona(VoluntarioDto voluntarioDto){
+        Persona persona = new Persona();
+        persona.setApellidos(voluntarioDto.getApellidos());
+        persona.setCedula(voluntarioDto.getCedula());
+        persona.setCelular(voluntarioDto.getCelular());
+        persona.setCorreo(voluntarioDto.getCorreo());
+        persona.setDireccion(voluntarioDto.getDireccion());
+        persona.setNombre(voluntarioDto.getNombre());
+        persona.setTelefono(voluntarioDto.getTelefono());
+        return persona;
+    }
+
+
+    private Voluntario toVoluntario(VoluntarioDto voluntarioDto, Persona persona){
+        Voluntario voluntario = new Voluntario();
+        voluntario.setActividad(voluntarioDto.getActividad());
+        voluntario.setPersona(persona);
+        voluntario.setTipo(voluntarioDto.getTipo());
+        return voluntario;
     }
     
 }

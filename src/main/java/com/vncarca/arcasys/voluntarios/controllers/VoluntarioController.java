@@ -52,9 +52,9 @@ public class VoluntarioController {
     }
     
     //EndPoint para registrasr un voluntario
-    @PostMapping(value="/{idPersona}")
+    @PostMapping(value="/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Valid @RequestBody VoluntarioDto voluntarioDto, BindingResult result, @PathVariable Long idPersona) {
+    public ResponseEntity<?> create(@Valid @RequestBody VoluntarioDto voluntarioDto, BindingResult result) {
 
         Map<String, Object> response = new HashMap<>();
         Voluntario newVoluntario = null;
@@ -67,14 +67,18 @@ public class VoluntarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
         try {
-            newVoluntario = voluntarioService.save(voluntarioDto, idPersona);
+            newVoluntario = voluntarioService.save(voluntarioDto);
+            if (newVoluntario == null) {
+                response.put("mensaje", "Error al crear, el Voluntario ya existe en la base de datos");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+            }
         } catch (DataAccessException e) {
             response.put("mensaje", "Error al guardar Voluntario en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("mensaje", "Voluntario guardado vete exito");
-        response.put("veterinario", newVoluntario);
+        response.put("mensaje", "Voluntario guardado con exito");
+        response.put("voluntario", newVoluntario);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
     
@@ -107,7 +111,7 @@ public class VoluntarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("mensaje", "Voluntario actualizado vete exito");
-        response.put("veterinario", voluntarioUpdate);
+        response.put("voluntario", voluntarioUpdate);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
