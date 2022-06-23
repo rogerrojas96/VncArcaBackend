@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vncarca.arcasys.voluntarios.model.Voluntario;
+import com.vncarca.arcasys.voluntarios.model.VoluntarioDto;
 import com.vncarca.arcasys.voluntarios.services.VoluntarioService;
 
 import io.swagger.annotations.Api;
@@ -51,9 +52,9 @@ public class VoluntarioController {
     }
     
     //EndPoint para registrasr un voluntario
-    @PostMapping(value="/")
+    @PostMapping(value="/{idPersona}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Valid @RequestBody Voluntario voluntario, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody VoluntarioDto voluntarioDto, BindingResult result, @PathVariable Long idPersona) {
 
         Map<String, Object> response = new HashMap<>();
         Voluntario newVoluntario = null;
@@ -66,7 +67,7 @@ public class VoluntarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
         try {
-            newVoluntario = voluntarioService.save(voluntario);
+            newVoluntario = voluntarioService.save(voluntarioDto, idPersona);
         } catch (DataAccessException e) {
             response.put("mensaje", "Error al guardar Voluntario en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -79,10 +80,8 @@ public class VoluntarioController {
     
     //EndPoint para actualizar voluntario
     @ResponseBody
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Voluntario voluntario, BindingResult result,
-            @PathVariable Long id) {
-        Voluntario volunt = voluntarioService.findById(id);
+    @PutMapping("/{idVoluntario}")
+    public ResponseEntity<?> update(@Valid @RequestBody VoluntarioDto voluntarioDto, BindingResult result, @PathVariable Long idVoluntario) {
 
         Voluntario voluntarioUpdate = null;
 
@@ -94,16 +93,14 @@ public class VoluntarioController {
             response.put("errors", errors);
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
-
-        if (volunt == null) {
-            response.put("mensaje", "Error al actualizar, el Voluntario volunt ID: ".concat(id.toString())
-                    .concat(" no existe en el servidor"));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-        }
         try {
-            volunt = voluntario;
-
-            voluntarioUpdate = voluntarioService.save(volunt);
+            voluntarioUpdate = voluntarioService.update(voluntarioDto, idVoluntario);
+            if (voluntarioUpdate == null) {
+                response.put("mensaje", "Error al actualizar, el Voluntario con ID: ".concat(idVoluntario.toString())
+                        .concat(" no existe en el servidor"));
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+                
+            }
         } catch (DataAccessException e) {
             response.put("mensaje", "Error al actualizar el Voluntario en el servidor");
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -134,6 +131,27 @@ public class VoluntarioController {
         }
         return new ResponseEntity<Voluntario>(voluntario, HttpStatus.OK);
     }
+
+    // EndPoint para buscar por Cedula
+    @ResponseBody
+    @GetMapping("/persona/{cedulaPersona}")
+    public ResponseEntity<?> findByCedula(@PathVariable String cedulaPersona) {
+        Voluntario voluntario = null;
+        Map<String, Object> response = new HashMap<>();
+        try {
+            voluntario = voluntarioService.findByCedula(cedulaPersona);
+        } catch (DataAccessException e) {
+            response.put("mensaje", "Error en la consulta de Voluntario en el servidor");
+            response.put("error", e.getMostSpecificCause().getMessage());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (voluntario == null) {
+            response.put("mensaje", "No existe el voluntario con CI:" .concat(cedulaPersona));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Voluntario>(voluntario, HttpStatus.OK);
+    }
+
 
     //EndPoint para eliminar un voluntario
     @ResponseBody
