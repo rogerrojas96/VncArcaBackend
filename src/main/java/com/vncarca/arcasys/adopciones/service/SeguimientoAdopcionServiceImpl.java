@@ -38,7 +38,7 @@ public class SeguimientoAdopcionServiceImpl implements ISeguimientoAdopcionServi
         if(adopcion != null){
             String correoAdoptante = adopcion.getAdoptante().getPersona().getCorreo();
             String mensaje = seguimientoDto.getMensajeSeguimiento();
-            enviarEmail(correoArca, correoAdoptante, ASUNTO_CORREO, mensaje);
+            //enviarEmail(correoArca, correoAdoptante, ASUNTO_CORREO, mensaje);
             SeguimientoAdopcion seguimiento = new SeguimientoAdopcion();
             seguimiento.setAdopcion(adopcion);
             seguimiento.setEstadoSeguimiento(true);
