@@ -40,10 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacionDTO;
 import com.vncarca.arcasys.carnetVacunacion.services.CarnetVacunacionService;
-import com.vncarca.notificaciones.models.Alarm;
-import com.vncarca.notificaciones.models.Event;
-import com.vncarca.notificaciones.services.AlarmService;
-
 import io.swagger.annotations.Api;
 
 @Api(tags = "Carnets de Vacunación", description = "Controlador para CRUD de Carnets de vacunación")
@@ -52,9 +48,6 @@ import io.swagger.annotations.Api;
 public class CarnetVacunacionController {
 	@Autowired
 	CarnetVacunacionService carnetVacunacionService;
-
-	@Autowired
-	AlarmService alarmService;
 
 	// EndPoint listar carnetsVacunaciones
 	@ResponseBody
@@ -93,10 +86,6 @@ public class CarnetVacunacionController {
 		}
 		try {
 			newcarnetVacunacion = carnetVacunacionService.save(carnetVacunacion);
-			Alarm a = new Alarm(false, "Vacunacion", newcarnetVacunacion.getFechaProximaAplicacion(),
-					newcarnetVacunacion.getAnimal());
-			alarmService.save(a);
-			// Event e = new Event(new HashSet<>(List.of(a)));
 		} catch (DataAccessException e) {
 			response.put("mensaje", "Error al guardar CarnetVacunacion en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());

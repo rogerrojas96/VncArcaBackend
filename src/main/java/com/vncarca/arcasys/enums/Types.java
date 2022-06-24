@@ -26,4 +26,8 @@ public class Types {
 	public enum ESTERILIZACION {
 		SI, NO
 	}
+
+	public enum EVENT {
+		VACUNA, TRATAMIENTO
+	}
 }

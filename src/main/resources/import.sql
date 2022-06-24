@@ -126,3 +126,7 @@ insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fec
 insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('Respuesta', false, '2022-10-01', 'mensaje', 5);
 insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 5);
 insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 5);
+
+
+
+INSERT INTO event_alarms (body,checked,event_day,event_type,animal_id) VALUES('Re',0,'2022-06-21','VACUNA',1),('qwqwwq',0,'2022-06-23','TRATAMIENTO',2),('sadasd',1,'2022-06-24','TRATAMIENTO',3),('dwedwed',1,'2022-07-12','VACUNA',1),('2rrr3',0,'2022-06-25','TRATAMIENTO',3);

@@ -26,8 +26,10 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.Animal;
+import com.vncarca.arcasys.enums.Enum;
+import com.vncarca.arcasys.enums.Types;
+import com.vncarca.arcasys.enums.Types.EVENT;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,18 +39,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "alarms")
-public class Alarm implements Serializable {
+@Table(name = "eventAlarms")
+public class EventAlarm implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = true)
-	private Boolean checked;
+	@Column(nullable = false)
+	private Boolean checked = false;
+
+	@NotNull
+	@Column(nullable = false)
+	@Enum(enumClass = Types.EVENT.class, regexp = "VACUNA o TRATAMIENTO")
+	private String eventType;
 
 	@Column(nullable = true)
-	private String description;
+	private String body;
 
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
@@ -57,20 +64,23 @@ public class Alarm implements Serializable {
 	@Column(nullable = true)
 	private Date eventDay;
 
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "animal_id", nullable = false, insertable = false, updatable = false)
+	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Animal.class)
+	@JoinColumn(name = "animal_id", nullable = false)
 	private Animal paciente;
 
 	/**
 	 * @param checked
-	 * @param description
+	 * @param eventType
+	 * @param body
 	 * @param eventDay
-	 * @param pacientes
+	 * @param paciente
 	 */
-	public Alarm(Boolean checked, String description, @NotNull Date eventDay, Animal paciente) {
+	public EventAlarm(Boolean checked,
+			@NotNull @Enum(enumClass = EVENT.class, regexp = "VACUNA o TRATAMIENTO") String eventType, String body,
+			@NotNull Date eventDay, Animal paciente) {
 		this.checked = checked;
-		this.description = description;
+		this.eventType = eventType;
+		this.body = body;
 		this.eventDay = eventDay;
 		this.paciente = paciente;
 	}

@@ -17,9 +17,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vncarca.arcasys.enums.Enum;
-import com.vncarca.arcasys.enums.Types;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
 
 import lombok.Data;
@@ -41,7 +38,7 @@ public class AnimalDTO {
 	private String procedencia;
 	private String observacionesProcedencia;
 	private float peso;
-	private Double adoptado;
+	private Boolean adoptado;
 	private String foto;
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
