@@ -1,5 +1,6 @@
 package com.vncarca.authsys.security.conf;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	com.vncarca.authsys.security.conf.AccessDeniedHandler accessDeniedHandler;
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

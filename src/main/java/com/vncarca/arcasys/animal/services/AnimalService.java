@@ -7,17 +7,18 @@ import org.springframework.data.domain.Pageable;
 
 import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.animal.model.AnimalDTO;
+import com.vncarca.arcasys.globalService.GlovalService;
 
-public interface AnimalService {
-	public Page<Animal> findAll(Pageable pageable);
+public interface AnimalService extends GlovalService<AnimalDTO, Animal> {
+	Page<Animal> findAll(Pageable pageable);
 
-	public Animal save(Animal animal);
+	Animal save(Animal animal);
 
-	public List<Animal> findAll();
+	List<Animal> findAll();
 
-	public Animal findById(Long id);
+	Animal findById(Long id);
 
-	public void delete(Long id);
+	void delete(Long id);
 
-	public AnimalDTO getinfoDTO(Animal a);
+	AnimalDTO getinfoDTO(Animal a);
 }

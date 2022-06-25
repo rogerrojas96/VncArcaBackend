@@ -6,12 +6,13 @@
 */
 package com.vncarca.arcasys.veterinario.model;
 
+import com.vncarca.arcasys.persona.model.PersonaDto;
+
 import lombok.Data;
 
 @Data
 public class VeterinarioDTO {
 	private Long id;
 	private String cargo;
-	private String nombreCompleto;
-	private String cedula;
+	private PersonaDto persona;
 }

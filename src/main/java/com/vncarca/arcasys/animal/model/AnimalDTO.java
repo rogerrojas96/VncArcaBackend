@@ -7,7 +7,6 @@
 package com.vncarca.arcasys.animal.model;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,7 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
 
 import lombok.Data;
 
@@ -44,7 +42,7 @@ public class AnimalDTO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date fechaNacimiento;
-	private List<FichaClinicaDTO> fichasClinicas;
+	// private List<FichaClinicaDTO> fichasClinicas;
 
 	// private Set<CarnetVacunacion> historialVacunaciones;
 }
