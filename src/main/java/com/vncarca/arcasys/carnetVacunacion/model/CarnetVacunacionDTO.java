@@ -17,9 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.animal.model.AnimalDTO;
-import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
 import com.vncarca.arcasys.carnetVacunacion.vacuna.model.VacunaDTO;
 
 import lombok.Data;

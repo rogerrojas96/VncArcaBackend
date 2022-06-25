@@ -1,14 +1,15 @@
 package com.vncarca.arcasys.veterinario.services;
 
-import java.util.Collection;
 import java.util.List;
-
-import com.vncarca.arcasys.veterinario.model.Veterinario;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface VeterinarioService {
+import com.vncarca.arcasys.globalService.GlovalService;
+import com.vncarca.arcasys.veterinario.model.Veterinario;
+import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
+
+public interface VeterinarioService extends GlovalService<VeterinarioDTO, Veterinario> {
 	public Page<Veterinario> findAll(Pageable pageable);
 
 	public Page<Veterinario> findByCedula(Pageable pageable, String cedula);
@@ -20,6 +21,8 @@ public interface VeterinarioService {
 	public Veterinario save(Veterinario veterinario);
 
 	public Veterinario findById(Long id);
+
+	public Veterinario findByPersonaId(Long id);
 
 	public void delete(Long id);
 }

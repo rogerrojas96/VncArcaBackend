@@ -55,8 +55,8 @@ public class Usuario implements Serializable {
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "persona_id", nullable = false)
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@JoinColumn(name = "persona_id", nullable = false)
 	private Persona persona;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

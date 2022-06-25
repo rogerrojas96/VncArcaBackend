@@ -7,13 +7,17 @@ import org.springframework.data.domain.Pageable;
 
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
+import com.vncarca.arcasys.globalService.GlovalService;
 
-public interface FichaClinicaService {
+public interface FichaClinicaService extends GlovalService<FichaClinicaDTO, FichaClinica> {
 	public Page<FichaClinica> findAll(Pageable pageable);
 
 	public Page<FichaClinica> findBytipoPacienteContaining(Pageable pageable, String tipoPaciente);
 
-	public FichaClinica save(FichaClinica fichaClinica);
+	public FichaClinicaDTO save(FichaClinicaRequestDTO fichaClinicaRequestDTO);
+
+	public FichaClinicaDTO update(FichaClinica fichaClinica);
 
 	// public List<FichaClinicaDTO> findAllDTO();
 	public List<FichaClinica> findAll();
@@ -24,6 +28,5 @@ public interface FichaClinicaService {
 
 	public void delete(Long id);
 
-	public FichaClinicaDTO fichaClinicaToDTO(FichaClinica ficjaClinica);
-
+	FichaClinica convertRequestToEntity(FichaClinicaRequestDTO fichaClinicaRequestDTO);
 }
