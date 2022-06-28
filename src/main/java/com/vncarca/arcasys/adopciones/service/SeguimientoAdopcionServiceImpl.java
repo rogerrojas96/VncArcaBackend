@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.vncarca.arcasys.adopciones.model.Adopcion;
 import com.vncarca.arcasys.adopciones.model.SeguimientoAdopcion;
 import com.vncarca.arcasys.adopciones.repository.AdopcionRepository;
 import com.vncarca.arcasys.adopciones.repository.SeguimientoAdopcionRepository;
+import com.vncarca.util.Response;
 
 @Service
 public class SeguimientoAdopcionServiceImpl implements ISeguimientoAdopcionService{
@@ -33,21 +35,27 @@ public class SeguimientoAdopcionServiceImpl implements ISeguimientoAdopcionServi
     private JavaMailSender javaMailSender;
     
     @Override
-    public SeguimientoAdopcion crearSeguimiento(SeguimientoAdopcionDto seguimientoDto, Long idAdopcion) {
+    public Response<SeguimientoAdopcion> crearSeguimiento(SeguimientoAdopcionDto seguimientoDto, Long idAdopcion) {
         Adopcion adopcion = adopcionRepository.findById(idAdopcion).orElse(null);
+        System.out.println("\n------------------------------------------------------------------------- "+correoArca);
         if(adopcion != null){
             String correoAdoptante = adopcion.getAdoptante().getPersona().getCorreo();
             String mensaje = seguimientoDto.getMensajeSeguimiento();
-            //enviarEmail(correoArca, correoAdoptante, ASUNTO_CORREO, mensaje);
-            SeguimientoAdopcion seguimiento = new SeguimientoAdopcion();
-            seguimiento.setAdopcion(adopcion);
-            seguimiento.setEstadoSeguimiento(true);
-            seguimiento.setFechaSeguimiento(seguimientoDto.getFechaSeguimiento());
-            seguimiento.setMensajeSeguimiento(mensaje);
-            seguimiento.setRespuestaAdoptante(null);
-            return seguimientoRepository.save(seguimiento);
+            boolean enviado = enviarEmail(correoArca, correoAdoptante, ASUNTO_CORREO, mensaje);
+            if (enviado) {
+                SeguimientoAdopcion seguimiento = new SeguimientoAdopcion();
+                seguimiento.setAdopcion(adopcion);
+                seguimiento.setEstadoSeguimiento(true);
+                seguimiento.setFechaSeguimiento(seguimientoDto.getFechaSeguimiento());
+                seguimiento.setMensajeSeguimiento(mensaje);
+                seguimiento.setRespuestaAdoptante(null);
+                seguimiento = seguimientoRepository.save(seguimiento);
+                return new Response<>(seguimiento, HttpStatus.CREATED);
+            }else{
+                return new Response<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
-        return null;
+        return new Response<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -109,12 +117,17 @@ public class SeguimientoAdopcionServiceImpl implements ISeguimientoAdopcionServi
 
 
     /* --------------------------------------- MÉTODOS AUXILIARES --------------------------------------- */
-    private void enviarEmail(String correoEmisor, String correoReceptor, String asunto, String cuerpoMensaje){
-        SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom(correoEmisor);
-        mail.setTo(correoReceptor);
-        mail.setSubject(asunto);
-        mail.setText(cuerpoMensaje);
-        javaMailSender.send(mail);
+    private boolean enviarEmail(String correoEmisor, String correoReceptor, String asunto, String cuerpoMensaje){
+        try {
+            SimpleMailMessage mail = new SimpleMailMessage();
+            mail.setFrom(correoEmisor);
+            mail.setTo(correoReceptor);
+            mail.setSubject(asunto);
+            mail.setText(cuerpoMensaje);
+            javaMailSender.send(mail);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
