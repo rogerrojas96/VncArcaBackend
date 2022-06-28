@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vncarca.arcasys.adopciones.dto.SeguimientoAdopcionDto;
 import com.vncarca.arcasys.adopciones.model.SeguimientoAdopcion;
 import com.vncarca.arcasys.adopciones.service.ISeguimientoAdopcionService;
+import com.vncarca.util.Response;
 
 import io.swagger.annotations.Api;
 
@@ -48,14 +49,18 @@ public class SeguimientoAdopcionController {
         response.clear();
         if(!result.hasErrors()){
              try{
-                seguimiento = seguimientoService.crearSeguimiento(seguimientoDto, idAdopcion);
-                if(seguimiento != null){
+                Response <SeguimientoAdopcion> seguimiento = seguimientoService.crearSeguimiento(seguimientoDto, idAdopcion);
+                if(seguimiento.getStatus() == HttpStatus.CREATED){
                     response.put("mensaje", "Seguimiento creado con exito!");
                     response.put("seguimiento", seguimiento);
                     status = HttpStatus.CREATED;
-                }else{
+                }else if( seguimiento.getStatus() == HttpStatus.BAD_REQUEST ){
                     response.put("mensaje", "No se encontro una adopción con: "+idAdopcion.toString());
                     status = HttpStatus.BAD_REQUEST;
+                }
+                else{
+                    response.put("mensaje", " Error en el servidor al intentar enviar un Email ");
+                    status = HttpStatus.INTERNAL_SERVER_ERROR;
                 }
             }catch(DataAccessException e){
                 response.put("mensaje", "Ha ocurrido un error en el servidor al intentar crear el seguimiento! ");

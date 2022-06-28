@@ -1,30 +1,37 @@
 package com.vncarca.arcasys.fichaclinica.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
-import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
-
-
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.vncarca.arcasys.animal.model.Animal;
-import com.vncarca.arcasys.animal.model.AnimalDTO;
+import com.vncarca.arcasys.animal.services.AnimalService;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
-import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.model.PersonaDto;
-import com.vncarca.arcasys.veterinario.model.Veterinario;
-import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
+import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
+import com.vncarca.arcasys.veterinario.services.VeterinarioService;
 
 @Service
+@Transactional
 public class FichaClinicaServiceImp implements FichaClinicaService {
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Autowired
 	FichaClinicaRepository fichaClinicaRepository;
+
+	@Autowired
+	VeterinarioService veterinarioService;
+
+	@Autowired
+	AnimalService animalService;
 
 	@Override
 	public Page<FichaClinica> findAll(Pageable pageable) {
@@ -32,16 +39,45 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	}
 
 	@Override
-	public FichaClinica save(FichaClinica fichaClinica) {
-
-		return fichaClinicaRepository.save(fichaClinica);
+	public FichaClinicaDTO save(FichaClinicaRequestDTO fichaClinicaRequestDTO) {
+		return convertToDto(fichaClinicaRepository.save(convertRequestToEntity(fichaClinicaRequestDTO)));
 	}
 
-	// @Override
-	// public List<FichaClinicaDTO> findAll() {
-	// return
-	// fichaClinicaRepository.findAll().stream().map(this::fichaClinicaToDTO).collect(Collectors.toList());
-	// }
+	@Override
+	public FichaClinicaDTO update(FichaClinica fichaClinica) {
+		return convertToDto(fichaClinicaRepository.save(fichaClinica));
+	}
+
+	@Override
+	public FichaClinica convertRequestToEntity(FichaClinicaRequestDTO fichaClinicaRequestDTO) {
+		FichaClinica fichaClinica = new FichaClinica(
+				fichaClinicaRequestDTO.getFechaIngreso(),
+				fichaClinicaRequestDTO.getMotivoConsulta(),
+				fichaClinicaRequestDTO.getHallazgos(),
+				fichaClinicaRequestDTO.getTemperatura(),
+				fichaClinicaRequestDTO.getConjuntiva(),
+				fichaClinicaRequestDTO.getFrecuenciaCardiaca(),
+				fichaClinicaRequestDTO.getFrecuenciaRespiratoria(),
+				fichaClinicaRequestDTO.getTRC(),
+				fichaClinicaRequestDTO.getMucosas(),
+				fichaClinicaRequestDTO.getEsterilizacion(),
+				fichaClinicaRequestDTO.getAlimentacion(),
+				fichaClinicaRequestDTO.getPronostico(),
+				fichaClinicaRequestDTO.getTipoPaciente(),
+				fichaClinicaRequestDTO.getExamenes_solicitados(),
+				fichaClinicaRequestDTO.getDiagnosticoDiferencial(),
+				fichaClinicaRequestDTO.getCosto(),
+				veterinarioService.findByPersonaId(fichaClinicaRequestDTO.getPersonaId()),
+				animalService.findById(fichaClinicaRequestDTO.getAnimalId()));
+
+		if (fichaClinicaRepository.existsById(fichaClinicaRequestDTO.getId())) {
+			FichaClinica oldFichaClinica = findById(fichaClinicaRequestDTO.getId());
+			fichaClinica.setId(oldFichaClinica.getId());
+			;
+		}
+
+		return fichaClinica;
+	}
 
 	@Override
 	public List<FichaClinica> findAll() {
@@ -50,7 +86,8 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 
 	@Override
 	public FichaClinica findById(Long id) {
-		return fichaClinicaRepository.findById(id).orElse(null);
+		return fichaClinicaRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+				"Ficha clinica con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
@@ -64,61 +101,27 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	}
 
 	@Override
-	public FichaClinicaDTO fichaClinicaToDTO(FichaClinica fichaClinica) {
-		FichaClinicaDTO fichaClinicaDTO = new FichaClinicaDTO();
-		fichaClinicaDTO.setId(fichaClinica.getId());
-		fichaClinicaDTO.setAlimentacion(fichaClinica.getAlimentacion());
-		// fichaClinicaDTO.setAnimal(AnimalToDTO(fichaClinica.getAnimal()));
-		fichaClinicaDTO.setConjuntiva(fichaClinica.getConjuntiva());
-		fichaClinicaDTO.setCosto(fichaClinica.getCosto());
-		fichaClinicaDTO.setDiagnosticoDiferencial(fichaClinica.getDiagnosticoDiferencial());
-		fichaClinicaDTO.setEsterilizacion(fichaClinica.getEsterilizacion());
-		fichaClinicaDTO.setFechaIngreso(fichaClinica.getFechaIngreso());
-		fichaClinicaDTO.setFrecuenciaCardiaca(fichaClinica.getFrecuenciaCardiaca());
-		fichaClinicaDTO.setFrecuenciaRespiratoria(fichaClinica.getFrecuenciaRespiratoria());
-		fichaClinicaDTO.setHallazgos(fichaClinica.getHallazgos());
-		fichaClinicaDTO.setMotivoConsulta(fichaClinica.getMotivoConsulta());
-		fichaClinicaDTO.setMucosas(fichaClinica.getMucosas());
-		fichaClinicaDTO.setPronostico(fichaClinica.getPronostico());
-		fichaClinicaDTO.setTRC(fichaClinica.getPronostico());
-		fichaClinicaDTO.setTemperatura(fichaClinica.getTemperatura());
-		fichaClinicaDTO.setVeterinario(VeterinarioToDTO(fichaClinica.getVeterinario()));
-		return fichaClinicaDTO;
-	}
-
-	private VeterinarioDTO VeterinarioToDTO(Veterinario veterinario) {
-		VeterinarioDTO veterinarioDTO = new VeterinarioDTO();
-		veterinarioDTO.setId(veterinario.getId());
-		veterinarioDTO.setCargo(veterinario.getCargo());
-		veterinarioDTO.setNombreCompleto(PersonaToDTO(veterinario.getPersona()));
-		veterinarioDTO.setCedula(veterinario.getPersona().getCedula());
-		return veterinarioDTO;
-	}
-
-	private String PersonaToDTO(Persona persona) {
-		PersonaDto personaDto = new PersonaDto();
-		personaDto.setApellidos(persona.getApellidos());
-		personaDto.setNombre(persona.getNombre());
-		return personaDto.toString();
-	}
-
-	private AnimalDTO AnimalToDTO(Animal animal) {
-		AnimalDTO animalDto = new AnimalDTO();
-		animalDto.setId(animal.getId());
-		animalDto.setNombre(animal.getNombre());
-		animalDto.setFechaNacimiento(animal.getFechaNacimiento());
-		animalDto.setFoto(animal.getFoto());
-		animalDto.setLugarEstancia(animal.getLugarEstancia());
-		animalDto.setSexo(animal.getSexo());
-		return animalDto;
+	public FichaClinicaDTO convertToDto(FichaClinica fihcaClinica) {
+		FichaClinicaDTO fichaClinicaDto = modelMapper.map(fihcaClinica, FichaClinicaDTO.class);
+		return fichaClinicaDto;
 	}
 
 	@Override
 	public List<FichaClinicaDTO> findByanimalId(Long id) {
 
-		return fichaClinicaRepository.findByanimalId(id).stream().map(this::fichaClinicaToDTO).collect(Collectors.toList());
+		return fichaClinicaRepository.findByanimalId(id).stream().map(this::convertToDto).collect(Collectors.toList());
+	}
+
+	@Override
+	public FichaClinica convertToEntity(FichaClinicaDTO dto) {
+		return modelMapper.map(dto, FichaClinica.class);
 	}
 }
 
+// @Override
+// public List<FichaClinicaDTO> findAll() {
+// return
+// fichaClinicaRepository.findAll().stream().map(this::fichaClinicaToDTO).collect(Collectors.toList());
+// }
 // List<FichaClinicaDTO> list = new
 // ArrayList<>();fichaClinicaRepository.findAll().iterator().forEachRemaining((f)->list.add(fichaClinicaToDTO(f)));

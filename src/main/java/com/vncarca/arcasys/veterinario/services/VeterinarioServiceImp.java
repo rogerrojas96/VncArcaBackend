@@ -1,7 +1,14 @@
 package com.vncarca.arcasys.veterinario.services;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.model.PersonaDto;
@@ -9,15 +16,14 @@ import com.vncarca.arcasys.veterinario.model.Veterinario;
 import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 import com.vncarca.arcasys.veterinario.repository.VeterinarioRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 @Service
+@Transactional
 public class VeterinarioServiceImp implements VeterinarioService {
 	@Autowired
 	VeterinarioRepository veterinarioRepository;
+
+	@Autowired
+	ModelMapper mapper;
 
 	@Override
 	public Page<Veterinario> findAll(Pageable pageable) {
@@ -40,30 +46,14 @@ public class VeterinarioServiceImp implements VeterinarioService {
 	@Override
 	public Veterinario findById(Long id) {
 
-		return veterinarioRepository.findById(id).orElse(null);
+		return veterinarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+				"Veterinario con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
 	public void delete(Long id) {
 
 		veterinarioRepository.deleteById(id);
-	}
-
-	private VeterinarioDTO convertVeterinarioDTO(Veterinario veterinario) {
-		VeterinarioDTO veterinarioDTO = new VeterinarioDTO();
-		veterinarioDTO.setId(veterinario.getId());
-		veterinarioDTO.setCargo(veterinario.getCargo());
-		veterinarioDTO.setNombreCompleto(veterinario.getPersona().toString());
-		veterinarioDTO.setCedula(veterinario.getPersona().getCedula());
-		return veterinarioDTO;
-	}
-
-	private PersonaDto ConvertPersonaDTO(Persona persona) {
-		PersonaDto personaDto = new PersonaDto();
-		personaDto.setApellidos(persona.getApellidos());
-		personaDto.setCedula(persona.getCedula());
-		personaDto.setNombre(persona.getNombre());
-		return personaDto;
 	}
 
 	@Override
@@ -75,5 +65,25 @@ public class VeterinarioServiceImp implements VeterinarioService {
 	@Override
 	public Page<Veterinario> findByCedulaLike(Pageable pageable, String cedula) {
 		return veterinarioRepository.findByPersona_cedulaContaining(pageable, cedula);
+	}
+
+	@Override
+	public VeterinarioDTO convertToDto(Veterinario V) {
+		VeterinarioDTO veterinarioDTO = new VeterinarioDTO();
+		veterinarioDTO.setId(V.getId());
+		veterinarioDTO.setCargo(V.getCargo());
+		veterinarioDTO.setPersona(mapper.map(V.getPersona(), PersonaDto.class));
+		return veterinarioDTO;
+	}
+
+	@Override
+	public Veterinario convertToEntity(VeterinarioDTO V) {
+		return new Veterinario(V.getId(), V.getCargo(), mapper.map(V.getPersona(), Persona.class));
+	}
+
+	@Override
+	public Veterinario findByPersonaId(Long id) {
+		return veterinarioRepository.findByPersonaId(id).orElseThrow(() -> new NoSuchElementException(
+				"Veterinario con persona ID: " + id.toString() + " no existe en el servidor"));
 	}
 }

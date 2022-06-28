@@ -24,13 +24,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.Animal;
 import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
+import com.vncarca.arcasys.enums.Types.ESTERILIZACION;
+import com.vncarca.arcasys.enums.Types.TIPO_PACIENTE;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -109,7 +113,53 @@ public class FichaClinica implements Serializable {
 	@NotNull
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "animal_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "animal_id", nullable = false, insertable = true, updatable = true)
 	private Animal animal;
+
+	/**
+	 * @param fechaIngreso
+	 * @param motivoConsulta
+	 * @param hallazgos
+	 * @param temperatura
+	 * @param conjuntiva
+	 * @param frecuenciaCardiaca
+	 * @param frecuenciaRespiratoria
+	 * @param tRC
+	 * @param mucosas
+	 * @param esterilizacion
+	 * @param alimentacion
+	 * @param pronostico
+	 * @param tipoPaciente
+	 * @param examenes_solicitados
+	 * @param diagnosticoDiferencial
+	 * @param costo
+	 * @param veterinario
+	 * @param animal
+	 */
+	public FichaClinica(Date fechaIngreso, String motivoConsulta, String hallazgos, float temperatura, String conjuntiva,
+			float frecuenciaCardiaca, float frecuenciaRespiratoria, String tRC, String mucosas,
+			@NotNull @Enum(enumClass = ESTERILIZACION.class, regexp = "SI o NO") String esterilizacion, float alimentacion,
+			String pronostico, @Enum(enumClass = TIPO_PACIENTE.class, regexp = "INTERNO o EXTERNO") String tipoPaciente,
+			String examenes_solicitados, String diagnosticoDiferencial, float costo, @NotNull Veterinario veterinario,
+			@NotNull Animal animal) {
+		this.fechaIngreso = fechaIngreso;
+		this.motivoConsulta = motivoConsulta;
+		this.hallazgos = hallazgos;
+		this.temperatura = temperatura;
+		this.conjuntiva = conjuntiva;
+		this.frecuenciaCardiaca = frecuenciaCardiaca;
+		this.frecuenciaRespiratoria = frecuenciaRespiratoria;
+		TRC = tRC;
+		this.mucosas = mucosas;
+		this.esterilizacion = esterilizacion;
+		this.alimentacion = alimentacion;
+		this.pronostico = pronostico;
+		this.tipoPaciente = tipoPaciente;
+		this.examenes_solicitados = examenes_solicitados;
+		this.diagnosticoDiferencial = diagnosticoDiferencial;
+		this.costo = costo;
+		this.veterinario = veterinario;
+		this.animal = animal;
+	}
 
 }

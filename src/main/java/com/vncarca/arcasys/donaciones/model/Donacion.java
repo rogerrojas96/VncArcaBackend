@@ -44,7 +44,7 @@ public class Donacion {
 
 
     /* ------------------------------------- Relaciones  ------------------------------------- */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @JoinColumn(name="id_persona")
     private Persona persona;

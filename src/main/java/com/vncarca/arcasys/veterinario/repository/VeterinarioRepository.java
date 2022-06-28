@@ -1,6 +1,6 @@
 package com.vncarca.arcasys.veterinario.repository;
 
-import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,4 +14,6 @@ public interface VeterinarioRepository extends JpaRepository<Veterinario, Long> 
 	public Page<Veterinario> findByPersona_cedulaIs(Pageable pageable, String cedula);
 
 	public Page<Veterinario> findByPersona_cedulaContaining(Pageable pageable, String cedula);
+
+	Optional<Veterinario> findByPersonaId(Long id);
 }

@@ -17,16 +17,4 @@ public class PersonaDto {
 	private String telefono;
 	private String celular;
 	private String correo;
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-
-	@Override
-	public String toString() {
-		return apellidos + " " + nombre;
-	}
-
 }

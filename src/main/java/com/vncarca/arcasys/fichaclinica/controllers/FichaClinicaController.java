@@ -3,7 +3,7 @@ package com.vncarca.arcasys.fichaclinica.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
 import com.vncarca.arcasys.fichaclinica.services.FichaClinicaService;
+import com.vncarca.arcasys.responses.CustomResponseEntity;
 
 import io.swagger.annotations.Api;
 
@@ -70,64 +71,37 @@ public class FichaClinicaController {
 	// EndPoint registrar FichaClinica
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@Valid @RequestBody FichaClinica fichaClinica, BindingResult result) {
-		Map<String, Object> response = new HashMap<>();
-		FichaClinica newFichaClinica = null;
-
-		if (result.hasErrors()) {
-			List<String> errors = result.getFieldErrors().stream().map(err -> {
-				return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
-			}).collect(Collectors.toList());
-			response.put("errors", errors);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<?> create(@Valid @RequestBody FichaClinicaRequestDTO fichaClinicaRequestDTO) {
 		try {
-			newFichaClinica = fichaClinicaService.save(fichaClinica);
+			FichaClinicaDTO fichaClinicaDTO = fichaClinicaService.save(fichaClinicaRequestDTO);
+			return new CustomResponseEntity(HttpStatus.CREATED, "Ficha clínica guardada con exito", fichaClinicaDTO)
+					.response();
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al guardar FichaClinica en el servidor");
-			response.put("error", e.getMostSpecificCause().getMessage());
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataAccessException("Error al guardar Ficha clinínica en el servidor", e) {
+			};
 		}
-		response.put("mensaje", "FichaClinica guardada fichaCli exito");
-		response.put("fichaClinica", newFichaClinica);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
 	// EndPoint Actualizar FichaClinica
 	@ResponseBody
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody FichaClinica fichaClinica, BindingResult result,
+	public ResponseEntity<?> update(@Valid @RequestBody FichaClinicaRequestDTO fichaClinicaRequestDTO,
 			@PathVariable Long id) {
-		FichaClinica fichaCli = fichaClinicaService.findById(id);
-
-		FichaClinica fichaClinicaUpdate = null;
-
-		Map<String, Object> response = new HashMap<>();
-		if (result.hasErrors()) {
-			List<String> errors = result.getFieldErrors().stream().map(err -> {
-				return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
-			}).collect(Collectors.toList());
-			response.put("errors", errors);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		FichaClinica animalToUpdate = fichaClinicaService.findById(id);
+		if (!Objects.equals(id, fichaClinicaRequestDTO.getId())) {
+			throw new IllegalArgumentException("El id {" + id + "} no coincide con el id de la ficha Clinica");
 		}
 
-		if (fichaCli == null) {
-			response.put("mensaje", "Error al actualizar, el FichaClinica fichaCli ID: ".concat(id.toString())
-					.concat(" no existe en el servidor"));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
 		try {
-			fichaCli = fichaClinica;
-
-			fichaClinicaUpdate = fichaClinicaService.save(fichaCli);
+			animalToUpdate = fichaClinicaService.convertRequestToEntity(fichaClinicaRequestDTO);
+			FichaClinicaDTO fichaUpdate = fichaClinicaService.update(animalToUpdate);
+			return new CustomResponseEntity(HttpStatus.CREATED, "Ficha clínica actualizada con exito",
+					fichaUpdate).response();
 		} catch (DataAccessException e) {
-			response.put("mensaje", "Error al actualizar el FichaClinica en el servidor");
-			response.put("error", e.getMostSpecificCause().getMessage());
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataAccessException("Error al actualizar el Animal en el servidor", e) {
+			};
 		}
-		response.put("mensaje", "FichaClinica actualizada fichaCli exito");
-		response.put("fichaClinica", fichaClinicaUpdate);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
 	}
 
 	// EndPoint Eliminar FichaClinica
