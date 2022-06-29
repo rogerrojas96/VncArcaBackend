@@ -110,8 +110,8 @@ public class AnimalRefugio implements Serializable {
 	@Column(nullable = true)
 	private Boolean adoptado;
 
-	@Column(nullable = false)
-	private Boolean deleted = Boolean.FALSE;
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted;
 
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")

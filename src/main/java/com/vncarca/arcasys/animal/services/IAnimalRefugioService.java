@@ -31,6 +31,6 @@ public interface IAnimalRefugioService {
 	AnimalRefugioResponse getinfoDto(AnimalRefugio a);
 
 	Page<AnimalRefugioResponse> findByDeleted(Pageable pageable, Boolean deleted);
-
+	Page<AnimalRefugioResponse> findAll(Pageable pageable);
 	List<AnimalRefugioResponse> findAll(boolean isDeleted);
 }

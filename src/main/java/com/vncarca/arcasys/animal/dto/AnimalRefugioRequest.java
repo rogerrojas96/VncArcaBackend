@@ -21,9 +21,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnimalRefugioRequest {
-    
+
 	@NotBlank
-    private String nombre;
+	private String nombre;
 
 	@NotBlank
 	private String especie;
@@ -53,7 +53,7 @@ public class AnimalRefugioRequest {
 
 	private Boolean adoptado;
 
-	private Boolean deleted;
+	private Boolean deleted = Boolean.FALSE;
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

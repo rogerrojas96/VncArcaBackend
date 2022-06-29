@@ -187,6 +187,12 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 		return animalRepository.findByDeleted(pageable, deleted).map(AnimalRefugioMapper::toResponse);
 	}
 
+
+	@Override
+	public Page<AnimalRefugioResponse> findAll(Pageable pageable) {
+		return animalRepository.findAll(pageable).map(AnimalRefugioMapper::toResponse);
+	}
+
 	/*@Autowired
 	private AnimalRefugioRepository animalRepository;
 
