@@ -66,6 +66,6 @@ public class Persona implements Serializable {
 	@NotBlank
 	@NotNull
 	@Email
-    @Column(length = 100, unique = true, nullable = false)
+    @Column(length = 100, unique = false, nullable = false)
     private String correo;
 }

@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vncarca.arcasys.animal.services.AnimalService;
+import com.vncarca.arcasys.animal.services.IAnimalRefugioService;
 import com.vncarca.notificaciones.models.EventAlarm;
 import com.vncarca.notificaciones.models.DTO.EventRequestBody;
 import com.vncarca.notificaciones.models.DTO.ListUncheckEvents;
@@ -30,13 +30,13 @@ public class EventServicesImp implements VacunaEventService {
 	AlarmRepository alarmRepository;
 
 	@Autowired
-	AnimalService animalService;
+	IAnimalRefugioService animalService;
 
 	@Override
 	@Transactional
 	public VacunaEventDTO save(EventRequestBody alarm) {
 		return getEventInfo(alarmRepository.save(new EventAlarm(alarm.getChecked(), alarm.getEventType(), alarm.getBody(),
-				alarm.getEventDay(), animalService.findById(alarm.getPacienteId()))));
+				alarm.getEventDay(), animalService.getAnimalEntityPorId(alarm.getPacienteId()))));
 	}
 
 	@Override
@@ -46,7 +46,6 @@ public class EventServicesImp implements VacunaEventService {
 
 	@Override
 	public Page<EventAlarm> findAll(Pageable pageable) {
-
 		return alarmRepository.findAll(pageable);
 	}
 
@@ -103,7 +102,7 @@ public class EventServicesImp implements VacunaEventService {
 				entity.getChecked(),
 				entity.getBody(),
 				entity.getEventType(),
-				animalService.getinfoDTO(entity.getPaciente()));
+				animalService.getinfoDto(entity.getPaciente()));
 	}
 
 	private ListUncheckEvents getUnckekedEventList(EventAlarm entity) {

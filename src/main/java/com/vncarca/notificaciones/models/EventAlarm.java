@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vncarca.arcasys.animal.model.Animal;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.enums.Types.EVENT;
@@ -64,9 +64,9 @@ public class EventAlarm implements Serializable {
 	@Column(nullable = true)
 	private Date eventDay;
 
-	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Animal.class)
+	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = AnimalRefugio.class)
 	@JoinColumn(name = "animal_id", nullable = false)
-	private Animal paciente;
+	private AnimalRefugio paciente;
 
 	/**
 	 * @param checked
@@ -77,7 +77,7 @@ public class EventAlarm implements Serializable {
 	 */
 	public EventAlarm(Boolean checked,
 			@NotNull @Enum(enumClass = EVENT.class, regexp = "VACUNA o TRATAMIENTO") String eventType, String body,
-			@NotNull Date eventDay, Animal paciente) {
+			@NotNull Date eventDay, AnimalRefugio paciente) {
 		this.checked = checked;
 		this.eventType = eventType;
 		this.body = body;

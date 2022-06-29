@@ -21,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vncarca.arcasys.animal.model.Animal;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.enums.Types.ESTERILIZACION;
@@ -114,7 +114,7 @@ public class FichaClinica implements Serializable {
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "animal_id", nullable = false, insertable = true, updatable = true)
-	private Animal animal;
+	private AnimalRefugio animal;
 
 	/**
 	 * @param fechaIngreso
@@ -141,7 +141,7 @@ public class FichaClinica implements Serializable {
 			@NotNull @Enum(enumClass = ESTERILIZACION.class, regexp = "SI o NO") String esterilizacion, float alimentacion,
 			String pronostico, @Enum(enumClass = TIPO_PACIENTE.class, regexp = "INTERNO o EXTERNO") String tipoPaciente,
 			String examenes_solicitados, String diagnosticoDiferencial, float costo, @NotNull Veterinario veterinario,
-			@NotNull Animal animal) {
+			@NotNull AnimalRefugio animal) {
 		this.fechaIngreso = fechaIngreso;
 		this.motivoConsulta = motivoConsulta;
 		this.hallazgos = hallazgos;

@@ -37,7 +37,6 @@ public class SeguimientoAdopcionServiceImpl implements ISeguimientoAdopcionServi
     @Override
     public Response<SeguimientoAdopcion> crearSeguimiento(SeguimientoAdopcionDto seguimientoDto, Long idAdopcion) {
         Adopcion adopcion = adopcionRepository.findById(idAdopcion).orElse(null);
-        System.out.println("\n------------------------------------------------------------------------- "+correoArca);
         if(adopcion != null){
             String correoAdoptante = adopcion.getAdoptante().getPersona().getCorreo();
             String mensaje = seguimientoDto.getMensajeSeguimiento();

@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vncarca.arcasys.animal.model.AnimalDTO;
+import com.vncarca.arcasys.animal.dto.AnimalRefugioResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,5 +32,5 @@ public class VacunaEventDTO {
 	private Boolean checked;
 	private String body;
 	private String eventType;
-	private AnimalDTO paciente;
+	private AnimalRefugioResponse paciente;
 }

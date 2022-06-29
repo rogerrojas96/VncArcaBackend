@@ -12,8 +12,8 @@ import com.vncarca.arcasys.adopciones.model.SeguimientoAdopcion;
 import com.vncarca.arcasys.adopciones.repository.AdopcionRepository;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
 import com.vncarca.arcasys.adopciones.repository.SeguimientoAdopcionRepository;
-import com.vncarca.arcasys.animal.model.Animal;
-import com.vncarca.arcasys.animal.repository.AnimalRepository;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
+import com.vncarca.arcasys.animal.repository.AnimalRefugioRepository;
 import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
 
@@ -27,7 +27,7 @@ public class AdopcionServiceImpl implements IAdopcionService{
     private AdopcionRepository adopcionRepository;
 
     @Autowired
-    private AnimalRepository animalRepository;
+    private AnimalRefugioRepository animalRepository;
 
 
     @Autowired
@@ -69,7 +69,7 @@ public class AdopcionServiceImpl implements IAdopcionService{
 
     @Override
     public Adopcion crearAdocion(AdopcionDto adopcionDto, Long idAdoptante, Long idAnimal) {
-        Animal animal = animalRepository.findById(idAnimal).orElse(null);
+        AnimalRefugio animal = animalRepository.findById(idAnimal).orElse(null);
         Adoptante adoptante = adoptanteRepository.findById(idAdoptante).orElse(null);
         if(adoptante !=null && animal != null && !adopcionRepository.existsByAnimal(animal)){ 
             animal.setAdoptado(true);
@@ -89,7 +89,7 @@ public class AdopcionServiceImpl implements IAdopcionService{
     public boolean eliminarAdopcion(Long idAdopcion) {
         if(adopcionRepository.existsById(idAdopcion)){
             Adopcion adopcion = adopcionRepository.findById(idAdopcion).get();
-            Animal animal = adopcion.getAnimal();
+            AnimalRefugio animal = adopcion.getAnimal();
             animal.setAdoptado(false);
             animal.setLugarEstancia(Types.ESTANCIA.REFUGIO.toString());
             animal = animalRepository.save(animal);
@@ -108,7 +108,7 @@ public class AdopcionServiceImpl implements IAdopcionService{
     @Override
     public Adopcion actualizarAdocion(AdopcionDto adopcionDto, Long idAdopcion, Long idAnimal) {
         Adopcion adopcion = null;
-        Animal animal = null;
+        AnimalRefugio animal = null;
 
         if (adopcionRepository.existsById(idAdopcion)){
             adopcion = adopcionRepository.findById(idAdopcion).get();

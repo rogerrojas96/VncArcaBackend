@@ -25,15 +25,17 @@ import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 @Entity
-@Table(name = "animales")
-public class Animal implements Serializable {
+@Table(name = "animales_refugio")
+public class AnimalRefugio implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -71,10 +73,6 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private String raza;
 
-	@NotBlank
-	@NotNull
-	private String tamanyo;
-
 	/*
 	 * El usuario podrá registrar el lugar en donde se encuentran los animales.
 	 * (Clínica, Refugio)
@@ -107,12 +105,6 @@ public class Animal implements Serializable {
 	@Column(nullable = true)
 	private Boolean adoptado;
 
-	@Lob
-	@NotNull
-	@Basic(fetch = FetchType.LAZY)
-	@Column(columnDefinition = "text")
-	private String foto;
-
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -120,15 +112,18 @@ public class Animal implements Serializable {
 	@Column(nullable = false)
 	private Date fechaNacimiento;
 
-	// @NotNull
-	// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal", orphanRemoval =
-	// true, fetch = FetchType.EAGER, targetEntity = FichaClinica.class)
-	// private List<FichaClinica> fichasClinicas = new ArrayList<>();
 
-	// @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal", fetch =
-	// FetchType.EAGER, orphanRemoval = true, targetEntity = CarnetVacunacion.class)
-	// private Set<CarnetVacunacion> historialVacunaciones;
+	/*
+	 * Atributos propios de la imagen que se guarda en el servidor de cloudinary ----------------------------------------------
+	 */
+	@Column(name = "nombre_imagen_animal_cld")
+	private String nombreImagenAnimalCld;
 
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	@Column(columnDefinition = "text", name = "url_imagen_animal_cld")
+	private String urlImagenAnimalCld;
+
+	@Column(name = "id_imagen_animal_cld")
+	private String idImagenAnimalCld;
 }

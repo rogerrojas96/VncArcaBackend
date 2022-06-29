@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.vncarca.arcasys.globalService.GlovalService;
+import com.vncarca.arcasys.globalService.GlobalService;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 
-public interface VeterinarioService extends GlovalService<VeterinarioDTO, Veterinario> {
+public interface VeterinarioService extends GlobalService<VeterinarioDTO, Veterinario> {
 	public Page<Veterinario> findAll(Pageable pageable);
 
 	public Page<Veterinario> findByCedula(Pageable pageable, String cedula);

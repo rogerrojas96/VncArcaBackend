@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
-import com.vncarca.arcasys.globalService.GlovalService;
+import com.vncarca.arcasys.globalService.GlobalService;
 
-public interface FichaClinicaService extends GlovalService<FichaClinicaDTO, FichaClinica> {
+public interface FichaClinicaService extends GlobalService<FichaClinicaDTO, FichaClinica> {
 	public Page<FichaClinica> findAll(Pageable pageable);
 
 	public Page<FichaClinica> findBytipoPacienteContaining(Pageable pageable, String tipoPaciente);

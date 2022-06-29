@@ -23,7 +23,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vncarca.arcasys.animal.model.Animal;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -55,9 +55,9 @@ public class Adopcion implements Serializable{
 
     @OneToOne
     @JoinColumn(name="id_animal")
-    private Animal animal; 
+    private AnimalRefugio animal; 
 
-    public Adopcion(Date fechaAdopcion, String descripcion, Adoptante adoptante, Animal animal) {
+    public Adopcion(Date fechaAdopcion, String descripcion, Adoptante adoptante, AnimalRefugio animal) {
         this.fechaAdopcion = fechaAdopcion;
         this.descripcion = descripcion;
         this.adoptante = adoptante;

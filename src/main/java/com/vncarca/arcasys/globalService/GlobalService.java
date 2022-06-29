@@ -6,7 +6,7 @@
 */
 package com.vncarca.arcasys.globalService;
 
-public interface GlovalService<DTO, ENTITY> {
+public interface GlobalService<DTO, ENTITY> {
 
 	DTO convertToDto(ENTITY entity);
 

@@ -2,14 +2,14 @@ package com.vncarca.arcasys.persona.services;
 
 import java.util.List;
 
-import com.vncarca.arcasys.globalService.GlovalService;
+import com.vncarca.arcasys.globalService.GlobalService;
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.model.PersonaDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface PersonaService extends GlovalService<PersonaDto, Persona> {
+public interface PersonaService extends GlobalService<PersonaDto, Persona> {
 	public Page<Persona> findAll(Pageable pageable);
 
 	public Page<Persona> findByCedula(Pageable pageable, String cedula);

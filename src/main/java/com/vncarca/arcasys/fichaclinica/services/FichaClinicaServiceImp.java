@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vncarca.arcasys.animal.services.AnimalService;
+import com.vncarca.arcasys.animal.services.IAnimalRefugioService;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
 import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
@@ -31,7 +31,7 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	VeterinarioService veterinarioService;
 
 	@Autowired
-	AnimalService animalService;
+	IAnimalRefugioService animalService;
 
 	@Override
 	public Page<FichaClinica> findAll(Pageable pageable) {
@@ -68,7 +68,7 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 				fichaClinicaRequestDTO.getDiagnosticoDiferencial(),
 				fichaClinicaRequestDTO.getCosto(),
 				veterinarioService.findByPersonaId(fichaClinicaRequestDTO.getPersonaId()),
-				animalService.findById(fichaClinicaRequestDTO.getAnimalId()));
+				animalService.getAnimalEntityPorId(fichaClinicaRequestDTO.getAnimalId()));
 
 		if (fichaClinicaRepository.existsById(fichaClinicaRequestDTO.getId())) {
 			FichaClinica oldFichaClinica = findById(fichaClinicaRequestDTO.getId());

@@ -1,48 +1,60 @@
-/**
-* Created by Roy Morocho.
-* User: steve
-* Date: 08 jun 2022
-* Time: 16:53:08
-*/
-package com.vncarca.arcasys.animal.model;
+package com.vncarca.arcasys.animal.dto;
 
 import java.util.Date;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class AnimalDTO {
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AnimalRefugioRequest {
+    
+	@NotBlank
+    private String nombre;
 
-	private Long id;
-	private String nombre;
+	@NotBlank
 	private String especie;
+
+	@NotBlank
 	private String colorCaracteristicas;
+
+	@NotBlank
 	private String sexo;
+
+	@Min(0)
 	private int edad;
+
+	@NotBlank
 	private String raza;
-	private String tamanyo;
+
+	@NotBlank
 	private String lugarEstancia;
+
 	private String procedencia;
+
+	@NotBlank
 	private String observacionesProcedencia;
+
+	@Min(0)
 	private float peso;
+
 	private Boolean adoptado;
-	private String foto;
+    
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date fechaNacimiento;
-	// private List<FichaClinicaDTO> fichasClinicas;
-
-	// private Set<CarnetVacunacion> historialVacunaciones;
 }

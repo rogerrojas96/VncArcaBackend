@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vncarca.arcasys.animal.model.Animal;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
 
 import org.hibernate.annotations.OnDelete;
@@ -58,6 +58,6 @@ public class CarnetVacunacion implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "animal_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	private Animal animal;
+	private AnimalRefugio animal;
 
 }

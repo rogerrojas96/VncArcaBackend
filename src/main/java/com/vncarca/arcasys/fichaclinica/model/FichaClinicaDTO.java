@@ -14,9 +14,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vncarca.arcasys.animal.model.AnimalDTO;
+import com.vncarca.arcasys.animal.dto.AnimalRefugioResponse;
 import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 
 import lombok.AllArgsConstructor;
@@ -50,7 +48,7 @@ public class FichaClinicaDTO {
 	private String diagnosticoDiferencial;
 	private float costo;
 	private VeterinarioDTO veterinario;
-	private AnimalDTO animal;
+	private AnimalRefugioResponse animal;
 
 	/**
 	 * @param fechaIngreso
@@ -75,7 +73,7 @@ public class FichaClinicaDTO {
 	public FichaClinicaDTO(Date fechaIngreso, String motivoConsulta, String hallazgos, float temperatura,
 			String conjuntiva, float frecuenciaCardiaca, float frecuenciaRespiratoria, String tRC, String mucosas,
 			String esterilizacion, float alimentacion, String pronostico, String tipoPaciente, String examenes_solicitados,
-			String diagnosticoDiferencial, float costo, VeterinarioDTO veterinario, AnimalDTO animal) {
+			String diagnosticoDiferencial, float costo, VeterinarioDTO veterinario, AnimalRefugioResponse animal) {
 		this.fechaIngreso = fechaIngreso;
 		this.motivoConsulta = motivoConsulta;
 		this.hallazgos = hallazgos;
