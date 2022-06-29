@@ -18,6 +18,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,16 +29,17 @@ import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "animales_refugio")
+@SQLDelete(sql = "UPDATE animales_refugio SET deleted = true WHERE id=?")
+@FilterDef(name = "deletedAnimalRefugioFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedAnimalRefugioFilter", condition = "deleted = :isDeleted")
 public class AnimalRefugio implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -105,6 +110,9 @@ public class AnimalRefugio implements Serializable {
 	@Column(nullable = true)
 	private Boolean adoptado;
 
+	@Column(nullable = false)
+	private Boolean deleted = Boolean.FALSE;
+
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -112,9 +120,9 @@ public class AnimalRefugio implements Serializable {
 	@Column(nullable = false)
 	private Date fechaNacimiento;
 
-
 	/*
-	 * Atributos propios de la imagen que se guarda en el servidor de cloudinary ----------------------------------------------
+	 * Atributos propios de la imagen que se guarda en el servidor de cloudinary
+	 * ----------------------------------------------
 	 */
 	@Column(name = "nombre_imagen_animal_cld")
 	private String nombreImagenAnimalCld;

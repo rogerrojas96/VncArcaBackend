@@ -3,14 +3,20 @@ package com.vncarca.arcasys.animal.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+
+import org.hibernate.Filter;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+import java.util.stream.Collectors;
 
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +41,8 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 	@Autowired
 	private CloudinaryService cloudinaryService;
 
+	@Autowired
+    private EntityManager entityManager;
 
 	@Override
 	public List<AnimalRefugioResponse> getAllAnimales(Pageable pageable) {
@@ -52,7 +60,8 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 
 	@Override
 	public AnimalRefugio getAnimalEntityPorId(Long idAnimal) {
-		return animalRepository.findById(idAnimal).orElse(null);
+		return animalRepository.findById(idAnimal).orElseThrow(()-> new NoSuchElementException(
+				"Animal con ID: " + idAnimal.toString() + " no existe en el servidor"));
 	}
 
 
@@ -113,14 +122,14 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 	public Response<AnimalRefugioResponse> eliminarAnimal(Long idAnimal) {
 		HttpStatus status = HttpStatus.OK;
 		AnimalRefugioResponse response = null;
-		AnimalRefugio animal = animalRepository.findById(idAnimal).orElse(null);
+		AnimalRefugio animal = getAnimalEntityPorId(idAnimal);
 		if(animal != null){
 			try{
-				cloudinaryService.delete(animal.getIdImagenAnimalCld());
+				// cloudinaryService.delete(animal.getIdImagenAnimalCld());
 				response = AnimalRefugioMapper.toResponse(animal);
 				response.setUrlImagenAnimal("");
 				animalRepository.deleteById(idAnimal);;
-			}catch(IOException e){
+			}catch(Exception e){ 
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 		}else{
@@ -139,7 +148,15 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 		return adto;
 	}
 
-
+	@Override
+	public List<AnimalRefugioResponse> findAll(boolean isDeleted){
+       	Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("deletedAnimalRefugioFilter");
+        filter.setParameter("isDeleted", isDeleted);
+        List<AnimalRefugioResponse> animals = animalRepository.findAll().stream().map(AnimalRefugioMapper::toResponse).collect(Collectors.toList());
+				session.disableFilter("deletedAnimalRefugioFilter");
+        return animals ;
+    }
 	/*
 	 * MÉTODOS AUXILIARES: --------------------------------------------------------------------
 	 */
@@ -164,6 +181,11 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 		return null;
 	}
 
+
+	@Override
+	public Page<AnimalRefugioResponse> findByDeleted(Pageable pageable, Boolean deleted) {
+		return animalRepository.findByDeleted(pageable, deleted).map(AnimalRefugioMapper::toResponse);
+	}
 
 	/*@Autowired
 	private AnimalRefugioRepository animalRepository;

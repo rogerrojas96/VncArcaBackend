@@ -52,7 +52,9 @@ public class AnimalRefugioRequest {
 	private float peso;
 
 	private Boolean adoptado;
-    
+
+	private Boolean deleted;
+
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)

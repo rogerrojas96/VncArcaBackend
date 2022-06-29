@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,7 +69,7 @@ public class AnimalRefugioController {
 
 	@ResponseBody
 	@PostMapping("/")
-	public ResponseEntity<?> guardarAnimal(@RequestParam(required = true) MultipartFile multipartFile, @Valid @RequestBody AnimalRefugioRequest request, BindingResult result){
+	public ResponseEntity<?> guardarAnimal(@RequestPart(required = true,name = "multipartFile") MultipartFile multipartFile, @Valid @RequestBody AnimalRefugioRequest request, BindingResult result){
 		response.clear();
 		if(!result.hasErrors()){
 			try{
