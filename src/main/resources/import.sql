@@ -126,15 +126,8 @@ insert into adopciones(descripcion, fecha_adopcion, id_adoptante, id_animal) val
 
 --Seguimientos
 insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('Respuesta', false, '2022-10-01', 'mensaje', 3);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('Respuesta', false, '2022-10-01', 'mensaje', 3);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 3);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 3);
 insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('Respuesta', false, '2022-10-01', 'mensaje', 4);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 4);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 4);
 insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('Respuesta', false, '2022-10-01', 'mensaje', 5);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 5);
-insert into seguimientos_adopciones(respuesta_adoptante, estado_seguimiento, fecha_seguimiento, mensaje_seguimiento, id_adopcion) values('', true, '2022-10-01', 'mensaje', 5);
 
 
 --Alarmas
