@@ -84,12 +84,12 @@ insert into servicios(descripcion, nombre, precio) values('Esterilizacion de ani
 
 
  --Medicamentos
- insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(100, 'Medicamento Comercial 1', 'Medicamento Genérico 1', 10.5);
- insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(200, 'Medicamento Comercial 2', 'Medicamento Genérico 2', 20.5);
- insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(60, 'Medicamento Comercial 3', 'Medicamento Genérico 3', 5.5);
- insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(75, 'Medicamento Comercial 4', 'Medicamento Genérico 4', 10);
- insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(92, 'Medicamento Comercial 5', 'Medicamento Genérico 5', 11.7);
- insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(151, 'Medicamento Comercial 6', 'Medicamento Genérico 6', 12.57);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(100, 'Paracetamol', 'Medicamento Genérico 1', 10.5);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(200, 'Aspirina', 'Medicamento Genérico 2', 20.5);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(60, 'Hibuprofeno', 'Medicamento Genérico 3', 5.5);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(75, 'Buprex', 'Medicamento Genérico 4', 10);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(92, 'Omeprazol', 'Medicamento Genérico 5', 11.7);
+ insert into medicamentos(cantidad, nombre_comercial, nombre_generico, precio) values(151, 'Ramipril', 'Medicamento Genérico 6', 12.57);
 
  --Tratamientos
  insert into tratamientos(descripcion, estado, fecha_aplicacion, indicaciones, id_ficha_clinica) values('Descripcion 1', 'Activo', '2022-10-10', 'Indicación 1', 1);
