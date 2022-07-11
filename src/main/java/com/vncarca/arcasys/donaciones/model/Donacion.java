@@ -1,6 +1,5 @@
 package com.vncarca.arcasys.donaciones.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.persona.model.Persona;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +39,7 @@ public class Donacion {
     private Boolean deleted=Boolean.FALSE;
 
     /* ------------------------------------- Relaciones  ------------------------------------- */
-    @ManyToOne
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @JoinColumn(name="id_persona")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_persona")
     private Persona persona;
 }

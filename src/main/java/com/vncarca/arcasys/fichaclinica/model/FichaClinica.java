@@ -1,12 +1,11 @@
 package com.vncarca.arcasys.fichaclinica.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.enums.Types.ESTERILIZACION;
 import com.vncarca.arcasys.enums.Types.TIPO_PACIENTE;
+import com.vncarca.arcasys.tratamiento.model.Tratamiento;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +19,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -91,20 +91,21 @@ public class FichaClinica implements Serializable {
 
 	@Column(nullable = false)
 	private float costo;
-
+	
 	@NotNull
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "veterinario_id", nullable = false, insertable = true, updatable = true)
 	private Veterinario veterinario;
-
+	
 	@NotNull
-	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "animal_id", nullable = false, insertable = true, updatable = true)
 	private AnimalRefugio animal;
 
 	@NotNull
 	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
 	private Boolean deleted=Boolean.FALSE;
+	
 	/**
 	 * @param fechaIngreso
 	 * @param motivoConsulta
@@ -150,5 +151,9 @@ public class FichaClinica implements Serializable {
 		this.veterinario = veterinario;
 		this.animal = animal;
 	}
-
+	
+	//Para softDelete
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "idFichaClinica")
+	private List<Tratamiento> tratamientos;
+	
 }

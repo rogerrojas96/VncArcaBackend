@@ -1,22 +1,21 @@
 package com.vncarca.arcasys.medicacion.dto;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.Date;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class MedicacionDto {
 
     @NotBlank
@@ -30,8 +29,8 @@ public class MedicacionDto {
 
     @NotBlank
     private String duracion;
-
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date fechaCaducidad;

@@ -95,7 +95,8 @@ public class UserServiceImp implements UserService {
 	}
 	@Override
 	public Usuario convertToEntity(UsuarioDtoExtends u) {
-		return new Usuario(u.getId(),u.getUsername(),u.getPassword(),personaService.convertToEntity(u.getPersona()), u.getRoles().stream().map(roleService::convertToEntity).collect(Collectors.toSet()));
+		return new Usuario(u.getId(), u.getUsername(), u.getPassword(), personaService.convertToEntity(u.getPersona()),
+				u.getRoles().stream().map(roleService::convertToEntity).collect(Collectors.toSet()));
 	}
 
 }

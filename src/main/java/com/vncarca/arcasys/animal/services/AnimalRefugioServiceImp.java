@@ -1,26 +1,5 @@
 package com.vncarca.arcasys.animal.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.persistence.EntityManager;
-
-import org.hibernate.Filter;
-import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
-import java.util.stream.Collectors;
-
-import java.util.NoSuchElementException;
-import org.springframework.http.HttpStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.vncarca.arcasys.animal.dto.AnimalRefugioRequest;
 import com.vncarca.arcasys.animal.dto.AnimalRefugioResponse;
 import com.vncarca.arcasys.animal.mapper.AnimalRefugioMapper;
@@ -28,9 +7,26 @@ import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.animal.repository.AnimalRefugioRepository;
 import com.vncarca.cloudinaryservice.CloudinaryService;
 import com.vncarca.util.Response;
+import org.hibernate.Filter;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.persistence.EntityManager;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -127,12 +123,12 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 		AnimalRefugioResponse response = null;
 		AnimalRefugio animal = getAnimalEntityPorId(idAnimal);
 		if(animal != null){
-			try{
+			try {
 				// cloudinaryService.delete(animal.getIdImagenAnimalCld());
 				response = AnimalRefugioMapper.toResponse(animal);
 //				response.setUrlImagenAnimal("");
 				animalRepository.deleteById(idAnimal);
-			}catch(Exception e){ 
+			} catch (Exception e) {
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 		}else{

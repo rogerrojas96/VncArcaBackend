@@ -1,32 +1,21 @@
 package com.vncarca.arcasys.medicacion.controllers;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import com.vncarca.arcasys.medicacion.dto.MedicacionDto;
+import com.vncarca.arcasys.medicacion.model.MedicacionDtoExtends;
+import com.vncarca.arcasys.medicacion.services.IMedicacionService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.vncarca.arcasys.medicacion.dto.MedicacionDto;
-import com.vncarca.arcasys.medicacion.model.Medicacion;
-
-import com.vncarca.arcasys.medicacion.services.IMedicacionService;
-
-import io.swagger.annotations.Api;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 @Api(tags = "Medicaciones", description = "Controlador para CRUD medicaciones")
 @RestController
 @RequestMapping("/medicaciones")
@@ -37,12 +26,12 @@ public class MedicacionController {
     @Autowired
     private IMedicacionService medicacionService;
     private Map<String, Object> response = new HashMap<>();
-    private Medicacion medicacion;
+    private MedicacionDtoExtends medicacion;
     private HttpStatus status;
-
+    
     @ResponseBody
     @GetMapping("/")
-    public ResponseEntity<List<Medicacion>> getAllMedicacions(){
+    public ResponseEntity<List<MedicacionDtoExtends>> getAllMedicacions() {
         return new ResponseEntity<>(medicacionService.getAllMedicacions(), HttpStatus.OK);
     }
     

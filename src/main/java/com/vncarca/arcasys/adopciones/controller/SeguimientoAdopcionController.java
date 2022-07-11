@@ -1,33 +1,22 @@
 package com.vncarca.arcasys.adopciones.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import com.vncarca.arcasys.adopciones.dto.SeguimientoAdopcionDto;
+import com.vncarca.arcasys.adopciones.model.SeguimientoAdopcionDtoExtends;
+import com.vncarca.arcasys.adopciones.service.ISeguimientoAdopcionService;
+import com.vncarca.util.Response;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.vncarca.arcasys.adopciones.dto.SeguimientoAdopcionDto;
-import com.vncarca.arcasys.adopciones.model.SeguimientoAdopcion;
-import com.vncarca.arcasys.adopciones.service.ISeguimientoAdopcionService;
-import com.vncarca.util.Response;
-
-import io.swagger.annotations.Api;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Api(tags = "Seguimiento de Adoptados", description = "Controlador para CRUD de seguimiento de animalitos adoptados.")
 @RestController
@@ -36,9 +25,9 @@ public class SeguimientoAdopcionController {
 
     @Autowired
     private ISeguimientoAdopcionService seguimientoService;
-
+    
     private Map<String, Object> response = new HashMap<>();
-    private SeguimientoAdopcion seguimiento;
+    private SeguimientoAdopcionDtoExtends seguimiento;
     private HttpStatus status;
     
     
@@ -48,18 +37,18 @@ public class SeguimientoAdopcionController {
             BindingResult result, @PathVariable Long idAdopcion) {
         response.clear();
         if(!result.hasErrors()){
-             try{
-                Response <SeguimientoAdopcion> seguimiento = seguimientoService.crearSeguimiento(seguimientoDto, idAdopcion);
-                if(seguimiento.getStatus() == HttpStatus.CREATED){
-                    response.put("mensaje", "Seguimiento creado con exito!");
-                    response.put("seguimiento", seguimiento);
-                    status = HttpStatus.CREATED;
-                }else if( seguimiento.getStatus() == HttpStatus.BAD_REQUEST ){
-                    response.put("mensaje", "No se encontro una adopción con: "+idAdopcion.toString());
-                    status = HttpStatus.BAD_REQUEST;
-                }
-                else{
-                    response.put("mensaje", " Error en el servidor al intentar enviar un Email ");
+             try {
+                 Response<SeguimientoAdopcionDtoExtends> seguimiento = seguimientoService.crearSeguimiento(seguimientoDto,
+                         idAdopcion);
+                 if (seguimiento.getStatus() == HttpStatus.CREATED) {
+                     response.put("mensaje", "Seguimiento creado con exito!");
+                     response.put("seguimiento", seguimiento);
+                     status = HttpStatus.CREATED;
+                 } else if (seguimiento.getStatus() == HttpStatus.BAD_REQUEST) {
+                     response.put("mensaje", "No se encontro una adopción con: " + idAdopcion.toString());
+                     status = HttpStatus.BAD_REQUEST;
+                 } else {
+                     response.put("mensaje", " Error en el servidor al intentar enviar un Email ");
                     status = HttpStatus.INTERNAL_SERVER_ERROR;
                 }
             }catch(DataAccessException e){
@@ -168,7 +157,7 @@ public class SeguimientoAdopcionController {
     public ResponseEntity<?> getAllSeguimientosActivos(@PathVariable Long idAdopcion) {
         response.clear();
         try{
-            List<SeguimientoAdopcion> seguimientos = seguimientoService.getAllSeguimientosActivos(idAdopcion);
+            List<SeguimientoAdopcionDtoExtends> seguimientos = seguimientoService.getAllSeguimientosActivos(idAdopcion);
             if(seguimientos != null){
                 response.put("seguimientos", seguimientos);
                 status = HttpStatus.OK;
@@ -189,7 +178,7 @@ public class SeguimientoAdopcionController {
     public ResponseEntity<?> getAllSeguimientosTerminados(@PathVariable Long idAdopcion) {
         response.clear();
         try{
-            List<SeguimientoAdopcion> seguimientos = seguimientoService.getAllSeguimientosTerminados(idAdopcion);
+            List<SeguimientoAdopcionDtoExtends> seguimientos = seguimientoService.getAllSeguimientosTerminados(idAdopcion);
             if(seguimientos != null){
                 response.put("seguimientos", seguimientos);
                 status = HttpStatus.OK;

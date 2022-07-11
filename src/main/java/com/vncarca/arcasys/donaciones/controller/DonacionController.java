@@ -1,32 +1,22 @@
 package com.vncarca.arcasys.donaciones.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import com.vncarca.arcasys.donaciones.Dto.DonacionDto;
+import com.vncarca.arcasys.donaciones.model.DonacionDtoExtends;
+import com.vncarca.arcasys.donaciones.service.IDonacionService;
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.vncarca.arcasys.donaciones.Dto.DonacionDto;
-import com.vncarca.arcasys.donaciones.model.Donacion;
-import com.vncarca.arcasys.donaciones.service.IDonacionService;
-
-import io.swagger.annotations.Api;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Api(tags = "Donaciones", description = "Controlador para CRUD de donaciones")
 @RestController
@@ -35,9 +25,9 @@ public class DonacionController {
     
     @Autowired
     private IDonacionService donacionService;
-
+    
     private Map<String, Object> response = new HashMap<>();
-    private Donacion donacion;
+    private DonacionDtoExtends donacion;
     private HttpStatus status;
 
 
@@ -92,11 +82,11 @@ public class DonacionController {
         }
         return new ResponseEntity<Map<String, Object>>(response, status); 
     }
-
-   
+    
+    
     @ResponseBody
     @GetMapping("/all")
-    public ResponseEntity<List<Donacion>> getAllDonaciones() {
+    public ResponseEntity<List<DonacionDtoExtends>> getAllDonaciones() {
         return new ResponseEntity<>(donacionService.getAllDonaciones(), HttpStatus.OK);
     }
 
@@ -105,7 +95,7 @@ public class DonacionController {
     public ResponseEntity<?> getAllDonacionesPorPersona(@PathVariable Long idPersona) {
         response.clear();
         try{
-            List<Donacion> donaciones = donacionService.getAllDonacionesPorPersona(idPersona);
+            List<DonacionDtoExtends> donaciones = donacionService.getAllDonacionesPorPersona(idPersona);
             if(donaciones != null){
                 response.put("mensaje", "Donaciones obtenidas con exito!");
                 response.put("donaciones", donaciones);

@@ -1,34 +1,32 @@
 package com.vncarca.arcasys.tratamiento.model;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.Date;
-
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * Created by Roy Morocho.
+ * User: steve
+ * Date: 11/07/2022
+ * Time: 11:41
+ */
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-public class TratamientoDto {
-
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
+public class TratamientoDto implements Serializable {
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.DATE)
 	private Date fechaAplicacion;
-
 	@NotBlank
 	private String descripcion;
-
 	@NotBlank
 	private String indicaciones;
-
 	@NotBlank
-	private String estado;  
+	private String estado;
 }

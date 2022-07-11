@@ -12,22 +12,22 @@ import java.io.Serializable;
 /**
  * Created by Roy Morocho.
  * User: steve
- * Date: 04/07/2022
- * Time: 18:54
+ * Date: 11/07/2022
+ * Time: 11:37
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class MedicamentoDto implements Serializable {
-    private Long id;
-    @NotBlank
-    @NotNull
-    private String nombreComercial;
-    @NotBlank
-    @NotNull
-    private String nombreGenerico;
-    @Positive
-    private int cantidad;
-    @Positive
-    private float precio;
+	private Long id;
+	@NotBlank
+	@NotNull
+	private String nombreComercial;
+	@NotBlank
+	@NotNull
+	private String nombreGenerico;
+	@Positive
+	private int cantidad;
+	@Positive
+	private float precio;
 }

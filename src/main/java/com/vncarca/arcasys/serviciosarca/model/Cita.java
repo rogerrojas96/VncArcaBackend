@@ -14,6 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Setter
@@ -44,15 +45,18 @@ public class Cita {
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "text")
     private String motivo;
-
+    
     @NotNull
     private boolean estado;
-
+    
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private Boolean deleted=Boolean.FALSE;
+    private Boolean deleted = Boolean.FALSE;
     /* --------------------------- RELACIONES --------------------------- */
-    @ManyToOne
-    @JoinColumn(name="id_veterinario")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_veterinario", nullable = false)
     private Veterinario veterinario;
+    
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cita")
+    private List<DetalleCita> detallesCitas;
 }

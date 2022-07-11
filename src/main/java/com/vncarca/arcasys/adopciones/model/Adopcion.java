@@ -1,15 +1,11 @@
 package com.vncarca.arcasys.adopciones.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.AnimalRefugio;
-import com.vncarca.notificaciones.models.EventAlarm;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLUpdate;
 import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -18,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -63,6 +58,6 @@ public class Adopcion implements Serializable{
         this.animal = animal;
     }
     //SoftDelete
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "adopcion")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "adopcion")
     private List<SeguimientoAdopcion> seguimientoAdopciones;
 }

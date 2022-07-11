@@ -1,7 +1,6 @@
 package com.vncarca.arcasys.medicacion.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.medicamento.model.Medicamento;
 import com.vncarca.arcasys.tratamiento.model.Tratamiento;
 import lombok.Getter;
@@ -53,18 +52,18 @@ public class Medicacion implements Serializable {
     private Date fechaCaducidad;
 
     /* --------------------------- RELACIONES --------------------------- */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @JoinColumn(name="id_medicamento")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_medicamento")
     private Medicamento medicamento;
-
+    
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @JoinColumn(name="id_tratamiento")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_tratamiento")
     private Tratamiento tratamiento;
 
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
     private Boolean deleted=Boolean.FALSE;
+    
+    
 }

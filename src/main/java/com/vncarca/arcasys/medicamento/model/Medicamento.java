@@ -1,5 +1,6 @@
 package com.vncarca.arcasys.medicamento.model;
 
+import com.vncarca.arcasys.medicacion.model.Medicacion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,7 +23,7 @@ import java.io.Serializable;
 @Table(name = "medicamentos")
 @Where(clause = "deleted=false")
 @SQLDelete(sql = "UPDATE medicamentos SET deleted = true WHERE id=?")
-public class Medicamento implements Serializable{
+public class Medicamento implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,4 +66,8 @@ public class Medicamento implements Serializable{
 		this.cantidad = cantidad;
 		this.precio = precio;
 	}
+	
+	//Para soft delete
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "medicamento")
+	private List<Medicacion> medicaciones;
 }

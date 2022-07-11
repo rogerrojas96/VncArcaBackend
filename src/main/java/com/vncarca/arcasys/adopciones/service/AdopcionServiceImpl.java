@@ -99,7 +99,6 @@ public class AdopcionServiceImpl implements IAdopcionService {
             AnimalRefugio animal = adopcion.getAnimal();
             animal.setAdoptado(false);
             animal.setLugarEstancia(Types.ESTANCIA.REFUGIO.toString());
-
 /*            animal = animalRepository.save(animal);
             List<SeguimientoAdopcion> seguimientos =  seguimientoRepository.getSeguimientosPorIdAdopcion(idAdopcion);
             if(seguimientos != null){
@@ -108,7 +107,6 @@ public class AdopcionServiceImpl implements IAdopcionService {
                 }
             }*/
             adopcionRepository.deleteById(idAdopcion);
-//            animalRepository.restoreAdopcion();
             return true;
         }
         return false;

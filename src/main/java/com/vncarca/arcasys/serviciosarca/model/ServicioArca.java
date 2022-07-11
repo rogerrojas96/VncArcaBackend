@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @NoArgsConstructor
 @Setter
@@ -48,9 +49,9 @@ public class ServicioArca {
         this.descripcion = descripcion;
         this.precio = precio;
     }
-
+    
     /**
-     * @param nombre 
+     * @param nombre
      * @param descripcion
      * @param precio
      */
@@ -59,4 +60,8 @@ public class ServicioArca {
         this.descripcion = descripcion;
         this.precio = precio;
     }
+    
+    //soft delete cascade
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "servicioArca")
+    private List<DetalleCita> detallesCitas;
 }

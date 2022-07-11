@@ -1,6 +1,7 @@
 package com.vncarca.arcasys.veterinario.model;
 
 import com.vncarca.arcasys.persona.model.Persona;
+import com.vncarca.arcasys.serviciosarca.model.Cita;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,7 +43,7 @@ public class Veterinario implements Serializable {
 			@JoinColumn(name = "veterinario_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "persona_id", referencedColumnName = "id") })
 	private Persona persona;
-
+	
 	/**
 	 * @param id
 	 * @param cargo
@@ -52,4 +54,8 @@ public class Veterinario implements Serializable {
 		this.cargo = cargo;
 		this.persona = persona;
 	}
+	
+	//Para soft delete
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "veterinario")
+	private List<Cita> citas;
 }

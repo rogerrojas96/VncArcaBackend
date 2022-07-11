@@ -10,13 +10,10 @@ import com.vncarca.notificaciones.models.EventAlarm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,7 +21,6 @@ import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -136,8 +132,8 @@ public class AnimalRefugio implements Serializable {
 
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "animal")
 	private List<FichaClinica> fichasClinicas;
-
-	@OneToOne(cascade = CascadeType.REMOVE,orphanRemoval = true,mappedBy = "animal")
+	
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "animal")
 	private Adopcion adopcion;
 
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "paciente")

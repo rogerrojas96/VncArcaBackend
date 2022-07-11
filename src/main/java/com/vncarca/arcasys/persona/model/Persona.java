@@ -1,9 +1,7 @@
 package com.vncarca.arcasys.persona.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
 import com.vncarca.arcasys.donaciones.model.Donacion;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 import com.vncarca.arcasys.voluntarios.model.Voluntario;
 import com.vncarca.authsys.security.model.Usuario;
@@ -20,7 +18,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -88,11 +85,11 @@ public class Persona implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "persona")
 	private Veterinario veterinario;
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "persona")
-	private Set<Usuario> usuarios;
-
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "persona")
-	private Set<Donacion> donaciones;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "persona")
+	private List<Usuario> usuarios;
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "persona")
+	private List<Donacion> donaciones;
 
 	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "persona")
 	private Adoptante adoptante;

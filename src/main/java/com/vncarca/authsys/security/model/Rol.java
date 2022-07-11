@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "roles")
@@ -43,8 +44,11 @@ public class Rol implements Serializable{
         this.id = id;
         this.nombre = nombre;
     }
-
+    
     public GrantedAuthority grantedAuthority() {
         return new SimpleGrantedAuthority(this.nombre);
     }
+    
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
+    private List<Usuario> usuarios;
 }

@@ -1,5 +1,6 @@
 package com.vncarca.arcasys.carnetVacunacion.vacuna.model;
 
+import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -56,4 +58,8 @@ public class Vacuna implements Serializable {
 		this.tipo = tipo;
 		this.descripcion = descripcion;
 	}
+	
+	// para soft deletes
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vacuna")
+	private List<CarnetVacunacion> carnetVacunaciones;
 }

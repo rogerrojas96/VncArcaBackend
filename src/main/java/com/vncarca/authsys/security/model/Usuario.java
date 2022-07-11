@@ -2,7 +2,6 @@ package com.vncarca.authsys.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.model.PersonaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,12 +54,12 @@ public class Usuario implements Serializable {
 	private Boolean deleted=Boolean.FALSE;
 
 	@NotNull
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true,nullable = false), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true,nullable = false), uniqueConstraints = {@UniqueConstraint(columnNames = { "usuario_id", "rol_id" }) })
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true, nullable = false), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true, nullable = false), uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario_id", "rol_id"})})
 	public Set<Rol> roles;
-
+	
 	/**
-	 * @param id 
+	 * @param id
 	 * @param username
 	 * @param password
 	 * @param persona

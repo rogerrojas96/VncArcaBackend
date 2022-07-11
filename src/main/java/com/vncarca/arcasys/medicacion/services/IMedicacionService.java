@@ -1,14 +1,18 @@
 package com.vncarca.arcasys.medicacion.services;
 
+import com.vncarca.arcasys.medicacion.dto.MedicacionDto;
+import com.vncarca.arcasys.medicacion.model.MedicacionDtoExtends;
+
 import java.util.List;
 
-import com.vncarca.arcasys.medicacion.dto.MedicacionDto;
-import com.vncarca.arcasys.medicacion.model.Medicacion;
-
 public interface IMedicacionService {
-    public List<Medicacion> getAllMedicacions();
-    public Medicacion getMedicacionPorId(Long idMedicacion);
-    public Medicacion crearMedicacion(MedicacionDto medicacionDto, Long idMedicamento, Long idTratamiento);
-    public boolean eliminarMedicacion(Long idMedicacion); 
-    public List<Medicacion> getMedicacionPorTratamiento(Long idTratamiento); 
+    public List<MedicacionDtoExtends> getAllMedicacions();
+    
+    public MedicacionDtoExtends getMedicacionPorId(Long idMedicacion);
+    
+    public MedicacionDtoExtends crearMedicacion(MedicacionDto medicacionDto, Long idMedicamento, Long idTratamiento);
+    
+    public boolean eliminarMedicacion(Long idMedicacion);
+    
+    public List<MedicacionDtoExtends> getMedicacionPorTratamiento(Long idTratamiento);
 }
