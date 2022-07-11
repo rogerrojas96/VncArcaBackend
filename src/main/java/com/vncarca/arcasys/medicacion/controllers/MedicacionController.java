@@ -67,6 +67,12 @@ public class MedicacionController {
         return new ResponseEntity<>(response, status);
     }
 
+    @GetMapping("/tratamiento/{idTratamiento}")
+    public ResponseEntity<?> getMedicacionesPorIdTratamiento(@PathVariable Long idTratamiento){
+
+        return new ResponseEntity<>(medicacionService.getMedicacionPorTratamiento(idTratamiento), HttpStatus.OK);
+    }
+
     
     @ResponseBody
     @PostMapping("/{idMedicamento}/{idTratamiento}")
