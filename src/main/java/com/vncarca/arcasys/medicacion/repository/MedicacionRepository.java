@@ -13,12 +13,14 @@ import org.springframework.stereotype.Repository;
 public interface MedicacionRepository extends JpaRepository<Medicacion, Long>{
 
     @Query(
-        value = "select * from medicacion where extract(day from medicacion.fecha_caducidad) = :dia and extract(month from medicacion.fecha_caducidad) = :mes and extract(year from medicacion.fecha_caducidad) = :anio", 
+        value = "select * from medicaciones where extract(day from medicaciones.fecha_caducidad) = :dia and extract(month from medicaciones.fecha_caducidad) = :mes and extract(year from medicaciones.fecha_caducidad) = :anio", 
         nativeQuery = true
     )
     public List<Medicacion> getMedicacionPorFecha(int dia, int mes, int anio);
     
-    @Query(value = "select * from medicacion where medicacion.id_medicamento = :idMedicamento", nativeQuery = true)
+    @Query(value = "select * from medicaciones where medicaciones.id_medicamento = :idMedicamento", nativeQuery = true)
     public List<Medicacion> getCitasPorMedicamento(Long idMedicamento);
 
+    @Query(value ="select * from medicaciones where medicaciones.id_tratamiento = :idTratamiento", nativeQuery= true)
+    public List<Medicacion> getMedicamentosPorIdTratamiento(Long idTratamiento);
 }

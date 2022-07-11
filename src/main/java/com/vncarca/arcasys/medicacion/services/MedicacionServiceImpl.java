@@ -64,5 +64,11 @@ public class MedicacionServiceImpl implements IMedicacionService{
         }
         return false;
     }
+
+    @Override
+    public List<Medicacion> getMedicacionPorTratamiento(Long idTratamiento) {
+        
+        return medicacionRepository.getMedicamentosPorIdTratamiento(idTratamiento);
+    }
     
 }

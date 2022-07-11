@@ -10,5 +10,5 @@ public interface IMedicacionService {
     public Medicacion getMedicacionPorId(Long idMedicacion);
     public Medicacion crearMedicacion(MedicacionDto medicacionDto, Long idMedicamento, Long idTratamiento);
     public boolean eliminarMedicacion(Long idMedicacion); 
-    
+    public List<Medicacion> getMedicacionPorTratamiento(Long idTratamiento); 
 }
