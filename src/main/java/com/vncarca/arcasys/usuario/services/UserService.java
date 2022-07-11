@@ -1,29 +1,31 @@
 package com.vncarca.arcasys.usuario.services;
 
-import java.util.List;
-
+import com.vncarca.arcasys.globalService.GlobalService;
+import com.vncarca.arcasys.usuario.model.UsuarioDto;
+import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
+import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
+import com.vncarca.authsys.security.model.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.vncarca.arcasys.usuario.model.UserDto;
-import com.vncarca.authsys.security.model.Usuario;
+import java.util.List;
 
-public interface UserService {
-	public Usuario save(Usuario usuario);
+public interface UserService extends GlobalService<UsuarioDtoExtends,Usuario> {
+	public UsuarioDtoExtends save(UsuarioDtoExtends usuario);
 
-	public Page<Usuario> findAll(Pageable pageable);
+	public Page<UsuarioDtoResponse> findAll(Pageable pageable);
 
-	public Page<Usuario> findByusername(Pageable pageable, String username);
+	public Page<UsuarioDtoResponse> findByusername(Pageable pageable, String username);
 
-	public List<Usuario> findAll();
+	public List<UsuarioDtoResponse> findAll();
 
-	public Usuario findById(Long id);
+	public UsuarioDtoResponse findById(Long id);
 
 	public void delete(Long id);
 
 	public void changeStatus(Long id);
 
-	public UserDto getUserProfile();
+	public UsuarioDto getUserProfile();
 
 	public void patchPassword(String password, Long id);
 }

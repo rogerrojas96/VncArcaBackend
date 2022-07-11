@@ -1,24 +1,5 @@
 package com.vncarca.arcasys.fichaclinica.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.AnimalRefugio;
@@ -27,11 +8,18 @@ import com.vncarca.arcasys.enums.Types;
 import com.vncarca.arcasys.enums.Types.ESTERILIZACION;
 import com.vncarca.arcasys.enums.Types.TIPO_PACIENTE;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,15 +27,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "fichas_clinicas")
-
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE fichas_clinicas SET deleted = true WHERE id=?")
 public class FichaClinica implements Serializable {
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
@@ -106,16 +93,18 @@ public class FichaClinica implements Serializable {
 	private float costo;
 
 	@NotNull
-	@ManyToOne
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "veterinario_id", nullable = false, insertable = true, updatable = true)
 	private Veterinario veterinario;
 
 	@NotNull
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
 	@JoinColumn(name = "animal_id", nullable = false, insertable = true, updatable = true)
 	private AnimalRefugio animal;
 
+	@NotNull
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted=Boolean.FALSE;
 	/**
 	 * @param fechaIngreso
 	 * @param motivoConsulta

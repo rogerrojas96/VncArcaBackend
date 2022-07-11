@@ -1,36 +1,29 @@
 package com.vncarca.arcasys.carnetVacunacion.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import lombok.Data;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "carnetVacunaciones")
+@AllArgsConstructor
+@NoArgsConstructor
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE carnet_vacunaciones SET deleted = true WHERE id=?")
 public class CarnetVacunacion implements Serializable {
-	private static final long serialVersionUID = 1;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,13 +44,22 @@ public class CarnetVacunacion implements Serializable {
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "vacuna_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Vacuna vacuna;
 
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "animal_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	private AnimalRefugio animal;
 
+	@NotNull
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted=Boolean.FALSE;
+
+	public CarnetVacunacion(Long id, Date fechaAplicacion, Date fechaProximaAplicacion, Vacuna vacuna, AnimalRefugio animal) {
+		this.id = id;
+		this.fechaAplicacion = fechaAplicacion;
+		this.fechaProximaAplicacion = fechaProximaAplicacion;
+		this.vacuna = vacuna;
+		this.animal = animal;
+	}
 }

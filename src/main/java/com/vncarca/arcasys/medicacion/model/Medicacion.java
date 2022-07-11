@@ -1,41 +1,29 @@
 package com.vncarca.arcasys.medicacion.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.medicamento.model.Medicamento;
 import com.vncarca.arcasys.tratamiento.model.Tratamiento;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name="medicaciones")
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE medicaciones SET deleted = true WHERE id=?")
 public class Medicacion implements Serializable {
     private static final long serialVersionUID=1L;
 
@@ -71,8 +59,12 @@ public class Medicacion implements Serializable {
     private Medicamento medicamento;
 
     @NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     @JoinColumn(name="id_tratamiento")
-	private Tratamiento tratamiento;
+    private Tratamiento tratamiento;
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private Boolean deleted=Boolean.FALSE;
 }

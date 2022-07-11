@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.vncarca.arcasys.adopciones.dto.AdoptanteDto;
-import com.vncarca.arcasys.adopciones.model.Adoptante;
+import com.vncarca.arcasys.adopciones.dto.AdoptanteDtoExtends;
 import com.vncarca.arcasys.adopciones.service.IAdoptanteService;
 
 import io.swagger.annotations.Api;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/adoptantes")
 public class AdoptanteController {
-    
+
     @Autowired
     private IAdoptanteService adoptanteService;
 
@@ -40,7 +40,7 @@ public class AdoptanteController {
     @ResponseBody
     @GetMapping("/")
     public ResponseEntity<?> getAllAdoptantes() {
-        return new ResponseEntity<List<Adoptante>>( adoptanteService.getAllAdoptantes(), HttpStatus.OK);
+        return new ResponseEntity<List<AdoptanteDtoExtends>>( adoptanteService.getAllAdoptantes(), HttpStatus.OK);
     }
 
 
@@ -48,10 +48,10 @@ public class AdoptanteController {
     @GetMapping("/adoptanteci/{cedula}")
     public ResponseEntity<?> getAdoptantePorCedula(@PathVariable String cedula) {
         Map<String, Object> response = new HashMap<>();
-        Adoptante adoptante = null;
+        AdoptanteDtoExtends adoptante = null;
         try {
             adoptante = adoptanteService.getAdoptantePorCedula(cedula);
-              
+
         } catch (DataAccessException e) {
             response.put("mensaje", "Ocurrio un error en el servidor al buscar Adoptante con CI: ".concat(cedula));
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -61,7 +61,7 @@ public class AdoptanteController {
             response.put("mensaje", "El Adoptante con CI: ".concat(cedula).concat(", no existe en el servidor!"));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Adoptante>( adoptante, HttpStatus.OK);  
+        return new ResponseEntity<AdoptanteDtoExtends>( adoptante, HttpStatus.OK);
     }
 
 
@@ -69,10 +69,10 @@ public class AdoptanteController {
     @GetMapping("/{idAdoptante}")
     public ResponseEntity<?> getAdoptantePorId(@PathVariable Long idAdoptante) {
         Map<String, Object> response = new HashMap<>();
-        Adoptante adoptante = null;
+        AdoptanteDtoExtends adoptante = null;
         try {
             adoptante = adoptanteService.getAdoptantePorId(idAdoptante);
-              
+
         } catch (DataAccessException e) {
             response.put("mensaje", "Ocurrio un error en el servidor al buscar Adoptante con ID: ".concat(idAdoptante.toString()));
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -82,14 +82,14 @@ public class AdoptanteController {
             response.put("mensaje", "El Adoptante con ID: ".concat(idAdoptante.toString()).concat(", no existe en el servidor!"));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Adoptante>( adoptante, HttpStatus.OK);  
+        return new ResponseEntity<AdoptanteDtoExtends>( adoptante, HttpStatus.OK);
     }
 
 
     @PostMapping("/")
     public ResponseEntity<?> crearAdoptante(@Valid @RequestBody AdoptanteDto adoptanteDto, BindingResult result){
         Map<String, Object> response = new HashMap<>();
-        Adoptante adoptante = null;
+        AdoptanteDtoExtends adoptante = null;
 
         if (result.hasErrors()) {
             response.put("errors", getErrors(result));
@@ -119,8 +119,8 @@ public class AdoptanteController {
     public ResponseEntity<?> actualizarAdoptante(
         @Valid @RequestBody AdoptanteDto adoptanteDto, BindingResult result, @PathVariable Long idAdoptante){
             Map<String, Object> response = new HashMap<>();
-            Adoptante adoptante = null;
-    
+        AdoptanteDtoExtends adoptante = null;
+
             if (result.hasErrors()) {
                 response.put("errors", getErrors(result));
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);

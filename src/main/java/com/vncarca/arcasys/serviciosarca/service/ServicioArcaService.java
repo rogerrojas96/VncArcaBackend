@@ -1,10 +1,13 @@
 package com.vncarca.arcasys.serviciosarca.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import com.vncarca.arcasys.serviciosarca.dto.ServicioArcaDto;
 import com.vncarca.arcasys.serviciosarca.model.DetalleCita;
 import com.vncarca.arcasys.serviciosarca.model.ServicioArca;
+import com.vncarca.arcasys.serviciosarca.dto.ServicioArcaDtoExtends;
 import com.vncarca.arcasys.serviciosarca.repository.DetalleCitaRepository;
 import com.vncarca.arcasys.serviciosarca.repository.ServicioArcaRepository;
 
@@ -22,35 +25,32 @@ public class ServicioArcaService implements IServicioArcaService{
 
 
     @Override
-    public List<ServicioArca> getAllServiciosArca() {
-        return servicioArcaRepository.findAll();
+    public List<ServicioArcaDtoExtends> getAllServiciosArca() {
+        return servicioArcaRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
 
     @Override
-    public ServicioArca getOneServicioArca(Long id) {
-        return servicioArcaRepository.findById(id).orElse(null);
+    public ServicioArcaDtoExtends getOneServicioArca(Long id) {
+        return servicioArcaRepository.findById(id).map(this::convertToDto).orElseThrow(()-> new NoSuchElementException(
+                "Servicio con ID: " + id.toString() + " no existe en el servidor"));
     }
 
 
     @Override
-    public ServicioArca crearServicioArca(ServicioArcaDto servicioArcaDto) {
-        ServicioArca servicioArca = new ServicioArca();
-        servicioArca.setPrecio(servicioArcaDto.getPrecio());
-        servicioArca.setDescripcion(servicioArcaDto.getDescripcion());
-        servicioArca.setNombre(servicioArcaDto.getNombre().toUpperCase());
-        return servicioArcaRepository.save(servicioArca);
+    public ServicioArcaDtoExtends crearServicioArca(ServicioArcaDto servicioArcaDto) {
+        return convertToDto(servicioArcaRepository.save(toEntity(servicioArcaDto)));
     }
 
 
     @Override
-    public ServicioArca editarServicioArca(ServicioArcaDto servicioArcaDto, Long id) {
-        ServicioArca servicioArca = servicioArcaRepository.findById(id).orElse(null);
+    public ServicioArcaDtoExtends editarServicioArca(ServicioArcaDto servicioArcaDto, Long id) {
+        ServicioArca servicioArca =convertToEntity(getOneServicioArca(id));
         if(servicioArca != null){
             servicioArca.setDescripcion(servicioArcaDto.getDescripcion());
             servicioArca.setNombre(servicioArcaDto.getNombre().toUpperCase());
             servicioArca.setPrecio(servicioArcaDto.getPrecio());
-            return servicioArcaRepository.save(servicioArca); 
+            return convertToDto(servicioArcaRepository.save(servicioArca));
         }
         return null;
     }
@@ -67,5 +67,19 @@ public class ServicioArcaService implements IServicioArcaService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public ServicioArcaDtoExtends convertToDto(ServicioArca s) {
+        return new ServicioArcaDtoExtends(s.getNombre(), s.getDescripcion(), s.getPrecio(),s.getId());
+    }
+
+    @Override
+    public ServicioArca convertToEntity(ServicioArcaDtoExtends s) {
+        return  new ServicioArca(s.getId(),s.getNombre().toUpperCase(),s.getDescripcion(),s.getPrecio());
+    }
+
+    public ServicioArca toEntity(ServicioArcaDto s) {
+        return  new ServicioArca(s.getNombre().toUpperCase(),s.getDescripcion(),s.getPrecio());
     }
 }

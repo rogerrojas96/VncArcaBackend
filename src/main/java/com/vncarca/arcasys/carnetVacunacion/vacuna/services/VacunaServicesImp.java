@@ -1,8 +1,11 @@
 package com.vncarca.arcasys.carnetVacunacion.vacuna.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
+import com.vncarca.arcasys.carnetVacunacion.vacuna.model.VacunaDTO;
 import com.vncarca.arcasys.carnetVacunacion.vacuna.repository.VacunaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,27 +19,24 @@ public class VacunaServicesImp implements VacunaServices {
 	VacunaRepository vacunaRepository;
 
 	@Override
-	public Page<Vacuna> findAll(Pageable pageable) {
-
-		return vacunaRepository.findAll(pageable);
+	public Page<VacunaDTO> findAll(Pageable pageable) {
+		return vacunaRepository.findAll(pageable).map(this::convertToDto);
 	}
 
 	@Override
-	public List<Vacuna> findAll() {
-
-		return vacunaRepository.findAll();
+	public List<VacunaDTO> findAll() {
+		return vacunaRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
 	@Override
-	public Vacuna save(Vacuna vacuna) {
-
-		return vacunaRepository.save(vacuna);
+	public VacunaDTO save(VacunaDTO vacuna) {
+		return convertToDto(vacunaRepository.save(convertToEntity(vacuna)));
 	}
 
 	@Override
-	public Vacuna findById(Long id) {
-
-		return vacunaRepository.findById(id).orElse(null);
+	public VacunaDTO findById(Long id) {
+		return vacunaRepository.findById(id).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
+				"Vacuna con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
@@ -44,4 +44,13 @@ public class VacunaServicesImp implements VacunaServices {
 		vacunaRepository.deleteById(id);
 	}
 
+	@Override
+	public VacunaDTO convertToDto(Vacuna vacuna) {
+		return new VacunaDTO(vacuna.getId(),vacuna.getNombre(),vacuna.getTipo(),vacuna.getDescripcion());
+	}
+
+	@Override
+	public Vacuna convertToEntity(VacunaDTO vacunaDTO) {
+		return new Vacuna(vacunaDTO.getId(),vacunaDTO.getNombre(),vacunaDTO.getTipo(),vacunaDTO.getDescripcion());
+	}
 }

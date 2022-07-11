@@ -1,10 +1,12 @@
 package com.vncarca.authsys.security.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import com.vncarca.arcasys.persona.services.PersonaService;
+import com.vncarca.authsys.security.dto.CustomUserDetails;
+import com.vncarca.authsys.security.dto.LoginRequest;
+import com.vncarca.authsys.security.dto.LoginResponse;
+import com.vncarca.authsys.security.dto.Token;
+import com.vncarca.authsys.security.model.Usuario;
+import com.vncarca.authsys.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +20,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.vncarca.authsys.security.dto.CustomUserDetails;
-import com.vncarca.authsys.security.dto.LoginRequest;
-import com.vncarca.authsys.security.dto.LoginResponse;
-import com.vncarca.authsys.security.dto.Token;
-import com.vncarca.authsys.security.model.Usuario;
-import com.vncarca.authsys.security.repository.UserRepository;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -36,11 +35,11 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private TokenProvider tokenProvider;
 
-    // @Autowired
-    // private CookieUtil cookieUtil;
+    @Autowired
+    PersonaService personaService;
 
     @Override
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         Usuario usuario = userRepository
@@ -60,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return ResponseEntity.ok().headers(responseHeaders)
-                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(),newAccessToken, customUserDetails.getUsuario().getPersona()));
+                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(),newAccessToken,personaService.convertToDto(customUserDetails.getUsuario().getPersona())));
     }
 
     private Authentication authenticate(String username, String password) throws Exception {
@@ -72,13 +71,4 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("Lo sentimos, las credenciales que estás usando no son válidas.", e);
         }
     }
-    // private void addAccessTokenCookie(HttpHeaders httpHeaders, Token token) {
-    //     httpHeaders.add(HttpHeaders.SET_COOKIE,
-    //             cookieUtil.createAccessTokenCookie(token.getTokenValue(), token.getDuration()).toString());
-    // }
-
 }
-
-// System.out.print(
-// "Usuario ------------->" + (CustomUserDetails) ((Authentication)
-// authentication).getPrincipal());

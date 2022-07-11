@@ -8,25 +8,24 @@ package com.vncarca.arcasys.carnetVacunacion.services;
 
 import java.util.List;
 
+import com.vncarca.arcasys.globalService.GlobalService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacionDTO;
 
-public interface CarnetVacunacionService {
-	Page<CarnetVacunacion> findAll(Pageable pageable);
+public interface CarnetVacunacionService extends GlobalService<CarnetVacunacionDTO,CarnetVacunacion> {
+	Page<CarnetVacunacionDTO> findAll(Pageable pageable);
 
-	List<CarnetVacunacion> findAll();
+	List<CarnetVacunacionDTO> findAll();
 
 	List<CarnetVacunacionDTO> findByanimalId(Long id);
 
-	CarnetVacunacionDTO carnetVacunacionToDTO(CarnetVacunacion carnetVacunacion);
-
-	CarnetVacunacion save(CarnetVacunacion carnetVacunacion);
+	CarnetVacunacionDTO save(CarnetVacunacionDTO carnetVacunacion);
 
 	void delete(Long id);
 
-	CarnetVacunacion findById(Long id);
+	CarnetVacunacionDTO findById(Long id);
 
 }

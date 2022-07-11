@@ -10,6 +10,8 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vncarca.arcasys.enums.Enum;
+import com.vncarca.arcasys.enums.Types;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class AnimalRefugioRequest {
 	private String colorCaracteristicas;
 
 	@NotBlank
+	@Enum(enumClass = Types.SEXO.class, regexp = "MACHO o HEMBRA")
 	private String sexo;
 
 	@Min(0)
@@ -41,8 +44,11 @@ public class AnimalRefugioRequest {
 	private String raza;
 
 	@NotBlank
+	@Enum(enumClass = Types.ESTANCIA.class, regexp = "CLINICA o REFUGIO")
 	private String lugarEstancia;
-
+	
+	@NotBlank
+	@Enum(enumClass = Types.PROCEDENCIA.class, regexp = "PARTICULAR o ECU911")
 	private String procedencia;
 
 	@NotBlank
@@ -51,9 +57,7 @@ public class AnimalRefugioRequest {
 	@Min(0)
 	private float peso;
 
-	private Boolean adoptado;
-
-	private Boolean deleted = Boolean.FALSE;
+	private Boolean adoptado=Boolean.FALSE;
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

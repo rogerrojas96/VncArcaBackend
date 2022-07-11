@@ -1,37 +1,29 @@
 package com.vncarca.arcasys.adopciones.model;
 
-import java.util.Date;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
 
 @NoArgsConstructor
 @Setter
 @Getter
 @Entity
 @Table(name = "seguimientos_adopciones")
-public class SeguimientoAdopcion {
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE seguimientos_adopciones SET deleted = true WHERE id=?")
+public class SeguimientoAdopcion implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +42,6 @@ public class SeguimientoAdopcion {
 	@Column(name = "fecha_seguimiento", nullable = false)
     private Date fechaSeguimiento;
 
-    
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "respuesta_adoptante",columnDefinition = "text", nullable = true)
@@ -59,9 +50,12 @@ public class SeguimientoAdopcion {
     @Column(name = "estado_seguimiento", nullable = false)
     private boolean estadoSeguimiento;
 
+    @NotNull
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private Boolean deleted=Boolean.FALSE;
 
     /* ------------------------------------- RELACIONES ------------------------------------- */
-    @ManyToOne
-    @JoinColumn(name = "id_adopcion")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_adopcion",nullable = false)
     private Adopcion adopcion;
 }

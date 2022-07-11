@@ -1,19 +1,23 @@
 package com.vncarca.arcasys.adopciones.service;
 
-import java.util.List;
-
+import com.vncarca.arcasys.adopciones.dto.AdopcionDtoExtends;
 import com.vncarca.arcasys.adopciones.dto.AdoptanteDto;
-import com.vncarca.arcasys.adopciones.model.Adopcion;
+import com.vncarca.arcasys.adopciones.dto.AdoptanteDtoExtends;
 import com.vncarca.arcasys.adopciones.model.Adoptante;
+import com.vncarca.arcasys.adopciones.model.AdoptanteExtendsMapper;
 import com.vncarca.arcasys.adopciones.repository.AdoptanteRepository;
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.repository.PersonaRepository;
-
+import com.vncarca.arcasys.persona.services.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@Component
 public class AdoptanteServiceImpl implements IAdoptanteService{
 
     @Autowired
@@ -22,34 +26,37 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
     @Autowired
     private PersonaRepository personaRepository;
 
+
     @Autowired
     private IAdopcionService adopcionService;
 
+    @Autowired
+    PersonaService personaService;
 
     @Override
-    public List<Adoptante> getAllAdoptantes() {
-        return adoptanteRepository.findAll();
+    public List<AdoptanteDtoExtends> getAllAdoptantes() {
+        return adoptanteRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
 
     @Override
-    public Adoptante getAdoptantePorCedula(String cedula) {
+    public AdoptanteDtoExtends getAdoptantePorCedula(String cedula) {
         Long idAdoptante = getIdAdoptante(cedula);
         if (idAdoptante != null){
-            return adoptanteRepository.findById(idAdoptante).get();
+            return convertToDto(adoptanteRepository.findById(idAdoptante).get());
         }
         return null;
     }
 
 
     @Override
-    public Adoptante getAdoptantePorId(Long idAdoptante) {
-        return adoptanteRepository.findById(idAdoptante).get();
+    public AdoptanteDtoExtends getAdoptantePorId(Long idAdoptante) {
+        return convertToDto(adoptanteRepository.findById(idAdoptante).get());
     }
 
 
     @Override
-    public Adoptante crearAdoptante(AdoptanteDto adoptanteDto) {
+    public AdoptanteDtoExtends crearAdoptante(AdoptanteDto adoptanteDto) {
         if(getIdAdoptante(adoptanteDto.getCedula()) == null){
             Persona persona = null;
             if(!personaRepository.existsByCedula(adoptanteDto.getCedula())){
@@ -69,14 +76,14 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
             adoptante.setNicknameFacebook(adoptanteDto.getNicknameFacebook());
             adoptante.setTelefonoFamiliar(adoptanteDto.getTelefonoFamiliar());
             adoptante.setPersona(persona);
-            return adoptanteRepository.save(adoptante);
+            return convertToDto(adoptanteRepository.save(adoptante));
         }
         return null;
     }
 
 
     @Override
-    public Adoptante actualizarAdoptante(AdoptanteDto adoptanteDto, Long idAdoptante) {
+    public AdoptanteDtoExtends actualizarAdoptante(AdoptanteDto adoptanteDto, Long idAdoptante) {
         if(adoptanteRepository.existsById(idAdoptante)){
             Adoptante adoptante = adoptanteRepository.findById(idAdoptante).get();
             
@@ -94,7 +101,7 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
             adoptante.setTelefonoFamiliar(adoptanteDto.getTelefonoFamiliar());
             adoptante.setPersona(persona);
 
-            return adoptanteRepository.save(adoptante);
+            return convertToDto(adoptanteRepository.save(adoptante));
         }
         return null;
     }
@@ -102,10 +109,10 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
     @Override
     public boolean eliminarAdoptante(Long idAdoptante) {
         if(adoptanteRepository.existsById(idAdoptante)){
-            List<Adopcion> adopciones = adopcionService.getAdopcionesPorIdAdoptante(idAdoptante);
-            for(Adopcion adopcion : adopciones){
-                adopcionService.eliminarAdopcion(adopcion.getId());
-            }
+//            List<AdopcionDtoExtends> adopciones = adopcionService.getAdopcionesPorIdAdoptante(idAdoptante);
+//            for(AdopcionDtoExtends adopcion : adopciones){
+//                adopcionService.eliminarAdopcion(adopcion.getId());
+//            }
             adoptanteRepository.deleteById(idAdoptante);
             return true;
         }
@@ -120,5 +127,9 @@ public class AdoptanteServiceImpl implements IAdoptanteService{
             return adoptanteRepository.getId(persona.getId());
         }
         return null;
+    }
+    @Override
+    public AdoptanteDtoExtends convertToDto(Adoptante a) {
+        return AdoptanteExtendsMapper.getAdoptanteDtoExtends(a,personaService);
     }
 }

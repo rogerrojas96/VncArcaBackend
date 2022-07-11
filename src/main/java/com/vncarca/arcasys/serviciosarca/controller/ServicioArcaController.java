@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.vncarca.arcasys.serviciosarca.dto.ServicioArcaDto;
-import com.vncarca.arcasys.serviciosarca.model.ServicioArca;
+import com.vncarca.arcasys.serviciosarca.dto.ServicioArcaDtoExtends;
 import com.vncarca.arcasys.serviciosarca.service.IServicioArcaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +38,13 @@ public class ServicioArcaController {
     private IServicioArcaService servicioArcaService;
 
     private Map<String, Object> response = new HashMap<>();
-    private ServicioArca servicioArca;
+    private ServicioArcaDtoExtends servicioArca;
     private HttpStatus status;
 
 
     @ResponseBody
     @GetMapping("/")
-    public ResponseEntity<List<ServicioArca>> getAllServiciosArca(){
+    public ResponseEntity<List<ServicioArcaDtoExtends>> getAllServiciosArca(){
         return new ResponseEntity<>(servicioArcaService.getAllServiciosArca(), HttpStatus.OK);
     }
 

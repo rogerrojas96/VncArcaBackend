@@ -19,7 +19,6 @@ public class AnimalRefugioMapper {
 		animal.setAdoptado(animalRequest.getAdoptado());
 		animal.setSexo(animalRequest.getSexo());
 		animal.setRaza(animalRequest.getRaza());
-		animal.setDeleted(animalRequest.getDeleted());
 		animal.setProcedencia(animalRequest.getProcedencia());
 		return animal;
 	}
@@ -38,7 +37,6 @@ public class AnimalRefugioMapper {
 		response.setPeso(animal.getPeso());
 		response.setProcedencia(animal.getProcedencia());
 		response.setRaza(animal.getRaza());
-		response.setDeleted(animal.getDeleted());
 		response.setSexo(animal.getSexo());
 		response.setUrlImagenAnimal(animal.getUrlImagenAnimalCld());
 		return response;

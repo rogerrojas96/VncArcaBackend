@@ -17,7 +17,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ErrorResponses {
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss",timezone = "GMT-5")
 	private Date timestamp;
 	private int code;
 	private HttpStatus status;

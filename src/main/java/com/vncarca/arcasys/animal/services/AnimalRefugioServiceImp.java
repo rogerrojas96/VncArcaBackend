@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -119,6 +120,8 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 
 
 	@Override
+	@Transactional
+	@Modifying
 	public Response<AnimalRefugioResponse> eliminarAnimal(Long idAnimal) {
 		HttpStatus status = HttpStatus.OK;
 		AnimalRefugioResponse response = null;
@@ -127,8 +130,8 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 			try{
 				// cloudinaryService.delete(animal.getIdImagenAnimalCld());
 				response = AnimalRefugioMapper.toResponse(animal);
-				response.setUrlImagenAnimal("");
-				animalRepository.deleteById(idAnimal);;
+//				response.setUrlImagenAnimal("");
+				animalRepository.deleteById(idAnimal);
 			}catch(Exception e){ 
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}

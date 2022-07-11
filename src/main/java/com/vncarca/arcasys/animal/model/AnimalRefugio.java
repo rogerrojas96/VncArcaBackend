@@ -1,36 +1,30 @@
 package com.vncarca.arcasys.animal.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
-import org.hibernate.annotations.SQLDelete;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vncarca.arcasys.adopciones.model.Adopcion;
+import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import com.vncarca.arcasys.enums.Enum;
 import com.vncarca.arcasys.enums.Types;
-
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
+import com.vncarca.notificaciones.models.EventAlarm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,8 +32,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "animales_refugio")
 @SQLDelete(sql = "UPDATE animales_refugio SET deleted = true WHERE id=?")
-@FilterDef(name = "deletedAnimalRefugioFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
-@Filter(name = "deletedAnimalRefugioFilter", condition = "deleted = :isDeleted")
+@Where(clause = "deleted = false")
 public class AnimalRefugio implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -107,11 +100,12 @@ public class AnimalRefugio implements Serializable {
 	@Column(nullable = false)
 	private float peso;
 
-	@Column(nullable = true)
+	@Column(nullable = true, columnDefinition = "tinyint(1) default 0")
 	private Boolean adoptado;
 
+	@NotNull
 	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-	private Boolean deleted;
+	private Boolean deleted=Boolean.FALSE;
 
 	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
@@ -134,4 +128,19 @@ public class AnimalRefugio implements Serializable {
 
 	@Column(name = "id_imagen_animal_cld")
 	private String idImagenAnimalCld;
+
+	//Soft delete en cascada todas entidades donde sea dependiente un animal de refugio
+
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "animal")
+	private List<CarnetVacunacion> carnetVacunaciones;
+
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "animal")
+	private List<FichaClinica> fichasClinicas;
+
+	@OneToOne(cascade = CascadeType.REMOVE,orphanRemoval = true,mappedBy = "animal")
+	private Adopcion adopcion;
+
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "paciente")
+	private List<EventAlarm> eventAlarms;
+
 }

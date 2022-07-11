@@ -1,23 +1,17 @@
 package com.vncarca.arcasys.veterinario.model;
 
-import java.io.Serializable;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import com.vncarca.arcasys.persona.model.Persona;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,20 +19,37 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "veterinarios")
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE veterinarios SET deleted = true WHERE id=?")
 public class Veterinario implements Serializable {
-
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false)
+	@NotBlank
+	@NotNull
 	private String cargo;
+
+	@NotNull
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted=Boolean.FALSE;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "veterinarios_personas", joinColumns = {
 			@JoinColumn(name = "veterinario_id", referencedColumnName = "id") }, inverseJoinColumns = {
 					@JoinColumn(name = "persona_id", referencedColumnName = "id") })
 	private Persona persona;
+
+	/**
+	 * @param id
+	 * @param cargo
+	 * @param persona
+	 */
+	public Veterinario(Long id, String cargo, Persona persona) {
+		this.id = id;
+		this.cargo = cargo;
+		this.persona = persona;
+	}
 }

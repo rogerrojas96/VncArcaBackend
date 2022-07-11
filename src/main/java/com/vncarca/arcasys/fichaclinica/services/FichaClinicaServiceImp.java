@@ -1,9 +1,11 @@
 package com.vncarca.arcasys.fichaclinica.services;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-
+import com.vncarca.arcasys.animal.services.IAnimalRefugioService;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
+import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
+import com.vncarca.arcasys.veterinario.services.VeterinarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,12 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vncarca.arcasys.animal.services.IAnimalRefugioService;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinicaDTO;
-import com.vncarca.arcasys.fichaclinica.model.FichaClinicaRequestDTO;
-import com.vncarca.arcasys.fichaclinica.repository.FichaClinicaRepository;
-import com.vncarca.arcasys.veterinario.services.VeterinarioService;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,8 +33,8 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	IAnimalRefugioService animalService;
 
 	@Override
-	public Page<FichaClinica> findAll(Pageable pageable) {
-		return fichaClinicaRepository.findAll(pageable);
+	public Page<FichaClinicaDTO> findAll(Pageable pageable) {
+		return fichaClinicaRepository.findAll(pageable).map(this::convertToDto);
 	}
 
 	@Override
@@ -44,8 +43,8 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	}
 
 	@Override
-	public FichaClinicaDTO update(FichaClinica fichaClinica) {
-		return convertToDto(fichaClinicaRepository.save(fichaClinica));
+	public FichaClinicaDTO update(FichaClinicaRequestDTO fichaClinica) {
+		return convertToDto(fichaClinicaRepository.save(convertRequestToEntity(fichaClinica)));
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 				animalService.getAnimalEntityPorId(fichaClinicaRequestDTO.getAnimalId()));
 
 		if (fichaClinicaRepository.existsById(fichaClinicaRequestDTO.getId())) {
-			FichaClinica oldFichaClinica = findById(fichaClinicaRequestDTO.getId());
+			FichaClinicaDTO oldFichaClinica = findById(fichaClinicaRequestDTO.getId());
 			fichaClinica.setId(oldFichaClinica.getId());
 			;
 		}
@@ -80,13 +79,13 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	}
 
 	@Override
-	public List<FichaClinica> findAll() {
-		return fichaClinicaRepository.findAll();
+	public List<FichaClinicaDTO> findAll() {
+		return fichaClinicaRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
 	@Override
-	public FichaClinica findById(Long id) {
-		return fichaClinicaRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+	public FichaClinicaDTO findById(Long id) {
+		return fichaClinicaRepository.findById(id).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
 				"Ficha clinica con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
@@ -96,8 +95,8 @@ public class FichaClinicaServiceImp implements FichaClinicaService {
 	}
 
 	@Override
-	public Page<FichaClinica> findBytipoPacienteContaining(Pageable pageable, String tipoPaciente) {
-		return fichaClinicaRepository.findBytipoPacienteContaining(pageable, tipoPaciente);
+	public Page<FichaClinicaDTO> findBytipoPacienteContaining(Pageable pageable, String tipoPaciente) {
+		return fichaClinicaRepository.findBytipoPacienteContaining(pageable, tipoPaciente).map(this::convertToDto);
 	}
 
 	@Override

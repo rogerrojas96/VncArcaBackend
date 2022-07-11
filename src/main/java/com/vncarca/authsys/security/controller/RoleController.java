@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import com.vncarca.authsys.security.model.RolDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -40,24 +41,24 @@ public class RoleController {
 
 	@ResponseBody
 	@GetMapping("/page")
-	public Page<Rol> getRols(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size) {
+	public Page<RolDto> getRols(@RequestParam(required = true) Integer page,
+								@RequestParam(required = true) Integer size) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Rol> pageRols = roleService.findAll(pageable);
+		Page<RolDto> pageRols = roleService.findAll(pageable);
 		return pageRols;
 	}
 
 	@GetMapping("/")
-	public List<Rol> getRoles() {
+	public List<RolDto> getRoles() {
 		return roleService.findAll();
 	}
 
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody()
-	public ResponseEntity<Object> create(@Valid @RequestBody Rol rol) {
+	public ResponseEntity<Object> create(@Valid @RequestBody RolDto rol) {
 		try {
-			Rol newRol = roleService.save(rol);
+			RolDto newRol = roleService.save(rol);
 			return new CustomResponseEntity(HttpStatus.CREATED, "Rol guardado con exito", newRol).response();
 		} catch (DataAccessException e) {
 			throw new DataAccessException("Error al guardar Rol en el servidor", e) {
@@ -67,14 +68,14 @@ public class RoleController {
 
 	@ResponseBody
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody Rol rol, @PathVariable Long id) {
-		Rol rolToUpdate = roleService.findById(id);
+	public ResponseEntity<?> update(@Valid @RequestBody RolDto rol, @PathVariable Long id) {
+		RolDto rolToUpdate = roleService.findById(id);
 		if (!Objects.equals(id, rol.getId())) {
 			throw new IllegalArgumentException("El id {" + id + "} no coincide con el id del rol");
 		}
 		try {
 			rolToUpdate = rol;
-			Rol rolUpdate = roleService.save(rolToUpdate);
+			RolDto rolUpdate = roleService.save(rolToUpdate);
 			return new CustomResponseEntity(HttpStatus.CREATED, "Rol actualizado con éxito", rolUpdate).response();
 		} catch (DataAccessException e) {
 			throw new DataAccessException("Error al actualizar el Rol en el servidor", e) {
@@ -98,8 +99,8 @@ public class RoleController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
 		try {
-			Rol rol = roleService.findById(id);
-			return new ResponseEntity<Rol>(rol, HttpStatus.OK);
+			RolDto rol = roleService.findById(id);
+			return new ResponseEntity<RolDto>(rol, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			throw new DataAccessException("Error en la consulta del Rol en el servidor", e) {
 			};

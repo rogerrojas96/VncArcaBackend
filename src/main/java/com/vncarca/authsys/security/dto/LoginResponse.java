@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vncarca.arcasys.persona.model.Persona;
 
+import com.vncarca.arcasys.persona.model.PersonaDtoExtends;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,6 +18,6 @@ public class LoginResponse {
 	private String username;
 	private Token token;
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	private Persona persona;
+	private PersonaDtoExtends persona;
 
 }

@@ -1,8 +1,11 @@
 package com.vncarca.arcasys.veterinario.services;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import com.vncarca.arcasys.persona.model.Persona;
+import com.vncarca.arcasys.persona.model.PersonaDto;
+import com.vncarca.arcasys.persona.services.PersonaService;
+import com.vncarca.arcasys.veterinario.model.Veterinario;
+import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
+import com.vncarca.arcasys.veterinario.repository.VeterinarioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,11 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.model.PersonaDto;
-import com.vncarca.arcasys.veterinario.model.Veterinario;
-import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
-import com.vncarca.arcasys.veterinario.repository.VeterinarioRepository;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -25,28 +26,31 @@ public class VeterinarioServiceImp implements VeterinarioService {
 	@Autowired
 	ModelMapper mapper;
 
-	@Override
-	public Page<Veterinario> findAll(Pageable pageable) {
+	@Autowired
+	PersonaService personaService;
 
-		return veterinarioRepository.findAll(pageable);
+	@Override
+	public Page<VeterinarioDTO> findAll(Pageable pageable) {
+
+		return veterinarioRepository.findAll(pageable).map(this::convertToDto);
 	}
 
 	@Override
-	public List<Veterinario> findAll() {
+	public List<VeterinarioDTO> findAll() {
 
-		return veterinarioRepository.findAll();
+		return veterinarioRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
 	@Override
-	public Veterinario save(Veterinario Veterinario) {
+	public VeterinarioDTO save(VeterinarioDTO veterinario) {
 
-		return veterinarioRepository.save(Veterinario);
+		return convertToDto(veterinarioRepository.save(convertToEntity(veterinario)));
 	}
 
 	@Override
-	public Veterinario findById(Long id) {
+	public VeterinarioDTO findById(Long id) {
 
-		return veterinarioRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+		return veterinarioRepository.findById(id).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
 				"Veterinario con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
@@ -57,28 +61,25 @@ public class VeterinarioServiceImp implements VeterinarioService {
 	}
 
 	@Override
-	public Page<Veterinario> findByCedula(Pageable pageable, String cedula) {
+	public Page<VeterinarioDTO> findByCedula(Pageable pageable, String cedula) {
 
-		return veterinarioRepository.findByPersona_cedulaIs(pageable, cedula);
+		return veterinarioRepository.findByPersona_cedulaIs(pageable, cedula).map(this::convertToDto);
 	}
 
 	@Override
-	public Page<Veterinario> findByCedulaLike(Pageable pageable, String cedula) {
-		return veterinarioRepository.findByPersona_cedulaContaining(pageable, cedula);
+	public Page<VeterinarioDTO> findByCedulaLike(Pageable pageable, String cedula) {
+		return veterinarioRepository.findByPersona_cedulaContaining(pageable, cedula).map(this::convertToDto);
 	}
 
 	@Override
-	public VeterinarioDTO convertToDto(Veterinario V) {
-		VeterinarioDTO veterinarioDTO = new VeterinarioDTO();
-		veterinarioDTO.setId(V.getId());
-		veterinarioDTO.setCargo(V.getCargo());
-		veterinarioDTO.setPersona(mapper.map(V.getPersona(), PersonaDto.class));
-		return veterinarioDTO;
+	public VeterinarioDTO convertToDto(Veterinario v) {
+//		mapper.map(v.getPersona(), PersonaDto.class);
+		return  new VeterinarioDTO(v.getId(),v.getCargo(),personaService.convertToDto(v.getPersona()));
 	}
 
 	@Override
-	public Veterinario convertToEntity(VeterinarioDTO V) {
-		return new Veterinario(V.getId(), V.getCargo(), mapper.map(V.getPersona(), Persona.class));
+	public Veterinario convertToEntity(VeterinarioDTO v) {
+		return new Veterinario(v.getId(),v.getCargo(),personaService.convertToEntity(v.getPersona()));
 	}
 
 	@Override

@@ -1,27 +1,23 @@
 package com.vncarca.arcasys.voluntarios.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.persona.model.Persona;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@SQLDelete(sql = "UPDATE voluntarios SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 @Table(name = "voluntarios")
 public class Voluntario implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -35,6 +31,10 @@ public class Voluntario implements Serializable {
 
     @Column(nullable = false)
     private String tipo;
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private Boolean deleted=Boolean.FALSE;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne()

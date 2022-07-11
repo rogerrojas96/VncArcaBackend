@@ -1,9 +1,13 @@
 package com.vncarca.arcasys.usuario.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import com.vncarca.arcasys.persona.services.PersonaService;
+import com.vncarca.arcasys.usuario.model.UsuarioDto;
+import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
+import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
+import com.vncarca.authsys.security.dto.CustomUserDetails;
+import com.vncarca.authsys.security.model.Usuario;
+import com.vncarca.authsys.security.repository.UserRepository;
+import com.vncarca.authsys.security.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,53 +15,51 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.model.PersonaDto;
-import com.vncarca.arcasys.usuario.model.UserDto;
-import com.vncarca.authsys.security.dto.CustomUserDetails;
-import com.vncarca.authsys.security.model.Usuario;
-import com.vncarca.authsys.security.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImp implements UserService {
 	@Autowired
 	UserRepository userRepository;
-
+@Autowired
+	PersonaService personaService;
+@Autowired
+	RoleService roleService;
 	@Override
-	public UserDto getUserProfile() {
+	public UsuarioDto getUserProfile() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		Usuario user = userRepository
 				.findByusername(customUserDetails.getUsername())
 				.orElseThrow(() -> new IllegalArgumentException(
 						"Usuario no registrado : " + customUserDetails.getUsername()));
-		return ConvertUserDTO(user);
+		return convertToProfileDto(user);
 	}
 
 	@Override
-	public List<Usuario> findAll() {
-		List<Usuario> list = new ArrayList<>();
-		userRepository.findAll().iterator().forEachRemaining(list::add);
+	public List<UsuarioDtoResponse> findAll() {
+		List<UsuarioDtoResponse> list = new ArrayList<>();
+		userRepository.findAll().stream().map(this::convertToResponse).iterator().forEachRemaining(list::add);
 		return list;
 	}
 
 	@Override
-	public Usuario save(Usuario usuario) {
-
-		return userRepository.save(usuario);
+	public UsuarioDtoExtends save(UsuarioDtoExtends usuario) {
+		return convertToDto(userRepository.save(convertToEntity(usuario)));
 	}
 
 	@Override
-	public Page<Usuario> findAll(Pageable pageable) {
-
-		return userRepository.findAll(pageable);
+	public Page<UsuarioDtoResponse> findAll(Pageable pageable) {
+		return userRepository.findAll(pageable).map(this::convertToResponse);
 	}
 
 	@Override
-	public Usuario findById(Long id) {
-
-		return userRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
-				"Persona con ID: " + id.toString() + " no existe en el servidor"));
+	public UsuarioDtoResponse findById(Long id) {
+		return userRepository.findById(id).map(this::convertToResponse).orElseThrow(() -> new NoSuchElementException(
+				"Usuario con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
@@ -67,13 +69,13 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public void changeStatus(Long id) {
-		Boolean enabled = findById(id).getEnabled();
-		userRepository.setStatus(!enabled, id);
+		Usuario u= convertToEntity( findById(id));
+		userRepository.setStatus(!u.getEnabled(), id);
 	}
 
 	@Override
-	public Page<Usuario> findByusername(Pageable pageable, String username) {
-		return userRepository.findByusername(pageable, username);
+	public Page<UsuarioDtoResponse> findByusername(Pageable pageable, String username) {
+		return userRepository.findByusername(pageable, username).map(this::convertToResponse);
 	}
 
 	@Override
@@ -81,25 +83,19 @@ public class UserServiceImp implements UserService {
 		userRepository.patchPassword(password, id);
 
 	}
-
-	private UserDto ConvertUserDTO(Usuario user) {
-		UserDto userDto = new UserDto();
-		userDto.setId(user.getId());
-		userDto.setUsername(user.getUsername());
-		userDto.setPersonaDto(ConvertPersonaDTO(user.getPersona()));
-		return userDto;
+	@Override
+	public UsuarioDtoExtends convertToDto(Usuario u) {
+		return new UsuarioDtoExtends(u.getId(), u.getUsername(), u.getPassword(),personaService.convertToDto(u.getPersona()),u.getRoles().stream().map(roleService::convertToDto).collect(Collectors.toSet()));
 	}
-
-	private PersonaDto ConvertPersonaDTO(Persona persona) {
-		PersonaDto personaDto = new PersonaDto();
-		personaDto.setApellidos(persona.getApellidos());
-		personaDto.setCedula(persona.getCedula());
-		personaDto.setCelular(persona.getCelular());
-		personaDto.setCorreo(persona.getCorreo());
-		personaDto.setDireccion(persona.getDireccion());
-		personaDto.setNombre(persona.getNombre());
-		personaDto.setTelefono(persona.getTelefono());
-		return personaDto;
+	public UsuarioDto convertToProfileDto(Usuario u) {
+		return new UsuarioDto(u.getId(), u.getUsername(), u.getPassword(),personaService.convertToDto(u.getPersona()));
+	}
+	public UsuarioDtoResponse convertToResponse(Usuario u) {
+		return new UsuarioDtoResponse(u.getId(), u.getUsername(), u.getPassword(),personaService.convertToDto(u.getPersona()),u.getRoles().stream().map(roleService::convertToDto).collect(Collectors.toSet()),u.getEnabled());
+	}
+	@Override
+	public Usuario convertToEntity(UsuarioDtoExtends u) {
+		return new Usuario(u.getId(),u.getUsername(),u.getPassword(),personaService.convertToEntity(u.getPersona()), u.getRoles().stream().map(roleService::convertToEntity).collect(Collectors.toSet()));
 	}
 
 }

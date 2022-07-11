@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.vncarca.arcasys.medicamento.model.Medicamento;
+import com.vncarca.arcasys.medicamento.model.MedicamentoDto;
 import com.vncarca.arcasys.medicamento.services.MedicamentoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,10 @@ public class MedicamentoController {
 
     @ResponseBody
     @GetMapping("/page")
-	public Page<Medicamento> getMedicamentos(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String nombre){
+	public Page<MedicamentoDto> getMedicamentos(@RequestParam(required = true) Integer page,
+                                                @RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String nombre){
     	Pageable pageable = PageRequest.of(page, size);
-        Page<Medicamento> pageMedicamento=null;
+        Page<MedicamentoDto> pageMedicamento=null;
 
         if (nombre.isEmpty() || nombre==null) {
 			pageMedicamento = medicamentoService.findAll(pageable);
@@ -57,13 +58,13 @@ public class MedicamentoController {
 
     // Trae a todos los medicamentos
     @GetMapping("/")
-	public List<Medicamento> getMedicamentos(){
+	public List<MedicamentoDto> getMedicamentos(){
 		 return medicamentoService.findAll();
 	}
 
     //Buscar medicamento por nombre
     @GetMapping("/find")
-	public List<Medicamento> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "",name = "nombre") String nombre ){
+	public List<MedicamentoDto> getMedicamentosByNombres(@RequestParam(required = false ,defaultValue = "",name = "nombre") String nombre ){
 
         if (nombre.isEmpty() || nombre==null) {
 		 return medicamentoService.findAll();
@@ -75,9 +76,9 @@ public class MedicamentoController {
     //EndPoint crear tratamiento
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Valid @RequestBody Medicamento medicamento, BindingResult result){
+    public ResponseEntity<?> create(@Valid @RequestBody MedicamentoDto medicamento, BindingResult result){
     	Map<String, Object> response = new HashMap<>();
-    	Medicamento newMedicamento = null;
+        MedicamentoDto newMedicamento = null;
     	if (result.hasErrors()) {
     		List<String> errors = result.getFieldErrors().stream().map(err -> {
     			 return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
@@ -105,11 +106,11 @@ public class MedicamentoController {
     // EndPoint Actualizar Medicamento
     @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Medicamento medicamento, BindingResult result,
+    public ResponseEntity<?> update(@Valid @RequestBody MedicamentoDto medicamento, BindingResult result,
             @PathVariable Long id) {
-        Medicamento med = medicamentoService.findById(id);
+        MedicamentoDto med = medicamentoService.findById(id);
 
-        Medicamento medicamentoUpdate = null;
+        MedicamentoDto medicamentoUpdate = null;
 
         Map<String, Object> response = new HashMap<>();
         if (result.hasErrors()) {
@@ -159,7 +160,7 @@ public class MedicamentoController {
     @ResponseBody
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        Medicamento medicamento = null;
+        MedicamentoDto medicamento = null;
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -173,12 +174,7 @@ public class MedicamentoController {
             response.put("mensaje", "El medicamento con ID: ".concat(id.toString()).concat(" no existe en el servidor ni en ni una parte porfavor revise bien :)"));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Medicamento>(medicamento, HttpStatus.OK);
+        return new ResponseEntity<MedicamentoDto>(medicamento, HttpStatus.OK);
     }
 
 }
-
-
-
-
-

@@ -1,26 +1,33 @@
 package com.vncarca.arcasys.persona.model;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vncarca.arcasys.adopciones.model.Adoptante;
+import com.vncarca.arcasys.donaciones.model.Donacion;
+import com.vncarca.arcasys.fichaclinica.model.FichaClinica;
+import com.vncarca.arcasys.veterinario.model.Veterinario;
+import com.vncarca.arcasys.voluntarios.model.Voluntario;
+import com.vncarca.authsys.security.model.Usuario;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE personas SET deleted = true WHERE id=?")
 @Table(name = "personas")
 public class Persona implements Serializable {
 
@@ -68,4 +75,25 @@ public class Persona implements Serializable {
 	@Email
     @Column(length = 100, unique = false, nullable = false)
     private String correo;
+
+	@NotNull
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted=Boolean.FALSE;
+
+	//Soft delete en cascada todas entidades donde sea dependiente una persona
+
+	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "persona")
+	private Voluntario voluntario;
+
+	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "persona")
+	private Veterinario veterinario;
+
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "persona")
+	private Set<Usuario> usuarios;
+
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "persona")
+	private Set<Donacion> donaciones;
+
+	@OneToOne(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "persona")
+	private Adoptante adoptante;
 }

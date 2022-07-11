@@ -9,6 +9,7 @@ package com.vncarca.arcasys.responses;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class CustomResponseEntity {
+public class CustomResponseEntity extends HttpEntity {
 
 	private HttpStatus status;
 	private String message;

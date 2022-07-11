@@ -1,36 +1,27 @@
 package com.vncarca.authsys.security.model;
 
-import java.io.Serializable;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.persona.model.Persona;
-
+import com.vncarca.arcasys.persona.model.PersonaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Set;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "usuarios")
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE usuarios SET deleted = true WHERE id=?")
 public class Usuario implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -50,8 +41,8 @@ public class Usuario implements Serializable {
 	private String password;
 
 	@NotNull
-	@Column(nullable = false)
-	private Boolean enabled;
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 1")
+	private Boolean enabled=Boolean.TRUE;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -59,8 +50,27 @@ public class Usuario implements Serializable {
 	@JoinColumn(name = "persona_id", nullable = false)
 	private Persona persona;
 
+	@NotNull
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted=Boolean.FALSE;
+
+	@NotNull
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true), uniqueConstraints = {
-			@UniqueConstraint(columnNames = { "usuario_id", "rol_id" }) })
+	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true,nullable = false), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true,nullable = false), uniqueConstraints = {@UniqueConstraint(columnNames = { "usuario_id", "rol_id" }) })
 	public Set<Rol> roles;
+
+	/**
+	 * @param id 
+	 * @param username
+	 * @param password
+	 * @param persona
+	 * @param roles
+	 */
+	public Usuario(Long id, String username, String password, Persona persona, Set<Rol> roles) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.persona = persona;
+		this.roles = roles;
+	}
 }

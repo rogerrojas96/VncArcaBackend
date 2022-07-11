@@ -1,27 +1,28 @@
 package com.vncarca.arcasys.adopciones.model;
 
+import com.vncarca.arcasys.persona.model.Persona;
+import com.vncarca.authsys.security.model.Usuario;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import com.vncarca.arcasys.persona.model.Persona;
+import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "adoptantes")
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE adoptantes SET deleted = true WHERE id=?")
 public class Adoptante implements Serializable{
     
     private static final long serialVersionUID = 1L;
@@ -38,14 +39,15 @@ public class Adoptante implements Serializable{
     @Column(name = "nickname_facebook" ,nullable = false)
     private String nicknameFacebook;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="id_persona")
     private Persona persona;
 
+    @NotNull
+    @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+    private Boolean deleted=Boolean.FALSE;
 
-    public Adoptante(String telefonoFamiliar,String nicknameFacebook) {
-        
-        this.telefonoFamiliar = telefonoFamiliar;
-        this.nicknameFacebook = nicknameFacebook;
-    }
+//    Soft Delete
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "adoptante")
+    private List<Adopcion> adopciones;
 }

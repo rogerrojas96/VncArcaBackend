@@ -3,7 +3,9 @@ package com.vncarca.authsys.security.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
+import com.vncarca.authsys.security.model.RolDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,30 +21,41 @@ public class RoleServicesImp implements RoleService {
 	RolRepository rolRepository;
 
 	@Override
-	public Rol save(Rol role) {
-		return rolRepository.save(role);
+	public RolDto save(RolDto role) {
+		return convertToDto(rolRepository.save(convertToEntity(role)));
 	}
 
 	@Override
-	public List<Rol> findAll() {
-		List<Rol> roles = new ArrayList<>();
-		rolRepository.findAll().iterator().forEachRemaining(roles::add);
+	public List<RolDto> findAll() {
+		List<RolDto> roles = new ArrayList<>();
+		rolRepository.findAll().stream().map(this::convertToDto).iterator().forEachRemaining(roles::add);
 		return roles;
 	}
 
 	@Override
-	public Rol findById(Long id) {
-		return rolRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+	public RolDto findById(Long id) {
+		return rolRepository.findById(id).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
 				"Rol con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
 	public void delete(Long id) {
-		rolRepository.deleteById(id);
+		if (Objects.equals(findById(id).getId(),id))
+			rolRepository.deleteById(id);
 	}
 
 	@Override
-	public Page<Rol> findAll(Pageable pageable) {
-		return rolRepository.findAll(pageable);
+	public Page<RolDto> findAll(Pageable pageable) {
+		return rolRepository.findAll(pageable).map(this::convertToDto);
+	}
+
+	@Override
+	public RolDto convertToDto(Rol rol) {
+		return new RolDto(rol.getId(),rol.getNombre());
+	}
+
+	@Override
+	public Rol convertToEntity(RolDto rolDto) {
+		return new Rol(rolDto.getId(),rolDto.getNombre());
 	}
 }

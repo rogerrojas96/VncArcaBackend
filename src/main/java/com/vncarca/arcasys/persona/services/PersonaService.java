@@ -6,19 +6,20 @@ import com.vncarca.arcasys.globalService.GlobalService;
 import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.model.PersonaDto;
 
+import com.vncarca.arcasys.persona.model.PersonaDtoExtends;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface PersonaService extends GlobalService<PersonaDto, Persona> {
-	public Page<Persona> findAll(Pageable pageable);
+public interface PersonaService extends GlobalService<PersonaDtoExtends, Persona> {
+	public Page<PersonaDtoExtends> findAll(Pageable pageable);
 
-	public Page<Persona> findByCedula(Pageable pageable, String cedula);
+	public Page<PersonaDtoExtends> findByCedula(Pageable pageable, String cedula);
 
-	public List<Persona> findAll();
+	public List<PersonaDtoExtends> findAll();
 
-	public Persona save(Persona persona);
+	public PersonaDtoExtends save(PersonaDtoExtends persona);
 
-	public Persona findById(Long id);
+	public PersonaDtoExtends findById(Long id);
 
 	public void delete(Long id);
 }

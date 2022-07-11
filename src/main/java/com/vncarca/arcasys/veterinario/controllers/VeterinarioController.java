@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.vncarca.arcasys.veterinario.model.Veterinario;
+import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 import com.vncarca.arcasys.veterinario.services.VeterinarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,10 @@ public class VeterinarioController {
 	// EndPoint listar veterinarioes
 	@ResponseBody
 	@GetMapping("/page")
-	public Page<Veterinario> getVeterinarios(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String cedula) {
+	public Page<VeterinarioDTO> getVeterinarios(@RequestParam(required = true) Integer page,
+												@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String cedula) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Veterinario> pageVeterinarios = null;
+		Page<VeterinarioDTO> pageVeterinarios = null;
 		if (cedula.isEmpty() || cedula == null) {
 			pageVeterinarios = veterinarioService.findAll(pageable);
 		} else {
@@ -57,9 +58,9 @@ public class VeterinarioController {
 	// EndPoint registrar Veterinario
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@Valid @RequestBody Veterinario veterinario, BindingResult result) {
+	public ResponseEntity<?> create(@Valid @RequestBody VeterinarioDTO veterinario, BindingResult result) {
 		Map<String, Object> response = new HashMap<>();
-		Veterinario newVeterinario = null;
+		VeterinarioDTO newVeterinario = null;
 
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(err -> {
@@ -83,11 +84,11 @@ public class VeterinarioController {
 	// EndPoint Actualizar Veterinario
 	@ResponseBody
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody Veterinario veterinario, BindingResult result,
+	public ResponseEntity<?> update(@Valid @RequestBody VeterinarioDTO veterinario, BindingResult result,
 			@PathVariable Long id) {
-		Veterinario vete = veterinarioService.findById(id);
+		VeterinarioDTO vete = veterinarioService.findById(id);
 
-		Veterinario veterinarioUpdate = null;
+		VeterinarioDTO veterinarioUpdate = null;
 
 		Map<String, Object> response = new HashMap<>();
 		if (result.hasErrors()) {
@@ -137,7 +138,7 @@ public class VeterinarioController {
 	@ResponseBody
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
-		Veterinario Veterinario = null;
+		VeterinarioDTO Veterinario = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
@@ -151,7 +152,7 @@ public class VeterinarioController {
 			response.put("mensaje", "El Veterinario con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Veterinario>(Veterinario, HttpStatus.OK);
+		return new ResponseEntity<VeterinarioDTO>(Veterinario, HttpStatus.OK);
 	}
 
 }

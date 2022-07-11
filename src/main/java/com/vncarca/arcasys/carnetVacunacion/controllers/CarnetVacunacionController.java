@@ -50,15 +50,15 @@ public class CarnetVacunacionController {
 	// EndPoint listar carnetsVacunaciones
 	@ResponseBody
 	@GetMapping("/page")
-	public Page<CarnetVacunacion> getCarnetsVacunaciones(@RequestParam(required = true) Integer page,
+	public Page<CarnetVacunacionDTO> getCarnetsVacunaciones(@RequestParam(required = true) Integer page,
 			@RequestParam(required = true) Integer size) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<CarnetVacunacion> pageCarnetsVacunaciones = carnetVacunacionService.findAll(pageable);
+		Page<CarnetVacunacionDTO> pageCarnetsVacunaciones = carnetVacunacionService.findAll(pageable);
 		return pageCarnetsVacunaciones;
 	}
 
 	@GetMapping("/")
-	public List<CarnetVacunacion> getcarnetsVacunaciones() {
+	public List<CarnetVacunacionDTO> getcarnetsVacunaciones() {
 		return carnetVacunacionService.findAll();
 	}
 
@@ -71,9 +71,9 @@ public class CarnetVacunacionController {
 	@PostMapping("/")
 	@SendTo()
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@Valid @RequestBody CarnetVacunacion carnetVacunacion, BindingResult result) {
+	public ResponseEntity<?> create(@Valid @RequestBody CarnetVacunacionDTO carnetVacunacion, BindingResult result) {
 		Map<String, Object> response = new HashMap<>();
-		CarnetVacunacion newcarnetVacunacion = null;
+		CarnetVacunacionDTO newcarnetVacunacion = null;
 
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(err -> {
@@ -97,10 +97,10 @@ public class CarnetVacunacionController {
 	// EndPoint Actualizar CarnetVacunacion
 	@ResponseBody
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody CarnetVacunacion carnetVacunacion, BindingResult result,
+	public ResponseEntity<?> update(@Valid @RequestBody CarnetVacunacionDTO carnetVacunacion, BindingResult result,
 			@PathVariable Long id) {
-		CarnetVacunacion carnetVac = carnetVacunacionService.findById(id);
-		CarnetVacunacion carnetVacunacionUpdate = null;
+		CarnetVacunacionDTO carnetVac = carnetVacunacionService.findById(id);
+		CarnetVacunacionDTO carnetVacunacionUpdate = null;
 		if (!Objects.equals(id, carnetVacunacion.getId())) {
 			throw new IllegalArgumentException("IDs no coinciden");
 		}
@@ -151,7 +151,7 @@ public class CarnetVacunacionController {
 	@ResponseBody
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
-		CarnetVacunacion CarnetVacunacion = null;
+		CarnetVacunacionDTO CarnetVacunacion = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
@@ -165,7 +165,7 @@ public class CarnetVacunacionController {
 			response.put("mensaje", "El CarnetVacunacion con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<CarnetVacunacion>(CarnetVacunacion, HttpStatus.OK);
+		return new ResponseEntity<CarnetVacunacionDTO>(CarnetVacunacion, HttpStatus.OK);
 	}
 
 }

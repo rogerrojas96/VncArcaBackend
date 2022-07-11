@@ -8,9 +8,12 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.vncarca.arcasys.adopciones.dto.AdopcionDto;
+import com.vncarca.arcasys.adopciones.dto.AdopcionDtoExtends;
+import com.vncarca.arcasys.adopciones.dto.AdoptanteDtoExtends;
 import com.vncarca.arcasys.adopciones.model.Adopcion;
 import com.vncarca.arcasys.adopciones.service.IAdopcionService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -31,17 +34,16 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @Api(tags = "Adopciones", description = "Controlador para CRUD de adopciones")
 @RequestMapping("/adopciones")
 @RestController
+@Slf4j
 public class AdopcionController {
-   
+
     @Autowired
     private IAdopcionService adopcionService;
-
-
 
     @ResponseBody
     @GetMapping("/")
     public ResponseEntity<?> getAllAdopciones() {
-        return new ResponseEntity<List<Adopcion>>( adopcionService.getAllAdopciones(), HttpStatus.OK); 
+        return new ResponseEntity<List<AdopcionDtoExtends>>( adopcionService.getAllAdopciones(), HttpStatus.OK);
     }
 
 
@@ -49,10 +51,10 @@ public class AdopcionController {
     @GetMapping("/allbyci/{cedula}")
     public ResponseEntity<?> getAdopcionesPorCedulaAdoptante(@PathVariable String cedula){
         Map<String, Object> response = new HashMap<>();
-        List<Adopcion> adopciones = null;
+        List<AdopcionDtoExtends> adopciones = null;
         try {
             adopciones = adopcionService.getAdopcionesPorCedulaAdoptante(cedula);
-              
+
         } catch (DataAccessException e) {
             response.put("mensaje", "Ocurrio un error en el servidor al buscar Adopciones por CI: ".concat(cedula));
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -62,7 +64,7 @@ public class AdopcionController {
             response.put("mensaje", "No existen adopciones para el Adoptante con CI: ".concat(cedula));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Adopcion>>( adopciones, HttpStatus.OK);  
+        return new ResponseEntity<List<AdopcionDtoExtends>>( adopciones, HttpStatus.OK);
     }
 
 
@@ -70,10 +72,10 @@ public class AdopcionController {
     @GetMapping("/allbyid/{id}")
     public ResponseEntity<?> getAdopcionesPorIdAdoptante(@PathVariable Long id){
         Map<String, Object> response = new HashMap<>();
-        List<Adopcion> adopciones = null;
+        List<AdopcionDtoExtends> adopciones = null;
         try {
             adopciones = adopcionService.getAdopcionesPorIdAdoptante(id);
-              
+
         } catch (DataAccessException e) {
             response.put("mensaje", "Ocurrio un error en el servidor al buscar Adopciones por Adoptante con ID: ".concat(id.toString()));
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -83,7 +85,7 @@ public class AdopcionController {
             response.put("mensaje", "No existen adopciones para el Adoptante con ID: ".concat(id.toString()));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<Adopcion>>( adopciones, HttpStatus.OK);  
+        return new ResponseEntity<List<AdopcionDtoExtends>>( adopciones, HttpStatus.OK);
     }
 
 
@@ -91,10 +93,10 @@ public class AdopcionController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getAdopcionPorId(@PathVariable Long id){
         Map<String, Object> response = new HashMap<>();
-        Adopcion adopcion = null;
+        AdopcionDtoExtends adopcion = null;
         try {
             adopcion = adopcionService.getAdopcionPorId(id);
-              
+
         } catch (DataAccessException e) {
             response.put("mensaje", "Ocurrio un error en el servidor al buscar adopción con ID: ".concat(id.toString()));
             response.put("error", e.getMostSpecificCause().getMessage());
@@ -104,15 +106,15 @@ public class AdopcionController {
             response.put("mensaje", "No existe adopción con ID: ".concat(id.toString()));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Adopcion>( adopcion, HttpStatus.OK);  
+        return new ResponseEntity<AdopcionDtoExtends>( adopcion, HttpStatus.OK);
     }
 
 
     @PostMapping("/{idAdoptante}/{idAnimal}")
-    public ResponseEntity<?> crearAdocion(@Valid @RequestBody AdopcionDto adopcionDto, 
+    public ResponseEntity<?> crearAdocion(@Valid @RequestBody AdopcionDto adopcionDto,
             @PathVariable Long idAdoptante, @PathVariable Long idAnimal, BindingResult result){
         Map<String, Object> response = new HashMap<>();
-        Adopcion adopcion = null;
+        AdopcionDtoExtends adopcion = null;
 
         if (result.hasErrors()) {
             response.put("errors", getErrors(result));
@@ -138,11 +140,11 @@ public class AdopcionController {
 
     @ResponseBody
     @PutMapping("/{idAdopcion}/{idAnimal}")
-    public ResponseEntity<?> actualizarAdocion(@Valid @RequestBody AdopcionDto adopcionDto, 
+    public ResponseEntity<?> actualizarAdocion(@Valid @RequestBody AdopcionDto adopcionDto,
                 @PathVariable Long idAdopcion, @PathVariable Long idAnimal, BindingResult result){
             Map<String, Object> response = new HashMap<>();
-            Adopcion adopcion = null;
-    
+        AdopcionDtoExtends adopcion = null;
+
             if (result.hasErrors()) {
                 response.put("errors", getErrors(result));
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
@@ -170,6 +172,7 @@ public class AdopcionController {
         Map<String, Object> response = new HashMap<>();
         try {
             boolean eliminado = adopcionService.eliminarAdopcion(idAdopcion);
+            log.error("eliminado -> {}",eliminado);
             if(eliminado){
                 response.put("mensaje", "Adopción eliminada con exito!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);

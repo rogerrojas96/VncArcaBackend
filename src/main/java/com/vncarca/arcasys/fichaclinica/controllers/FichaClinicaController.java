@@ -44,7 +44,7 @@ public class FichaClinicaController {
 	// EndPoint listar fichaClinicaes
 	@ResponseBody
 	@GetMapping("/page")
-	public Page<FichaClinica> getFichasClinicas(@RequestParam(required = true) Integer page,
+	public Page<FichaClinicaDTO> getFichasClinicas(@RequestParam(required = true) Integer page,
 			@RequestParam(required = true) Integer size,
 			@RequestParam(required = false, defaultValue = "") String tipoPaciente) {
 		Pageable pageable = PageRequest.of(page, size);
@@ -59,7 +59,7 @@ public class FichaClinicaController {
 	// }
 
 	@GetMapping("/")
-	public List<FichaClinica> getFichasClinicas() {
+	public List<FichaClinicaDTO> getFichasClinicas() {
 		return fichaClinicaService.findAll();
 	}
 
@@ -87,14 +87,14 @@ public class FichaClinicaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody FichaClinicaRequestDTO fichaClinicaRequestDTO,
 			@PathVariable Long id) {
-		FichaClinica animalToUpdate = fichaClinicaService.findById(id);
+		FichaClinicaDTO animalToUpdate = fichaClinicaService.findById(id);
 		if (!Objects.equals(id, fichaClinicaRequestDTO.getId())) {
 			throw new IllegalArgumentException("El id {" + id + "} no coincide con el id de la ficha Clinica");
 		}
 
 		try {
-			animalToUpdate = fichaClinicaService.convertRequestToEntity(fichaClinicaRequestDTO);
-			FichaClinicaDTO fichaUpdate = fichaClinicaService.update(animalToUpdate);
+//			animalToUpdate = fichaClinicaService.convertRequestToEntity(fichaClinicaRequestDTO);
+			FichaClinicaDTO fichaUpdate = fichaClinicaService.update(fichaClinicaRequestDTO);
 			return new CustomResponseEntity(HttpStatus.CREATED, "Ficha clínica actualizada con exito",
 					fichaUpdate).response();
 		} catch (DataAccessException e) {
@@ -124,21 +124,21 @@ public class FichaClinicaController {
 	@ResponseBody
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
-		FichaClinica FichaClinica = null;
+		FichaClinicaDTO fichaClinica = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			FichaClinica = fichaClinicaService.findById(id);
+			fichaClinica = fichaClinicaService.findById(id);
 		} catch (DataAccessException e) {
 			response.put("mensaje", "Error en la consulta de FichaClinica en el servidor");
 			response.put("error", e.getMostSpecificCause().getMessage());
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		if (FichaClinica == null) {
+		if (fichaClinica == null) {
 			response.put("mensaje", "El FichaClinica con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<FichaClinica>(FichaClinica, HttpStatus.OK);
+		return new ResponseEntity<FichaClinicaDTO>(fichaClinica, HttpStatus.OK);
 	}
 
 }

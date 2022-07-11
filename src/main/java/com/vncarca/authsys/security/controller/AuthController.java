@@ -3,6 +3,7 @@ package com.vncarca.authsys.security.controller;
 import javax.validation.Valid;
 
 import com.vncarca.authsys.security.dto.LoginRequest;
+import com.vncarca.authsys.security.dto.LoginResponse;
 import com.vncarca.authsys.security.service.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class AuthController {
 	private AuthService userService;
 
 	@PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 		return userService.login(loginRequest);
 	}
 }

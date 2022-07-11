@@ -10,17 +10,17 @@ import com.vncarca.arcasys.veterinario.model.Veterinario;
 import com.vncarca.arcasys.veterinario.model.VeterinarioDTO;
 
 public interface VeterinarioService extends GlobalService<VeterinarioDTO, Veterinario> {
-	public Page<Veterinario> findAll(Pageable pageable);
+	public Page<VeterinarioDTO> findAll(Pageable pageable);
 
-	public Page<Veterinario> findByCedula(Pageable pageable, String cedula);
+	public Page<VeterinarioDTO> findByCedula(Pageable pageable, String cedula);
 
-	public Page<Veterinario> findByCedulaLike(Pageable pageable, String cedula);
+	public Page<VeterinarioDTO> findByCedulaLike(Pageable pageable, String cedula);
 
-	public List<Veterinario> findAll();
+	public List<VeterinarioDTO> findAll();
 
-	public Veterinario save(Veterinario veterinario);
+	public VeterinarioDTO save(VeterinarioDTO veterinario);
 
-	public Veterinario findById(Long id);
+	public VeterinarioDTO findById(Long id);
 
 	public Veterinario findByPersonaId(Long id);
 

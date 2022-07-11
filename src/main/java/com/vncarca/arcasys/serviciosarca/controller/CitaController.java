@@ -1,33 +1,23 @@
 package com.vncarca.arcasys.serviciosarca.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import com.vncarca.arcasys.serviciosarca.dto.CitaServiciosArca;
 import com.vncarca.arcasys.serviciosarca.dto.CitaDto;
-import com.vncarca.arcasys.serviciosarca.model.Cita;
-import com.vncarca.arcasys.serviciosarca.model.DetalleCita;
+import com.vncarca.arcasys.serviciosarca.dto.CitaDtoExtends;
+import com.vncarca.arcasys.serviciosarca.dto.DetalleCitaDto;
 import com.vncarca.arcasys.serviciosarca.service.ICitaService;
-
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.annotations.Api;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Api(tags = "Citas", description = "Controlador para CRUD de agendamiento de citas")
 @RestController
@@ -38,20 +28,20 @@ public class CitaController {
     private ICitaService citaService;
 
     private Map<String, Object> response = new HashMap<>();
-    private Cita cita;
+    private CitaDtoExtends cita;
     private HttpStatus status;
 
 
     @ResponseBody
     @GetMapping("/")
-    public ResponseEntity<List<Cita>> getAllCitas(){
+    public ResponseEntity<List<CitaDtoExtends>> getAllCitas(){
         return new ResponseEntity<>(citaService.getAllCitas(), HttpStatus.OK);
     }
 
 
     @ResponseBody
     @GetMapping("/detallesCita/{idCita}")
-    public ResponseEntity<List<DetalleCita>> getAllDetallesCita(@PathVariable Long idCita){
+    public ResponseEntity<List<DetalleCitaDto>> getAllDetallesCita(@PathVariable Long idCita){
         return new ResponseEntity<>(citaService.getAllDetallesCita(idCita), HttpStatus.OK);
     }
 
@@ -60,7 +50,7 @@ public class CitaController {
     public ResponseEntity<?> getCitasPorFechaAgenda(@PathVariable String fechaAgenda){
         response.clear();
         try{
-            List<Cita> citas = citaService.getCitasPorFechaAgenda(fechaAgenda);
+            List<CitaDtoExtends> citas = citaService.getCitasPorFechaAgenda(fechaAgenda);
             response.put("mensaje", "Ok!");
             response.put("citas", citas);
             status = HttpStatus.OK;
@@ -75,21 +65,21 @@ public class CitaController {
 
     @ResponseBody
     @GetMapping("/veterinario/{idVeterinario}")
-    public ResponseEntity<List<Cita>> getCitasPorVeterinario(@PathVariable Long idVeterinario){
+    public ResponseEntity<List<CitaDtoExtends>> getCitasPorVeterinario(@PathVariable Long idVeterinario){
         return new ResponseEntity<>(citaService.getCitasPorVeterinario(idVeterinario), HttpStatus.OK);
     }
 
 
     @ResponseBody
     @GetMapping("/{idCita}")
-    public ResponseEntity<Cita> getCitaPorId(@PathVariable Long idCita){
+    public ResponseEntity<CitaDtoExtends> getCitaPorId(@PathVariable Long idCita){
         return new ResponseEntity<>(citaService.getCitaPorId(idCita), HttpStatus.OK);
     }
 
 
     @ResponseBody
     @PostMapping("/{idVeterinario}")
-    public ResponseEntity<?> crearCita(@Valid @RequestBody CitaDto citaDto,
+    public ResponseEntity<?> crearCita(@Valid @RequestBody CitaServiciosArca citaDto,
             BindingResult result, @PathVariable Long idVeterinario){
         response.clear();
         if(!result.hasErrors()){
@@ -107,7 +97,7 @@ public class CitaController {
                 response.put("mensaje", "Ha ocurrido un error en el servidor al intentar crear la cita!");
                 response.put("error", e.getMostSpecificCause().getMessage());
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
-            } 
+            }
         }else{
             response.put( "errors", getErrors(result));
              status = HttpStatus.BAD_REQUEST;
@@ -119,8 +109,8 @@ public class CitaController {
 
     @ResponseBody
     @PutMapping("/{idCita}/{idVeterinario}")
-    public ResponseEntity<?> modificarCita(@Valid @RequestBody CitaDto citaDto, BindingResult result,
-            @PathVariable Long idCita,  @PathVariable Long idVeterinario){
+    public ResponseEntity<?> modificarCita(@Valid @RequestBody CitaServiciosArca citaDto, BindingResult result,
+                                           @PathVariable Long idCita, @PathVariable Long idVeterinario){
         response.clear();
         if(!result.hasErrors()){
             try{

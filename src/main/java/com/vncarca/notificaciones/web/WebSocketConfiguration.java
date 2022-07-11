@@ -6,13 +6,11 @@
 */
 package com.vncarca.notificaciones.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.vncarca.authsys.security.service.CustomUserDetailsServiceImpl;
+import com.vncarca.authsys.security.service.TokenProvider;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -40,14 +38,11 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import com.vncarca.authsys.security.service.CustomUserDetailsServiceImpl;
-import com.vncarca.authsys.security.service.TokenProvider;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
-@ConfigurationProperties
 @EnableWebSocketMessageBroker
 @EnableConfigurationProperties(WebSocketProperties.class)
 @AllArgsConstructor

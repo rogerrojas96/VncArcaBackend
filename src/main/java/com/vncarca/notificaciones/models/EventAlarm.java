@@ -23,6 +23,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -40,6 +42,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "eventAlarms")
+@Where(clause = "deleted=false")
+@SQLDelete(sql = "UPDATE event_alarms SET deleted = true WHERE id=?")
 public class EventAlarm implements Serializable {
 
 	@Id
@@ -64,7 +68,11 @@ public class EventAlarm implements Serializable {
 	@Column(nullable = true)
 	private Date eventDay;
 
-	@ManyToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = AnimalRefugio.class)
+	@NotNull
+	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
+	private Boolean deleted=Boolean.FALSE;
+
+	@ManyToOne(optional = true, fetch = FetchType.EAGER, targetEntity = AnimalRefugio.class)
 	@JoinColumn(name = "animal_id", nullable = false)
 	private AnimalRefugio paciente;
 

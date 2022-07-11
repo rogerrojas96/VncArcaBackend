@@ -26,4 +26,9 @@ public interface AnimalRefugioRepository
 	@Query("update AnimalRefugio a set a.deleted = ?1 where a.id = ?2")
 	void restoreAnimal(Boolean isDeleted, Long id);
 
+	@Transactional()
+	@Modifying(clearAutomatically = true)
+	@Query("update AnimalRefugio  a set a.adoptado = false, a.lugarEstancia ='REFUGIO' where a.id in (select animal from Adopcion )")
+	void restoreAdopcion();
+
 }

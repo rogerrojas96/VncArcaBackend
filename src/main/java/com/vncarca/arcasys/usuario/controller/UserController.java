@@ -1,12 +1,11 @@
 package com.vncarca.arcasys.usuario.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import com.vncarca.arcasys.responses.CustomResponseEntity;
+import com.vncarca.arcasys.usuario.model.UsuarioDto;
+import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
+import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
+import com.vncarca.arcasys.usuario.services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -17,24 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.vncarca.arcasys.responses.CustomResponseEntity;
-import com.vncarca.arcasys.usuario.model.UserDto;
-import com.vncarca.arcasys.usuario.services.UserService;
-import com.vncarca.authsys.security.model.Usuario;
-
-import io.swagger.annotations.Api;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Api(tags = "Usuarios", description = "Controlador para CRUD de usuarios")
 @RestController
@@ -49,11 +37,11 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/page")
-	public Page<Usuario> getUsers(@RequestParam(required = true) Integer page,
-			@RequestParam(required = true) Integer size,
-			@RequestParam(required = false, defaultValue = "", name = "username") String username) {
+	public Page<UsuarioDtoResponse> getUsers(@RequestParam(required = true) Integer page,
+											 @RequestParam(required = true) Integer size,
+											 @RequestParam(required = false, defaultValue = "", name = "username") String username) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Usuario> pageUsuarios = null;
+		Page<UsuarioDtoResponse> pageUsuarios = null;
 
 		if (username.isEmpty() || username == null) {
 			pageUsuarios = userService.findAll(pageable);
@@ -65,16 +53,16 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
-	public List<Usuario> retireveUsers() {
+	public List<UsuarioDtoResponse> retireveUsers() {
 		return userService.findAll();
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> create(@Valid @RequestBody Usuario usuario, BindingResult result) {
+	public ResponseEntity<?> create(@Valid @RequestBody UsuarioDtoExtends usuario, BindingResult result) {
 		Map<String, Object> response = new HashMap<>();
-		Usuario newUsuario = null;
+		UsuarioDtoExtends newUsuario = null;
 		if (result.hasErrors()) {
 			List<String> errors = result.getFieldErrors().stream().map(err -> {
 				return "El campo '" + err.getField() + "' " + err.getDefaultMessage();
@@ -98,7 +86,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Long id) {
-		Usuario usuario = null;
+		UsuarioDto usuario = null;
 		Map<String, Object> response = new HashMap<>();
 
 		try {
@@ -112,15 +100,15 @@ public class UserController {
 			response.put("mensaje", "El usuario con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+		return new ResponseEntity<UsuarioDto>(usuario, HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody Usuario usuario, BindingResult result, @PathVariable Long id) {
-		Usuario user = userService.findById(id);
+	public ResponseEntity<?> update(@Valid @RequestBody UsuarioDtoExtends usuario, BindingResult result, @PathVariable Long id) {
+		UsuarioDtoExtends user = userService.findById(id);
 
-		Usuario usuarioUpdate = null;
+		UsuarioDtoExtends usuarioUpdate = null;
 
 		Map<String, Object> response = new HashMap<>();
 		if (result.hasErrors()) {
@@ -183,7 +171,7 @@ public class UserController {
 	public Boolean passwordCorrecta(@RequestParam(required = true) Long id,
 			@RequestParam(required = true) String currentPassword) {
 		try {
-			Usuario user = userService.findById(id);
+			UsuarioDto user = userService.findById(id);
 			return encoder.matches(currentPassword, user.getPassword());
 		} catch (DataAccessException e) {
 			throw new DataAccessException("Ocurrió un error", e) {
@@ -205,7 +193,7 @@ public class UserController {
 
 	// @PreAuthorize("#username == authentication.principal.username")
 	@GetMapping("/pofile")
-	public ResponseEntity<UserDto> myProfile() {
+	public ResponseEntity<UsuarioDto> myProfile() {
 		return ResponseEntity.ok(userService.getUserProfile());
 	}
 }

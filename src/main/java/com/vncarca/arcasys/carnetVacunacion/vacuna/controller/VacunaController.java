@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.vncarca.arcasys.carnetVacunacion.vacuna.model.Vacuna;
+import com.vncarca.arcasys.carnetVacunacion.vacuna.model.VacunaDTO;
 import com.vncarca.arcasys.carnetVacunacion.vacuna.services.VacunaServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,24 +42,24 @@ public class VacunaController {
     // EndPoint listar vacunas
     @ResponseBody
     @GetMapping("/page")
-    public Page<Vacuna> getVacunas(@RequestParam(required = true) Integer page,
-            @RequestParam(required = true) Integer size) {
+    public Page<VacunaDTO> getVacunas(@RequestParam(required = true) Integer page,
+                                      @RequestParam(required = true) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Vacuna> pageVacunas = vacunaService.findAll(pageable);
+        Page<VacunaDTO> pageVacunas = vacunaService.findAll(pageable);
         return pageVacunas;
     }
 
 	@GetMapping("/")
-	public List<Vacuna> getVacunas(){
+	public List<VacunaDTO> getVacunas(){
 		 return vacunaService.findAll();
 	}
     
 	// EndPoint registrar Vacuna
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Valid @RequestBody Vacuna vacuna, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody VacunaDTO vacuna, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
-        Vacuna newVacuna = null;
+        VacunaDTO newVacuna = null;
 
         if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors().stream().map(err -> {
@@ -83,11 +83,11 @@ public class VacunaController {
     // EndPoint Actualizar Vacuna
     @ResponseBody
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Vacuna vacuna, BindingResult result,
+    public ResponseEntity<?> update(@Valid @RequestBody VacunaDTO vacuna, BindingResult result,
             @PathVariable Long id) {
-        Vacuna vacu = vacunaService.findById(id);
+        VacunaDTO vacu = vacunaService.findById(id);
 
-        Vacuna vacunaUpdate = null;
+        VacunaDTO vacunaUpdate = null;
 
         Map<String, Object> response = new HashMap<>();
         if (result.hasErrors()) {
@@ -137,7 +137,7 @@ public class VacunaController {
     @ResponseBody
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        Vacuna Vacuna = null;
+        VacunaDTO Vacuna = null;
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -151,7 +151,7 @@ public class VacunaController {
             response.put("mensaje", "El Vacuna con ID: ".concat(id.toString()).concat(" no existe en el servidor"));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Vacuna>(Vacuna, HttpStatus.OK);
+        return new ResponseEntity<VacunaDTO>(Vacuna, HttpStatus.OK);
     }
 
 }
