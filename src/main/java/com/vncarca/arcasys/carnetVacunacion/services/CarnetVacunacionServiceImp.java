@@ -7,6 +7,7 @@
 package com.vncarca.arcasys.carnetVacunacion.services;
 
 import com.vncarca.arcasys.animal.mapper.AnimalRefugioMapper;
+import com.vncarca.arcasys.animal.model.AnimalRefugio;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacion;
 import com.vncarca.arcasys.carnetVacunacion.model.CarnetVacunacionDTO;
 import com.vncarca.arcasys.carnetVacunacion.repository.CarnetVacunacionRepository;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,6 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CarnetVacunacionServiceImp implements CarnetVacunacionService {
     @Autowired
     CarnetVacunacionRepository carnetVacunacionRepository;
@@ -80,7 +83,6 @@ public class CarnetVacunacionServiceImp implements CarnetVacunacionService {
         return new CarnetVacunacion(carnetVacunacionDTO.getId(),
                 carnetVacunacionDTO.getFechaAplicacion(),
                 carnetVacunacionDTO.getFechaProximaAplicacion(),
-                vacunaServices.convertToEntity(carnetVacunacionDTO.getVacuna()),
-                AnimalRefugioMapper.toAnimal(carnetVacunacionDTO.getAnimal()));
+                vacunaServices.convertToEntity(carnetVacunacionDTO.getVacuna()), modelMapper.map(carnetVacunacionDTO.getAnimal(), AnimalRefugio.class));
     }
 }

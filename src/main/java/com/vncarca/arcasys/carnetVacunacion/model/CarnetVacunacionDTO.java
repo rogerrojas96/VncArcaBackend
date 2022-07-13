@@ -6,31 +6,30 @@
 */
 package com.vncarca.arcasys.carnetVacunacion.model;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vncarca.arcasys.animal.dto.AnimalRefugioResponse;
+import com.vncarca.arcasys.carnetVacunacion.vacuna.model.VacunaDTO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import lombok.AllArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vncarca.arcasys.animal.dto.AnimalRefugioResponse;
-import com.vncarca.arcasys.carnetVacunacion.vacuna.model.VacunaDTO;
-
-import lombok.Data;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
-//@JsonIgnoreProperties(ignoreUnknown = true)
-//@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+@NoArgsConstructor
 public class CarnetVacunacionDTO {
 
 	private Long id;
 
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
 	private Date fechaAplicacion;
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "America/Guayaquil")
