@@ -16,10 +16,10 @@ insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('0702648551','Joseline','Pezantes','Av Americas','0453536','0980385998','eduardo.mendieta.t@gmail.com',0);
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('1103756134','Sthefany','Argudo','9 de octubre','0453537','0980385999','edisson.nauta.est@tecazuay.edu.ec',0);
 --Clientes
-INSERT INTO vncarcadb.personas (apellidos,cedula,celular,correo,deleted,direccion,nombre,telefono) VALUES('Perez','0105661234','0980989009','jose@gmail.com',0,'Av. americas','Jose','4094123'),('Guaraca','0105661235','0980989009','martha@gmail.com',0,'Av. americas','Martha','4094124'),('Machado','0105661236','0980989010','roberto@gmail.com',0,'Av. americas','Roberto','4094125'),('Pralta','0105661237','0980989011','julia@gmail.com',0,'Av. americas','Julia','4094126'),('Tenesaca','0105661238','0980989012','ana@gmail.com',0,'Av. americas','Ana','4094127');
+INSERT INTO personas (apellidos,cedula,celular,correo,deleted,direccion,nombre,telefono) VALUES('Perez','0105661234','0980989009','jose@gmail.com',0,'Av. americas','Jose','4094123'),('Guaraca','0105661235','0980989009','martha@gmail.com',0,'Av. americas','Martha','4094124'),('Machado','0105661236','0980989010','roberto@gmail.com',0,'Av. americas','Roberto','4094125'),('Pralta','0105661237','0980989011','julia@gmail.com',0,'Av. americas','Julia','4094126'),('Tenesaca','0105661238','0980989012','ana@gmail.com',0,'Av. americas','Ana','4094127');
 INSERT INTO veterinarios (id,cargo,deleted)values(1,'Principal',0);
 
-INSERT INTO vncarcadb.cliente (id) VALUES(11),(12),(13),(14),(15);
+INSERT INTO cliente (id) VALUES(11),(12),(13),(14),(15);
 
 insert into veterinarios (id,cargo,deleted)values(2,'Suplente',0)
 
