@@ -1,6 +1,7 @@
 package com.vncarca.arcasys.serviciosarca.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.vncarca.arcasys.persona.cliente.Cliente;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,18 +26,22 @@ import java.util.List;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE citas SET deleted = true WHERE id=?")
 public class Cita {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(name = "nombre_cliente")
-    private String nombreCliente;
+//    @NotBlank
+//    @Column(name = "nombre_cliente")
+//    private String nombreCliente;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    @JsonFormat( shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd HH:mm",timezone = "America/Guayaquil")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "America/Guayaquil")
     @Column(name = "fecha_cita", unique = true)
     private Date fechaCita;
 

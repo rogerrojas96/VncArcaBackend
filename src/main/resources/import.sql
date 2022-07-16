@@ -13,12 +13,17 @@ insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('0200982163','Marco','Santander','9 de octubre','0453537','0980385999','edisson.nauta.est@tecazuay.edu.ec',0);
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('0913537742','Martha','Palacios','Av Americas','0453536','0980385998','edisson.nauta.est@tecazuay.edu.ec',0);
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('0401197298','María','Urgiles','9 de octubre','0453537','0980385999','edisson.nauta.est@tecazuay.edu.ec',0);
-	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('0702648551','Joseline','Pezantes','Av Americas','0453536','0980385998','eduardo.mendieta.t@gmail.com');
+	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('0702648551','Joseline','Pezantes','Av Americas','0453536','0980385998','eduardo.mendieta.t@gmail.com',0);
 	insert into personas (cedula,nombre,apellidos,direccion,telefono,celular,correo,deleted) values ('1103756134','Sthefany','Argudo','9 de octubre','0453537','0980385999','edisson.nauta.est@tecazuay.edu.ec',0);
+--Clientes
+INSERT INTO vncarcadb.personas (apellidos,cedula,celular,correo,deleted,direccion,nombre,telefono) VALUES('Perez','0105661234','0980989009','jose@gmail.com',0,'Av. americas','Jose','4094123'),('Guaraca','0105661235','0980989009','martha@gmail.com',0,'Av. americas','Martha','4094124'),('Machado','0105661236','0980989010','roberto@gmail.com',0,'Av. americas','Roberto','4094125'),('Pralta','0105661237','0980989011','julia@gmail.com',0,'Av. americas','Julia','4094126'),('Tenesaca','0105661238','0980989012','ana@gmail.com',0,'Av. americas','Ana','4094127');
+INSERT INTO veterinarios (id,cargo,deleted)values(1,'Principal',0);
+
+INSERT INTO vncarcadb.cliente (id) VALUES(11),(12),(13),(14),(15);
+
+insert into veterinarios (id,cargo,deleted)values(2,'Suplente',0)
 
 --Veterinarios
-insert into veterinarios (id,cargo,deleted)values(1,'Principal',0)
-insert into veterinarios (id,cargo,deleted)values(2,'Suplente',0)
 
 -- Veterinario - persona`
 insert into veterinarios_personas (veterinario_id, persona_id)values(1,2)
@@ -72,11 +77,11 @@ insert into servicios(descripcion, nombre, precio,deleted) values('Vacunacion de
 insert into servicios(descripcion, nombre, precio,deleted) values('Esterilizacion de animalitos', 'Esterilizacion', 15.5,0)
 
 --Citas
- insert into citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario,deleted ) values(true, '2022-06-01 07:30:00', 'Consulta general', 'Jose Perez', 1,0)
- insert into citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario,deleted) values(true, '2022-06-01 09:30:00', 'Consulta cirugia', 'Martha Guaraca', 1,0)
- insert into citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario,deleted) values(true, '2022-06-01 14:30:00', 'Desparacitacion', 'Roberto Machado', 1,0)
- insert into citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario,deleted) values(true, '2022-06-01 16:30:00', 'Esterilizacion', 'Julia Peralta', 1,0)
- insert into citas(estado, fecha_cita, motivo, nombre_cliente, id_veterinario,deleted) values(true, '2022-06-02 16:30:00', 'Vacunacion', 'Ana Tenesaca', 1,0)
+ insert into citas(estado, fecha_cita, motivo, cliente_id, id_veterinario,deleted ) values(true, '2022-06-01 07:30:00', 'Consulta general', 11, 1,0)
+ insert into citas(estado, fecha_cita, motivo, cliente_id, id_veterinario,deleted) values(true, '2022-06-01 09:30:00', 'Consulta cirugia', 12, 1,0)
+ insert into citas(estado, fecha_cita, motivo, cliente_id, id_veterinario,deleted) values(true, '2022-06-01 14:30:00', 'Desparacitacion', 13, 1,0)
+ insert into citas(estado, fecha_cita, motivo, cliente_id, id_veterinario,deleted) values(true, '2022-06-01 16:30:00', 'Esterilizacion', 14, 1,0)
+ insert into citas(estado, fecha_cita, motivo, cliente_id, id_veterinario,deleted) values(true, '2022-06-02 16:30:00', 'Vacunacion', 15, 1,0)
 
  --Detalle de citas
  insert into detalles_citas(id_cita, id_servicio) values(1, 1)

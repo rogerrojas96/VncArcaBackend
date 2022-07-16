@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-	
+
 	@ExceptionHandler(DataAccessException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<Object> handleDataAccessException(DataAccessException e, WebRequest webRequest) {
@@ -44,14 +45,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Object>(errorResponse,
 				status);
 	}
-	
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e, WebRequest webRequest) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ErrorResponses errorResponse = new ErrorResponses(status, e.getMessage().intern().split(";")[0],
+				e.getMostSpecificCause().getMessage());
+		return new ResponseEntity<Object>(errorResponse,
+				status);
+	}
+
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public ResponseEntity<ErrorResponse> handleRecordNotFound(EmptyResultDataAccessException ex) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		log.trace("Record not found: {}", ex.getMessage());
 		return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage()), status);
 	}
-	
+
 	@ExceptionHandler(ExpiredJwtException.class)
 	public ResponseEntity<Object> handleExpiredJwtExceptions(ExpiredJwtException e) {
 		HttpStatus status = HttpStatus.UNAUTHORIZED;

@@ -1,5 +1,8 @@
 package com.vncarca.arcasys.serviciosarca.service;
 
+import com.vncarca.arcasys.persona.cliente.Cliente;
+import com.vncarca.arcasys.persona.cliente.ClienteDtoExtends;
+import com.vncarca.arcasys.persona.cliente.Services.ClienteService;
 import com.vncarca.arcasys.serviciosarca.dto.*;
 import com.vncarca.arcasys.serviciosarca.model.Cita;
 import com.vncarca.arcasys.serviciosarca.model.DetalleCita;
@@ -9,6 +12,7 @@ import com.vncarca.arcasys.serviciosarca.repository.ServicioArcaRepository;
 import com.vncarca.arcasys.veterinario.model.Veterinario;
 import com.vncarca.arcasys.veterinario.repository.VeterinarioRepository;
 import com.vncarca.arcasys.veterinario.services.VeterinarioService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
-public class CitaService implements ICitaService{
+public class CitaService implements ICitaService {
 
     @Autowired
     private CitaRepository citaRepository;
@@ -38,9 +42,13 @@ public class CitaService implements ICitaService{
     private ServicioArcaService servicioArcaService;
     @Autowired
     private VeterinarioService veterinarioService;
+    @Autowired
+    private ClienteService clienteService;
+    @Autowired
+    ModelMapper mapper;
 
     @Override
-    public List<CitaDtoExtends> getAllCitas() {
+    public List<CitaArcaExtends> getAllCitas() {
         return citaRepository.findAll().stream().map(this::convertToDtoExtends).collect(Collectors.toList());
     }
 
@@ -52,7 +60,7 @@ public class CitaService implements ICitaService{
 
 
     @Override
-    public List<CitaDtoExtends> getCitasPorFechaAgenda(String fechaAgenda) {
+    public List<CitaArcaExtends> getCitasPorFechaAgenda(String fechaAgenda) {
         LocalDate fecha = LocalDate.parse(fechaAgenda);
         int dia = fecha.getDayOfMonth();
         int mes = fecha.getMonthValue();
@@ -62,29 +70,30 @@ public class CitaService implements ICitaService{
 
 
     @Override
-    public List<CitaDtoExtends> getCitasPorVeterinario(Long idVeterinario) {
+    public List<CitaArcaExtends> getCitasPorVeterinario(Long idVeterinario) {
         return citaRepository.getCitasPorVeterinario(idVeterinario).stream().map(this::convertToDtoExtends).collect(Collectors.toList());
     }
 
 
     @Override
-    public CitaDtoExtends getCitaPorId(Long idCita) {
-        return citaRepository.findById(idCita).map(this::convertToDtoExtends).orElseThrow(()-> new NoSuchElementException(
+    public CitaArcaExtends getCitaPorId(Long idCita) {
+        return citaRepository.findById(idCita).map(this::convertToDtoExtends).orElseThrow(() -> new NoSuchElementException(
                 "Cita con ID: " + idCita.toString() + " no existe en el servidor"));
     }
+
     public Cita findById(Long idCita) {
         return citaRepository.findById(idCita).orElseThrow(()-> new NoSuchElementException(
                 "Cita con ID: " + idCita.toString() + " no existe en el servidor"));
     }
 
     @Override
-    public CitaDtoExtends crearCita(CitaServiciosArca citaDto, Long idVeterinario) {
-        if(!citaRepository.existsByFechaCita(citaDto.getFechaCita()) && veterinarioRepository.existsById(idVeterinario)){
+    public CitaArcaExtends crearCita(CitaServiciosArca citaDto, Long idVeterinario) {
+        if (!citaRepository.existsByFechaCita(citaDto.getFechaCita()) && veterinarioRepository.existsById(idVeterinario)) {
             Cita cita = new Cita();
             cita.setEstado(citaDto.isEstado());
             cita.setFechaCita(citaDto.getFechaCita());
             cita.setMotivo(citaDto.getMotivo());
-            cita.setNombreCliente(citaDto.getNombreCliente());
+            cita.setCliente(clienteDtoExtendsToCliente(clienteService.findById(citaDto.getCliente_id())));
             cita.setVeterinario(veterinarioRepository.findById(idVeterinario).get());
 
             cita = citaRepository.save(cita);
@@ -104,15 +113,15 @@ public class CitaService implements ICitaService{
 
 
     @Override
-    public CitaDtoExtends modificarCita(CitaServiciosArca citaDto, Long idCita, Long idVeterinario) {
+    public CitaArcaExtends modificarCita(CitaServiciosArca citaDto, Long idCita, Long idVeterinario) {
         Veterinario veterinario = veterinarioRepository.findById(idVeterinario).orElse(null);
         Cita cita = findById(idCita);
-        if(cita != null && veterinario != null){
+        if (cita != null && veterinario != null) {
             List<DetalleCita> detalleCitas = detalleCitaRepository.getDetallesCita(cita.getId());
             cita.setEstado(citaDto.isEstado());
             cita.setFechaCita(citaDto.getFechaCita());
             cita.setMotivo(citaDto.getMotivo());
-            cita.setNombreCliente(citaDto.getNombreCliente());
+            cita.setCliente(this.clienteDtoExtendsToCliente(clienteService.findById(citaDto.getCliente_id())));
             cita.setVeterinario(veterinarioRepository.findById(idVeterinario).get());
             cita = citaRepository.save(cita);
 
@@ -148,26 +157,36 @@ public class CitaService implements ICitaService{
 
     private Date getDate(String fecha){
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try{
+        try {
             return formato.parse(fecha);
-        }catch(ParseException e){
+        } catch (ParseException e) {
             return null;
         }
     }
 
     @Override
     public CitaDto convertToDto(Cita cita) {
-        return new CitaDto(cita.getNombreCliente(),cita.getFechaCita(),cita.getMotivo(),cita.isEstado());
+        return new CitaDto(0L, cita.getFechaCita(), cita.getMotivo(), cita.isEstado());
     }
-    public CitaDtoExtends convertToDtoExtends(Cita c) {
-        return new CitaDtoExtends(c.getNombreCliente(),c.getFechaCita(),c.getMotivo(),c.isEstado(),c.getId(),veterinarioService.convertToDto(c.getVeterinario()));
+
+    public CitaArcaExtends convertToDtoExtends(Cita c) {
+        return new CitaArcaExtends(c.getId(), this.clienteToClienteDtoExtends(c.getCliente()), c.getFechaCita(), c.getMotivo(), c.isEstado(), veterinarioService.convertToDto(c.getVeterinario()));
     }
+
     @Override
     public Cita convertToEntity(CitaDto citaDto) {
         return null;
     }
 
     public DetalleCitaDto convertDetalleCitaToDto(DetalleCita cita) {
-        return new DetalleCitaDto(cita.getId(),convertToDtoExtends(cita.getCita()),servicioArcaService.convertToDto(cita.getServicioArca()));
+        return new DetalleCitaDto(cita.getId(), convertToDtoExtends(cita.getCita()), servicioArcaService.convertToDto(cita.getServicioArca()));
+    }
+
+    public ClienteDtoExtends clienteToClienteDtoExtends(Cliente c) {
+        return new ClienteDtoExtends(c.getId(), c.getCedula(), c.getNombre(), c.getApellidos(), c.getDireccion(), c.getTelefono(), c.getCelular(), c.getCorreo());
+    }
+
+    public Cliente clienteDtoExtendsToCliente(ClienteDtoExtends c) {
+        return new Cliente(c.getId(), c.getCedula(), c.getNombre(), c.getApellidos(), c.getDireccion(), c.getTelefono(), c.getCelular(), c.getCorreo());
     }
 }

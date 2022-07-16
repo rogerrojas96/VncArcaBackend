@@ -1,12 +1,8 @@
 package com.vncarca.arcasys.persona.services;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
+import com.vncarca.arcasys.persona.model.Persona;
 import com.vncarca.arcasys.persona.model.PersonaDtoExtends;
-import org.aspectj.weaver.ast.Instanceof;
+import com.vncarca.arcasys.persona.repository.PersonaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.model.PersonaDto;
-import com.vncarca.arcasys.persona.repository.PersonaRepository;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,8 +56,8 @@ public class PersonaServiceImp implements PersonaService {
 	}
 
 	@Override
-	public PersonaDtoExtends convertToDto(Persona entity) {
-		return modelMapper.map(entity, PersonaDtoExtends.class);
+	public PersonaDtoExtends convertToDto(Persona e) {
+		return new PersonaDtoExtends(e.getCedula(), e.getNombre(), e.getApellidos(), e.getDireccion(), e.getTelefono(), e.getCelular(), e.getCorreo(), e.getId());
 	}
 
 	@Override

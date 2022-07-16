@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,14 +16,9 @@ import java.util.List;
  */
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
-public class CitaServiciosArca extends CitaDto{
+public class CitaServiciosArca extends CitaDto {
     @NotNull
     private List<ServicioArcaDtoExtends> servicios;
-
-    public CitaServiciosArca(String nombreCliente, Date fechaCita, String motivo, boolean estado, List<ServicioArcaDtoExtends> servicios) {
-        super(nombreCliente, fechaCita, motivo, estado);
-        this.servicios = servicios;
-    }
-
 }

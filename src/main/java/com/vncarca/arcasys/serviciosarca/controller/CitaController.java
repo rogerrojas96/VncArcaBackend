@@ -1,8 +1,7 @@
 package com.vncarca.arcasys.serviciosarca.controller;
 
+import com.vncarca.arcasys.serviciosarca.dto.CitaArcaExtends;
 import com.vncarca.arcasys.serviciosarca.dto.CitaServiciosArca;
-import com.vncarca.arcasys.serviciosarca.dto.CitaDto;
-import com.vncarca.arcasys.serviciosarca.dto.CitaDtoExtends;
 import com.vncarca.arcasys.serviciosarca.dto.DetalleCitaDto;
 import com.vncarca.arcasys.serviciosarca.service.ICitaService;
 import io.swagger.annotations.Api;
@@ -28,20 +27,20 @@ public class CitaController {
     private ICitaService citaService;
 
     private Map<String, Object> response = new HashMap<>();
-    private CitaDtoExtends cita;
+    private CitaArcaExtends cita;
     private HttpStatus status;
 
 
     @ResponseBody
     @GetMapping("/")
-    public ResponseEntity<List<CitaDtoExtends>> getAllCitas(){
+    public ResponseEntity<List<CitaArcaExtends>> getAllCitas() {
         return new ResponseEntity<>(citaService.getAllCitas(), HttpStatus.OK);
     }
 
 
     @ResponseBody
     @GetMapping("/detallesCita/{idCita}")
-    public ResponseEntity<List<DetalleCitaDto>> getAllDetallesCita(@PathVariable Long idCita){
+    public ResponseEntity<List<DetalleCitaDto>> getAllDetallesCita(@PathVariable Long idCita) {
         return new ResponseEntity<>(citaService.getAllDetallesCita(idCita), HttpStatus.OK);
     }
 
@@ -50,7 +49,7 @@ public class CitaController {
     public ResponseEntity<?> getCitasPorFechaAgenda(@PathVariable String fechaAgenda){
         response.clear();
         try{
-            List<CitaDtoExtends> citas = citaService.getCitasPorFechaAgenda(fechaAgenda);
+            List<CitaArcaExtends> citas = citaService.getCitasPorFechaAgenda(fechaAgenda);
             response.put("mensaje", "Ok!");
             response.put("citas", citas);
             status = HttpStatus.OK;
@@ -65,14 +64,14 @@ public class CitaController {
 
     @ResponseBody
     @GetMapping("/veterinario/{idVeterinario}")
-    public ResponseEntity<List<CitaDtoExtends>> getCitasPorVeterinario(@PathVariable Long idVeterinario){
+    public ResponseEntity<List<CitaArcaExtends>> getCitasPorVeterinario(@PathVariable Long idVeterinario) {
         return new ResponseEntity<>(citaService.getCitasPorVeterinario(idVeterinario), HttpStatus.OK);
     }
 
 
     @ResponseBody
     @GetMapping("/{idCita}")
-    public ResponseEntity<CitaDtoExtends> getCitaPorId(@PathVariable Long idCita){
+    public ResponseEntity<CitaArcaExtends> getCitaPorId(@PathVariable Long idCita) {
         return new ResponseEntity<>(citaService.getCitaPorId(idCita), HttpStatus.OK);
     }
 

@@ -1,7 +1,5 @@
 package com.vncarca.arcasys.serviciosarca.dto;
 
-import com.vncarca.arcasys.serviciosarca.dto.CitaDto;
-import com.vncarca.arcasys.serviciosarca.dto.ServicioArcaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +17,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class DetalleCitaDto implements Serializable {
     private Long id;
-    private CitaDtoExtends cita;
+    private CitaArcaExtends cita;
     private ServicioArcaDtoExtends servicioArca;
 }
