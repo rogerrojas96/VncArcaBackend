@@ -44,11 +44,15 @@ public class Rol implements Serializable{
         this.id = id;
         this.nombre = nombre;
     }
-    
+
     public GrantedAuthority grantedAuthority() {
         return new SimpleGrantedAuthority(this.nombre);
     }
-    
+
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "roles")
     private List<Usuario> usuarios;
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios.addAll(usuarios);
+    }
 }

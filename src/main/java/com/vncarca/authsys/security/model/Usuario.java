@@ -12,7 +12,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -51,13 +52,17 @@ public class Usuario implements Serializable {
 
 	@NotNull
 	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-	private Boolean deleted=Boolean.FALSE;
+	private Boolean deleted = Boolean.FALSE;
 
 	@NotNull
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id", updatable = true, nullable = false), inverseJoinColumns = @JoinColumn(name = "rol_id", updatable = true, nullable = false), uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario_id", "rol_id"})})
-	public Set<Rol> roles;
-	
+	public List<Rol> roles = new ArrayList<>();
+
+	public void setRoles(List<Rol> roles) {
+		this.roles.addAll(roles);
+	}
+
 	/**
 	 * @param id
 	 * @param username
@@ -65,7 +70,7 @@ public class Usuario implements Serializable {
 	 * @param persona
 	 * @param roles
 	 */
-	public Usuario(Long id, String username, String password, Persona persona, Set<Rol> roles) {
+	public Usuario(Long id, String username, String password, Persona persona, List<Rol> roles) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
