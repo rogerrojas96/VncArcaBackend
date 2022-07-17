@@ -4,7 +4,7 @@ import com.vncarca.arcasys.persona.model.PersonaDto;
 import com.vncarca.arcasys.persona.model.PersonaDtoExtends;
 import com.vncarca.arcasys.persona.services.PersonaService;
 import com.vncarca.arcasys.responses.CustomResponseEntity;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
-@Tag(name = "Personas", description = "Controlador para CRUD de personas")
+@Api(tags = "Personas", description = "Controlador para CRUD de personas")
 @RestController
 @RequestMapping("/personas")
 public class PersonaController {
