@@ -1,12 +1,10 @@
 package com.vncarca.arcasys.persona.controllers;
 
-import java.util.List;
-import java.util.Objects;
-
-import javax.validation.Valid;
-
 import com.vncarca.arcasys.persona.model.PersonaDto;
 import com.vncarca.arcasys.persona.model.PersonaDtoExtends;
+import com.vncarca.arcasys.persona.services.PersonaService;
+import com.vncarca.arcasys.responses.CustomResponseEntity;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -15,25 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.services.PersonaService;
-import com.vncarca.arcasys.responses.CustomResponseEntity;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Objects;
 
-import io.swagger.annotations.Api;
-
-@Api(tags = "Personas", description = "Controlador para CRUD de personas")
+@Tag(name = "Personas", description = "Controlador para CRUD de personas")
 @RestController
 @RequestMapping("/personas")
 public class PersonaController {
@@ -44,11 +30,11 @@ public class PersonaController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	@GetMapping("/page")
-	public Page<PersonaDtoExtends> getPersonas(@RequestParam(required = true) Integer page,
-										@RequestParam(required = true) Integer size, @RequestParam(required = false, defaultValue = "") String cedula) {
+	public Page<PersonaDtoExtends> getPersonas(@RequestParam Integer page,
+	                                           @RequestParam Integer size, @RequestParam(required = false, defaultValue = "") String cedula) {
 		Pageable pageable = PageRequest.of(page, size);
-		Page<PersonaDtoExtends> pagePersonas = null;
-		if (cedula.isEmpty() || cedula == null) {
+		Page<PersonaDtoExtends> pagePersonas;
+		if (cedula.isEmpty()) {
 			pagePersonas = personaService.findAll(pageable);
 		} else {
 			pagePersonas = personaService.findByCedula(pageable, cedula);
@@ -117,7 +103,33 @@ public class PersonaController {
 	public ResponseEntity<?> getById(@PathVariable Long id) {
 		try {
 			PersonaDto persona = personaService.findById(id);
-			return new ResponseEntity<PersonaDto>(persona, HttpStatus.OK);
+			return new ResponseEntity<>(persona, HttpStatus.OK);
+		} catch (DataAccessException e) {
+			throw new DataAccessException("Error en la consulta de la persona en el servidor", e) {
+			};
+		}
+	}
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@ResponseBody
+	@GetMapping("/findByCedula/{cedula}")
+	public ResponseEntity<?> findByCedula(@PathVariable String cedula) {
+		try {
+			PersonaDto persona = personaService.findByCedula(cedula);
+			return new ResponseEntity<>(persona, HttpStatus.OK);
+		} catch (DataAccessException e) {
+			throw new DataAccessException("Error en la consulta de la persona en el servidor", e) {
+			};
+		}
+	}
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@ResponseBody
+	@GetMapping("/findByCedulaNotClientes/{cedula}")
+	public ResponseEntity<?> findByCedulaNotClientes(@PathVariable String cedula) {
+		try {
+			PersonaDto persona = personaService.findByCedulaNotClientes(cedula);
+			return new ResponseEntity<>(persona, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			throw new DataAccessException("Error en la consulta de la persona en el servidor", e) {
 			};

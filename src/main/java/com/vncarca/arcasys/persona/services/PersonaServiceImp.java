@@ -41,12 +41,24 @@ public class PersonaServiceImp implements PersonaService {
 	@Override
 	public PersonaDtoExtends findById(Long id) {
 		return personaRepository.findById(id).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
-				"Persona con ID: " + id.toString() + " no existe en el servidor"));
+				"Persona con ID: " + id + " no existe en el servidor"));
+	}
+
+	@Override
+	public PersonaDtoExtends findByCedula(String cedula) {
+		return personaRepository.findByCedula(cedula).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
+				"Persona con cedula: " + cedula + " no existe en el servidor"));
+	}
+
+	@Override
+	public PersonaDtoExtends findByCedulaNotClientes(String cedula) {
+		return personaRepository.findByCedulaNotClientes(cedula).map(this::convertToDto).orElseThrow(() -> new NoSuchElementException(
+				"Persona con cedula: " + cedula + " no existe en el servidor"));
 	}
 
 	@Override
 	public void delete(Long id) {
-		if(Objects.equals(findById(id).getId(), id))
+		if (Objects.equals(findById(id).getId(), id))
 			personaRepository.deleteById(id);
 	}
 

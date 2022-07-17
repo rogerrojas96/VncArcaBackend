@@ -1,25 +1,27 @@
 package com.vncarca.arcasys.persona.services;
 
-import java.util.List;
-
 import com.vncarca.arcasys.globalService.GlobalService;
 import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.arcasys.persona.model.PersonaDto;
-
 import com.vncarca.arcasys.persona.model.PersonaDtoExtends;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface PersonaService extends GlobalService<PersonaDtoExtends, Persona> {
-	public Page<PersonaDtoExtends> findAll(Pageable pageable);
+	Page<PersonaDtoExtends> findAll(Pageable pageable);
 
-	public Page<PersonaDtoExtends> findByCedula(Pageable pageable, String cedula);
+	Page<PersonaDtoExtends> findByCedula(Pageable pageable, String cedula);
 
-	public List<PersonaDtoExtends> findAll();
+	PersonaDtoExtends findByCedula(String cedula);
 
-	public PersonaDtoExtends save(PersonaDtoExtends persona);
+	PersonaDtoExtends findByCedulaNotClientes(String cedula);
 
-	public PersonaDtoExtends findById(Long id);
+	List<PersonaDtoExtends> findAll();
 
-	public void delete(Long id);
+	PersonaDtoExtends save(PersonaDtoExtends persona);
+
+	PersonaDtoExtends findById(Long id);
+
+	void delete(Long id);
 }
