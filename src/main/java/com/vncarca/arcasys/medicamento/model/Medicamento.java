@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -66,8 +67,12 @@ public class Medicamento implements Serializable {
 		this.cantidad = cantidad;
 		this.precio = precio;
 	}
-	
+
 	//Para soft delete
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "medicamento")
-	private List<Medicacion> medicaciones;
+	private List<Medicacion> medicaciones = new ArrayList<>();
+
+	public void setMedicaciones(List<Medicacion> medicaciones) {
+		this.medicaciones.addAll(medicaciones);
+	}
 }
