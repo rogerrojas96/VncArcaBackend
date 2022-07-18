@@ -42,6 +42,12 @@ public class VeterinarioController {
 		return pageVeterinarios;
 	}
 
+	@ResponseBody
+	@GetMapping("/findAll")
+	public List<VeterinarioDTO> getAllVeterinarios() {
+		return veterinarioService.findAll();
+	}
+
 	// EndPoint registrar Veterinario
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -140,5 +146,6 @@ public class VeterinarioController {
 		}
 		return new ResponseEntity<VeterinarioDTO>(Veterinario, HttpStatus.OK);
 	}
+
 
 }
