@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,28 @@ public class CitaController {
     private Map<String, Object> response = new HashMap<>();
     private CitaArcaExtends cita;
     private HttpStatus status;
+
+
+    @ResponseBody
+    @GetMapping("/horas-disponibles/{fechaAgenda}")
+    public ResponseEntity<?> getHorasDisponibles(@PathVariable String fechaAgenda){
+        response.clear();
+        try{
+            List<String> horasDisponibles = citaService.getHorasDisponibles(fechaAgenda);
+            response.put("mensaje", "Ok!");
+            response.put("horas", horasDisponibles);
+            status = HttpStatus.OK;
+        }catch(DataAccessException e){
+            response.put("mensaje", "Ha ocurrido un error en el servidor al intentar buscar horas disponibles por fecha!");
+            response.put("error", e.getMostSpecificCause().getMessage());
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }catch(DateTimeParseException e){
+            response.put("mensaje", "El formato de la fecha no es correcto: "+fechaAgenda);
+            response.put("error", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+        }
+        return new ResponseEntity<Map<String, Object>>(response, status);
+    }
 
 
     @ResponseBody
@@ -57,6 +81,10 @@ public class CitaController {
             response.put("mensaje", "Ha ocurrido un error en el servidor al intentar buscar citas por fecha!");
             response.put("error", e.getMostSpecificCause().getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }catch(DateTimeParseException e){
+            response.put("mensaje", "El formato de la fecha no es correcto: "+fechaAgenda);
+            response.put("error", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
         }
         return new ResponseEntity<Map<String, Object>>(response, status);
     }

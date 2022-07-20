@@ -16,10 +16,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -155,13 +155,46 @@ public class CitaService implements ICitaService {
         return false;
     }
 
-    private Date getDate(String fecha){
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            return formato.parse(fecha);
-        } catch (ParseException e) {
-            return null;
+
+    public List<String> getHorasDisponibles(String fechaAgenda){
+        List<String> horasDisponibles = getHorasTotalesServicio();
+        List<CitaArcaExtends> citasAgendadas = getCitasPorFechaAgenda(fechaAgenda);
+        
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneId.systemDefault());
+
+        for (CitaArcaExtends cita : citasAgendadas) {
+            String hora = formater.format(cita.getFechaCita().toInstant()).substring(11, 16);
+            int indice = horasDisponibles.indexOf(hora);
+            if(indice != -1){
+                horasDisponibles.remove(indice);
+            }
         }
+
+        return horasDisponibles;
+    }
+
+
+    private List<String> getHorasTotalesServicio(){
+        List<String> horasTotales = new ArrayList<>();
+        horasTotales.add("08:00");
+        horasTotales.add("08:30");
+        horasTotales.add("09:00");
+        horasTotales.add("09:30");
+        horasTotales.add("10:00");
+        horasTotales.add("10:30");
+        horasTotales.add("11:00");
+        horasTotales.add("11:30");
+        horasTotales.add("14:00");
+        horasTotales.add("14:30");
+        horasTotales.add("15:00");
+        horasTotales.add("15:30");
+        horasTotales.add("16:00");
+        horasTotales.add("16:30");
+        horasTotales.add("17:00");
+        horasTotales.add("17:30");
+        horasTotales.add("18:00");
+
+        return horasTotales;
     }
 
     @Override

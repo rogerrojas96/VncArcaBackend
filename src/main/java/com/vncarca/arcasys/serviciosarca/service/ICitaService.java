@@ -26,4 +26,6 @@ public interface ICitaService extends GlobalService<CitaDto, Cita> {
     public CitaArcaExtends modificarCita(CitaServiciosArca citaDto, Long idCita, Long idVeterinario);
 
     public boolean eliminarCita(Long idCita);
+
+    public List<String> getHorasDisponibles(String fechaAgenda);
 }
