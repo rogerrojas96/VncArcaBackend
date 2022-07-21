@@ -47,6 +47,11 @@ public class CitaService implements ICitaService {
     @Autowired
     ModelMapper mapper;
 
+
+    public List<CitaArcaExtends> getAllCitasActivasPorCliente(String cedula){
+        return citaRepository.getCitasActivasPorCliente(cedula, true).stream().map(this::convertToDtoExtends).collect(Collectors.toList());
+    }
+
     @Override
     public List<CitaArcaExtends> getAllCitas() {
         return citaRepository.findAll().stream().map(this::convertToDtoExtends).collect(Collectors.toList());

@@ -54,6 +54,12 @@ public class CitaController {
         return new ResponseEntity<Map<String, Object>>(response, status);
     }
 
+    @ResponseBody
+    @GetMapping("/by-cliente/{cedula}")
+    public ResponseEntity<List<CitaArcaExtends>> getAllCitasActivasPorCliente(@PathVariable String cedula){
+        return new ResponseEntity<>(citaService.getAllCitasActivasPorCliente(cedula), HttpStatus.OK);
+    }
+
 
     @ResponseBody
     @GetMapping("/")

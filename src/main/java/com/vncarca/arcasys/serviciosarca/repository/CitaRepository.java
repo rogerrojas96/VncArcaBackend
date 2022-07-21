@@ -21,4 +21,10 @@ public interface CitaRepository extends JpaRepository<Cita, Long>{
     public List<Cita> getCitasPorVeterinario(Long idVeterinario);
 
     public boolean existsByFechaCita(Date fechaCita); 
+
+    @Query(
+        value = "select citas.* from citas join cliente on citas.cliente_id = cliente.id join personas on cliente.id = personas.id where personas.cedula = :cedula and citas.estado = :estado", 
+        nativeQuery = true
+    )
+    public List<Cita> getCitasActivasPorCliente(String cedula, boolean estado);
 }

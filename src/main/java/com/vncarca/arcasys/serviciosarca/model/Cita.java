@@ -31,14 +31,6 @@ public class Cita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotBlank
-//    @Column(name = "nombre_cliente")
-//    private String nombreCliente;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    private Cliente cliente;
-
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "America/Guayaquil")
@@ -64,4 +56,8 @@ public class Cita {
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cita")
     private List<DetalleCita> detallesCitas;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
 }
