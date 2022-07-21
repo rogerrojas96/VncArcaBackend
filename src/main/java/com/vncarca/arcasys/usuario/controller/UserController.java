@@ -1,6 +1,7 @@
 package com.vncarca.arcasys.usuario.controller;
 
 import com.vncarca.arcasys.responses.CustomResponseEntity;
+import com.vncarca.arcasys.usuario.model.ProfileDto;
 import com.vncarca.arcasys.usuario.model.UsuarioDto;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Api(tags = "Usuarios", description = "Controlador para CRUD de usuarios")
@@ -140,6 +142,22 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
+	@PutMapping("profile/{id}")
+	public ResponseEntity<?> updateMyProfile(@Valid @RequestBody ProfileDto usuario, @PathVariable Long id) {
+		if (!Objects.equals(id, usuario.getId())) {
+			throw new IllegalArgumentException("El id {" + id + "} no coincide con el id del usuario");
+		}
+		try {
+			ProfileDto userToUpdate = userService.findMyProfyleById(id);
+			userToUpdate = usuario;
+			ProfileDto usuarioUpdate = userService.updateProfile(userToUpdate);
+			return new CustomResponseEntity(HttpStatus.CREATED, "Perfil actualizado con exito", usuarioUpdate).response();
+		} catch (DataAccessException e) {
+			throw new DataAccessException("Error al actualizar cuenta de usuario ", e) {
+			};
+		}
+	}
+
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -193,7 +211,7 @@ public class UserController {
 
 	// @PreAuthorize("#username == authentication.principal.username")
 	@GetMapping("/pofile")
-	public ResponseEntity<UsuarioDto> myProfile() {
+	public ResponseEntity<ProfileDto> myProfile() {
 		return ResponseEntity.ok(userService.getUserProfile());
 	}
 }

@@ -1,7 +1,6 @@
 package com.vncarca.arcasys.adopciones.model;
 
 import com.vncarca.arcasys.persona.model.Persona;
-import com.vncarca.authsys.security.model.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -40,14 +38,18 @@ public class Adoptante implements Serializable{
     private String nicknameFacebook;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="id_persona")
+    @JoinColumn(name = "id_persona")
     private Persona persona;
 
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private Boolean deleted=Boolean.FALSE;
+    private Boolean deleted = Boolean.FALSE;
 
-//    Soft Delete
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "adoptante")
+    //    Soft Delete
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "adoptante")
     private List<Adopcion> adopciones;
+
+    public void setAdopciones(List<Adopcion> adopciones) {
+        this.adopciones.addAll(adopciones);
+    }
 }

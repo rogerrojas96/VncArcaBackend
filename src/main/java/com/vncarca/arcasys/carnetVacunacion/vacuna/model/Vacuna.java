@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -58,8 +59,12 @@ public class Vacuna implements Serializable {
 		this.tipo = tipo;
 		this.descripcion = descripcion;
 	}
-	
+
 	// para soft deletes
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "vacuna")
-	private List<CarnetVacunacion> carnetVacunaciones;
+	private List<CarnetVacunacion> carnetVacunaciones = new ArrayList<>();
+
+	public void setCarnetVacunaciones(List<CarnetVacunacion> carnetVacunaciones) {
+		this.carnetVacunaciones.addAll(carnetVacunaciones);
+	}
 }

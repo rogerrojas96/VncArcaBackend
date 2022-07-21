@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -60,8 +61,12 @@ public class ServicioArca {
         this.descripcion = descripcion;
         this.precio = precio;
     }
-    
+
     //soft delete cascade
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "servicioArca")
-    private List<DetalleCita> detallesCitas;
+    private List<DetalleCita> detallesCitas = new ArrayList<>();
+
+    public void setDetallesCitas(List<DetalleCita> detallesCitas) {
+        this.detallesCitas.addAll(detallesCitas);
+    }
 }

@@ -1,7 +1,7 @@
 package com.vncarca.arcasys.usuario.services;
 
 import com.vncarca.arcasys.persona.services.PersonaService;
-import com.vncarca.arcasys.usuario.model.UsuarioDto;
+import com.vncarca.arcasys.usuario.model.ProfileDto;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
 import com.vncarca.authsys.security.dto.CustomUserDetails;
@@ -24,12 +24,13 @@ import java.util.stream.Collectors;
 public class UserServiceImp implements UserService {
 	@Autowired
 	UserRepository userRepository;
-@Autowired
+	@Autowired
 	PersonaService personaService;
-@Autowired
+	@Autowired
 	RoleService roleService;
+
 	@Override
-	public UsuarioDto getUserProfile() {
+	public ProfileDto getUserProfile() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		Usuario user = userRepository
@@ -37,6 +38,17 @@ public class UserServiceImp implements UserService {
 				.orElseThrow(() -> new IllegalArgumentException(
 						"Usuario no registrado : " + customUserDetails.getUsername()));
 		return convertToProfileDto(user);
+	}
+
+	@Override
+	public ProfileDto updateProfile(ProfileDto profileDto) {
+		return convertToProfileDto(userRepository.save(convertProfileToEntity(profileDto)));
+	}
+
+	@Override
+	public ProfileDto findMyProfyleById(Long id) {
+		return userRepository.findById(id).map(this::convertToProfileDto).orElseThrow(() -> new NoSuchElementException(
+				"Usuario con ID: " + id.toString() + " no existe en el servidor"));
 	}
 
 	@Override
@@ -69,7 +81,7 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public void changeStatus(Long id) {
-		Usuario u= convertToEntity( findById(id));
+		Usuario u = convertToEntity(findById(id));
 		userRepository.setStatus(!u.getEnabled(), id);
 	}
 
@@ -83,20 +95,34 @@ public class UserServiceImp implements UserService {
 		userRepository.patchPassword(password, id);
 
 	}
+
 	@Override
 	public UsuarioDtoExtends convertToDto(Usuario u) {
-		return new UsuarioDtoExtends(u.getId(), u.getUsername(), u.getPassword(),personaService.convertToDto(u.getPersona()),u.getRoles().stream().map(roleService::convertToDto).collect(Collectors.toSet()));
+		return new UsuarioDtoExtends(u.getId(), u.getUsername(), u.getPassword(), personaService.convertToDto(u.getPersona()), u.getRoles().stream().map(roleService::convertToDto).collect(Collectors.toSet()));
 	}
-	public UsuarioDto convertToProfileDto(Usuario u) {
-		return new UsuarioDto(u.getId(), u.getUsername(), u.getPassword(),personaService.convertToDto(u.getPersona()));
+
+	public ProfileDto convertToProfileDto(Usuario u) {
+		return new ProfileDto(u.getId(), u.getUsername(), personaService.convertToDto(u.getPersona()));
 	}
+
 	public UsuarioDtoResponse convertToResponse(Usuario u) {
-		return new UsuarioDtoResponse(u.getId(), u.getUsername(), u.getPassword(),personaService.convertToDto(u.getPersona()),u.getRoles().stream().map(roleService::convertToDto).collect(Collectors.toSet()),u.getEnabled());
+		return new UsuarioDtoResponse(u.getId(), u.getUsername(), u.getPassword(), personaService.convertToDto(u.getPersona()), u.getRoles().stream().map(roleService::convertToDto).collect(Collectors.toSet()), u.getEnabled());
 	}
+
+	public ProfileDto convertToProfile(Usuario u) {
+		return new ProfileDto(u.getId(), u.getUsername(), personaService.convertToDto(u.getPersona()));
+	}
+
 	@Override
 	public Usuario convertToEntity(UsuarioDtoExtends u) {
 		return new Usuario(u.getId(), u.getUsername(), u.getPassword(), personaService.convertToEntity(u.getPersona()),
 				u.getRoles().stream().map(roleService::convertToEntity).collect(Collectors.toList()));
+	}
+
+	public Usuario convertProfileToEntity(ProfileDto p) {
+		UsuarioDtoExtends currentProfile = findById(p.getId());
+		return new Usuario(currentProfile.getId(), p.getUsername(), currentProfile.getPassword(), personaService.convertToEntity(p.getPersona()),
+				currentProfile.getRoles().stream().map(roleService::convertToEntity).collect(Collectors.toList()));
 	}
 
 }

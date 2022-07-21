@@ -19,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -127,16 +128,29 @@ public class AnimalRefugio implements Serializable {
 
 	//Soft delete en cascada todas entidades donde sea dependiente un animal de refugio
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "animal")
-	private List<CarnetVacunacion> carnetVacunaciones;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "animal")
+	private List<CarnetVacunacion> carnetVacunaciones = new ArrayList<>();
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "animal")
-	private List<FichaClinica> fichasClinicas;
-	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "animal")
+	private List<FichaClinica> fichasClinicas = new ArrayList<>();
+
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "animal")
 	private Adopcion adopcion;
 
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy = "paciente")
-	private List<EventAlarm> eventAlarms;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "paciente")
+	private List<EventAlarm> eventAlarms = new ArrayList<>();
+
+	//Relaciones para updates
+	public void setCarnetVacunaciones(List<CarnetVacunacion> carnetVacunaciones) {
+		this.carnetVacunaciones.addAll(carnetVacunaciones);
+	}
+
+	public void setFichasClinicas(List<FichaClinica> fichasClinicas) {
+		this.fichasClinicas.addAll(fichasClinicas);
+	}
+
+	public void setEventAlarms(List<EventAlarm> eventAlarms) {
+		this.eventAlarms.addAll(eventAlarms);
+	}
 
 }

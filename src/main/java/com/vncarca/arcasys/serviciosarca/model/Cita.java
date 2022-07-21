@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class Cita {
     
     @NotNull
     private boolean estado;
-    
+
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
     private Boolean deleted = Boolean.FALSE;
@@ -61,7 +62,11 @@ public class Cita {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_veterinario", nullable = false)
     private Veterinario veterinario;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cita")
-    private List<DetalleCita> detallesCitas;
+    private List<DetalleCita> detallesCitas = new ArrayList<>();
+
+    public void setDetallesCitas(List<DetalleCita> detallesCitas) {
+        this.detallesCitas.addAll(detallesCitas);
+    }
 }

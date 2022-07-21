@@ -57,7 +57,12 @@ public class Adopcion implements Serializable{
         this.adoptante = adoptante;
         this.animal = animal;
     }
+
     //SoftDelete
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "adopcion")
     private List<SeguimientoAdopcion> seguimientoAdopciones;
+
+    public void setSeguimientoAdopciones(List<SeguimientoAdopcion> seguimientoAdopciones) {
+        this.seguimientoAdopciones.addAll(seguimientoAdopciones);
+    }
 }

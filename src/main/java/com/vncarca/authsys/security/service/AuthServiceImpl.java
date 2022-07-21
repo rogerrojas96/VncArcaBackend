@@ -58,8 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return ResponseEntity.ok().headers(responseHeaders)
-                    .body(new LoginResponse(usuario.getId(), usuario.getUsername(),newAccessToken,personaService.convertToDto(customUserDetails.getUsuario().getPersona())));
+            return ResponseEntity.ok().headers(responseHeaders).body(new LoginResponse(usuario.getId(), usuario.getUsername(), newAccessToken, personaService.convertToDto(customUserDetails.getUsuario().getPersona())));
     }
 
     private Authentication authenticate(String username, String password) throws Exception {
