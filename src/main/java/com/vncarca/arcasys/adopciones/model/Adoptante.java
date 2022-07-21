@@ -11,6 +11,7 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -47,7 +48,7 @@ public class Adoptante implements Serializable{
 
     //    Soft Delete
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "adoptante")
-    private List<Adopcion> adopciones;
+    private List<Adopcion> adopciones = new ArrayList<>();
 
     public void setAdopciones(List<Adopcion> adopciones) {
         this.adopciones.addAll(adopciones);

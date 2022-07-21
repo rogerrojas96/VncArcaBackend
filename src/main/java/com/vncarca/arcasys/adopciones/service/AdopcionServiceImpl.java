@@ -96,17 +96,15 @@ public class AdopcionServiceImpl implements IAdopcionService {
     @Override
     public boolean eliminarAdopcion(Long idAdopcion) {
         if(adopcionRepository.existsById(idAdopcion)) {
-            Adopcion adopcion = adopcionRepository.findById(idAdopcion).get();
-            AnimalRefugio animal = adopcion.getAnimal();
-            animal.setAdoptado(false);
-            animal.setLugarEstancia(Types.ESTANCIA.REFUGIO.toString());
-/*            animal = animalRepository.save(animal);
+/*
             List<SeguimientoAdopcion> seguimientos =  seguimientoRepository.getSeguimientosPorIdAdopcion(idAdopcion);
             if(seguimientos != null){
                 for(SeguimientoAdopcion seguimiento  : seguimientos){
                     seguimientoRepository.deleteById(seguimiento.getId());
                 }
             }*/
+            
+            adopcionRepository.updateAnimalByAdopcionDeleted(idAdopcion);
             adopcionRepository.deleteById(idAdopcion);
             return true;
         }
