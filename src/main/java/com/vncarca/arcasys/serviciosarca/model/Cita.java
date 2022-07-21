@@ -31,10 +31,6 @@ public class Cita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotBlank
-//    @Column(name = "nombre_cliente")
-//    private String nombreCliente;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
@@ -53,7 +49,7 @@ public class Cita {
     
     @NotNull
     private boolean estado;
-    
+
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
     private Boolean deleted = Boolean.FALSE;
@@ -61,7 +57,11 @@ public class Cita {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_veterinario", nullable = false)
     private Veterinario veterinario;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cita")
     private List<DetalleCita> detallesCitas;
+
+    public void setDetallesCitas(List<DetalleCita> detallesCitas) {
+        this.detallesCitas.addAll(detallesCitas);
+    }
 }
