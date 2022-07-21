@@ -13,6 +13,8 @@ public interface ICitaService extends GlobalService<CitaDto, Cita> {
 
     public List<CitaArcaExtends> getAllCitas();
 
+    public List<CitaArcaExtends> getAllCitasActivasPorCliente(String cedula);
+
     public List<DetalleCitaDto> getAllDetallesCita(Long idCita);
 
     public List<CitaArcaExtends> getCitasPorFechaAgenda(String fechaAgenda);
@@ -26,4 +28,6 @@ public interface ICitaService extends GlobalService<CitaDto, Cita> {
     public CitaArcaExtends modificarCita(CitaServiciosArca citaDto, Long idCita, Long idVeterinario);
 
     public boolean eliminarCita(Long idCita);
+
+    public List<String> getHorasDisponibles(String fechaAgenda);
 }
