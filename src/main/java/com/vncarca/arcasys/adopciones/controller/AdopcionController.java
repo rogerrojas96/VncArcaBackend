@@ -5,7 +5,6 @@ import com.vncarca.arcasys.adopciones.dto.AdopcionDtoExtends;
 import com.vncarca.arcasys.adopciones.service.IAdopcionService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 @Api(tags = "Adopciones", description = "Controlador para CRUD de adopciones")
 @RequestMapping("/adopciones")
 @RestController
-@Slf4j
 public class AdopcionController {
 
     @Autowired
@@ -160,7 +158,6 @@ public class AdopcionController {
         Map<String, Object> response = new HashMap<>();
         try {
             boolean eliminado = adopcionService.eliminarAdopcion(idAdopcion);
-            log.error("eliminado -> {}",eliminado);
             if(eliminado){
                 response.put("mensaje", "Adopción eliminada con exito!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);

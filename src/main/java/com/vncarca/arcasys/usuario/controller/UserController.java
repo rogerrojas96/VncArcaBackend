@@ -183,8 +183,7 @@ public class UserController {
 		}
 
 	}
-
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	
 	@GetMapping("/validatePassword")
 	public Boolean passwordCorrecta(@RequestParam(required = true) Long id,
 			@RequestParam(required = true) String currentPassword) {
@@ -197,7 +196,6 @@ public class UserController {
 		}
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PatchMapping("/changepasswd/{id}")
 	public ResponseEntity<?> patchPassword(@PathVariable Long id, @RequestParam(required = true) String passwd) {
 		try {

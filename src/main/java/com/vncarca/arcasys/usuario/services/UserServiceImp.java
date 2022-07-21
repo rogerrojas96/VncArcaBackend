@@ -42,7 +42,9 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public ProfileDto updateProfile(ProfileDto profileDto) {
-		return convertToProfileDto(userRepository.save(convertProfileToEntity(profileDto)));
+		personaService.save(profileDto.getPersona());
+		userRepository.updateProfile(profileDto.getUsername(), profileDto.getId());
+		return profileDto;
 	}
 
 	@Override
@@ -121,7 +123,8 @@ public class UserServiceImp implements UserService {
 
 	public Usuario convertProfileToEntity(ProfileDto p) {
 		UsuarioDtoExtends currentProfile = findById(p.getId());
-		return new Usuario(currentProfile.getId(), p.getUsername(), currentProfile.getPassword(), personaService.convertToEntity(p.getPersona()),
+
+		return new Usuario(currentProfile.getId(), p.getUsername(), currentProfile.getPassword(), personaService.convertToEntity(personaService.save(p.getPersona())),
 				currentProfile.getRoles().stream().map(roleService::convertToEntity).collect(Collectors.toList()));
 	}
 
