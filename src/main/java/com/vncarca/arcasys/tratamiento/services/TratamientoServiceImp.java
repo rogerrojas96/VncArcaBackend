@@ -72,7 +72,7 @@ public class TratamientoServiceImp implements TratamientoService {
 	
 	@Override
 	public List<TratamientoDtoExtends> findByFichaClinica(Long idFicha) {
-		return tratamientoRepository.getByFichaClinica(idFicha).stream().map(this::convertToDtoExtends).collect(Collectors.toList());
+		return tratamientoRepository.findAllByIdFichaClinicaId(idFicha).stream().map(this::convertToDtoExtends).collect(Collectors.toList());
 	}
 	
 	@Override
