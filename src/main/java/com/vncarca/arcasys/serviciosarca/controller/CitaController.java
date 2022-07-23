@@ -171,23 +171,23 @@ public class CitaController {
 
     @ResponseBody
     @DeleteMapping("/{idCita}")
-    public ResponseEntity<?> eliminarCita(Long idCita) {
+    public ResponseEntity<?> eliminarCita(@PathVariable Long idCita) {
         response.clear();
-        try{
+        try {
             boolean eliminado = citaService.eliminarCita(idCita);
-            if(eliminado){
+            if (eliminado) {
                 response.put("mensaje", "Cita eliminada con exito!");
                 status = HttpStatus.OK;
-            }else{
-                response.put("mensaje", "No existe la cita con id: "+idCita.toString());
+            } else {
+                response.put("mensaje", "No existe la cita con id: " + idCita.toString());
                 status = HttpStatus.BAD_REQUEST;
             }
-        }catch(DataAccessException e){
+        } catch (DataAccessException e) {
             response.put("mensaje", "Ha ocurrido un error en el servidor al intentar eliminar la cita! ");
             response.put("error", e.getMostSpecificCause().getMessage());
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Map<String, Object>>(response, status); 
+        return new ResponseEntity<Map<String, Object>>(response, status);
     }
 
 

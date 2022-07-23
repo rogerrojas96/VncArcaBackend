@@ -27,4 +27,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long>{
         nativeQuery = true
     )
     public List<Cita> getCitasActivasPorCliente(String cedula, boolean estado);
+
+    @Query(value = "select citas.deleted from citas where citas.id = :idCita", nativeQuery = true)
+    public boolean getEstadoDeleted(Long idCita);
 }

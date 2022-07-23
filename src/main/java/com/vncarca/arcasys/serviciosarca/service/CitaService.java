@@ -149,7 +149,7 @@ public class CitaService implements ICitaService {
 
     @Override
     public boolean eliminarCita(Long idCita) {
-        if(citaRepository.existsById(idCita)){
+        if (citaRepository.existsById(idCita)) {
             List<DetalleCita> detalleCitas = detalleCitaRepository.getDetallesCita(idCita);
             for (DetalleCita detalleCita : detalleCitas) {
                 detalleCitaRepository.deleteById(detalleCita.getId());
