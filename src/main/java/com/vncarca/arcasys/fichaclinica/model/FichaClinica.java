@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -151,9 +152,12 @@ public class FichaClinica implements Serializable {
 		this.veterinario = veterinario;
 		this.animal = animal;
 	}
-	
+
 	//Para softDelete
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "idFichaClinica")
-	private List<Tratamiento> tratamientos;
-	
+	private List<Tratamiento> tratamientos = new ArrayList<>();
+
+	public void setTratamientos(List<Tratamiento> tratamientos) {
+		this.tratamientos.addAll(tratamientos);
+	}
 }

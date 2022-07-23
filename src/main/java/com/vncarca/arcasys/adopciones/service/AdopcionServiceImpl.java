@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +64,7 @@ public class AdopcionServiceImpl implements IAdopcionService {
 
     @Override
     public List<AdopcionDtoExtends> getAdopcionesPorIdAdoptante(Long idAdoptante) {
-        return adopcionRepository.getAdopcionesPorIdAdoptante(idAdoptante).stream().map(this::convertToDtoExtends).collect(Collectors.toList());
+        return adopcionRepository.findAdopcionsByAdoptante_Id(idAdoptante).stream().filter(Objects::nonNull).map(this::convertToDtoExtends).collect(Collectors.toList());
     }
 
     @Override
@@ -95,17 +96,15 @@ public class AdopcionServiceImpl implements IAdopcionService {
     @Override
     public boolean eliminarAdopcion(Long idAdopcion) {
         if(adopcionRepository.existsById(idAdopcion)) {
-            Adopcion adopcion = adopcionRepository.findById(idAdopcion).get();
-            AnimalRefugio animal = adopcion.getAnimal();
-            animal.setAdoptado(false);
-            animal.setLugarEstancia(Types.ESTANCIA.REFUGIO.toString());
-/*            animal = animalRepository.save(animal);
+/*
             List<SeguimientoAdopcion> seguimientos =  seguimientoRepository.getSeguimientosPorIdAdopcion(idAdopcion);
             if(seguimientos != null){
                 for(SeguimientoAdopcion seguimiento  : seguimientos){
                     seguimientoRepository.deleteById(seguimiento.getId());
                 }
             }*/
+            
+            adopcionRepository.updateAnimalByAdopcionDeleted(idAdopcion);
             adopcionRepository.deleteById(idAdopcion);
             return true;
         }

@@ -31,6 +31,10 @@ public class Cita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "America/Guayaquil")
@@ -45,7 +49,7 @@ public class Cita {
     
     @NotNull
     private boolean estado;
-    
+
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
     private Boolean deleted = Boolean.FALSE;
@@ -53,11 +57,11 @@ public class Cita {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_veterinario", nullable = false)
     private Veterinario veterinario;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cita")
     private List<DetalleCita> detallesCitas;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    private Cliente cliente;
+    public void setDetallesCitas(List<DetalleCita> detallesCitas) {
+        this.detallesCitas.addAll(detallesCitas);
+    }
 }

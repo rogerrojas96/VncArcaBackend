@@ -15,6 +15,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,13 +58,17 @@ public class Tratamiento  implements Serializable{
 	@NotNull
 	@Column(nullable = false, columnDefinition = "tinyint(1) default 0")
 	private Boolean deleted = Boolean.FALSE;
-	
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_ficha_clinica")
 	private FichaClinica idFichaClinica;
-	
+
 	//Para soft Delete
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "tratamiento")
-	private List<Medicacion> medicaciones;
+	private List<Medicacion> medicaciones = new ArrayList<>();
+
+	public void setMedicaciones(List<Medicacion> medicaciones) {
+		this.medicaciones.addAll(medicaciones);
+	}
 }

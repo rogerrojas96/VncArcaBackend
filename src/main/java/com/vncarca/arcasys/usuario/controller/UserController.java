@@ -1,10 +1,12 @@
 package com.vncarca.arcasys.usuario.controller;
 
 import com.vncarca.arcasys.responses.CustomResponseEntity;
+import com.vncarca.arcasys.usuario.model.ProfileDto;
 import com.vncarca.arcasys.usuario.model.UsuarioDto;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
 import com.vncarca.arcasys.usuario.services.UserService;
+import com.vncarca.authsys.security.dto.LoginResponse;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Api(tags = "Usuarios", description = "Controlador para CRUD de usuarios")
@@ -140,6 +143,22 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
+	@PutMapping("profile/{id}")
+	public ResponseEntity<?> updateMyProfile(@Valid @RequestBody ProfileDto usuario, @PathVariable Long id) {
+		if (!Objects.equals(id, usuario.getId())) {
+			throw new IllegalArgumentException("El id {" + id + "} no coincide con el id del usuario");
+		}
+		try {
+			ProfileDto userToUpdate = userService.findMyProfyleById(id);
+			userToUpdate = usuario;
+			LoginResponse usuarioUpdate = userService.updateProfile(userToUpdate);
+			return new CustomResponseEntity(HttpStatus.CREATED, "Perfil actualizado con exito", usuarioUpdate).response();
+		} catch (DataAccessException e) {
+			throw new DataAccessException("Error al actualizar cuenta de usuario ", e) {
+			};
+		}
+	}
+
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -165,8 +184,7 @@ public class UserController {
 		}
 
 	}
-
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	
 	@GetMapping("/validatePassword")
 	public Boolean passwordCorrecta(@RequestParam(required = true) Long id,
 			@RequestParam(required = true) String currentPassword) {
@@ -179,7 +197,6 @@ public class UserController {
 		}
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PatchMapping("/changepasswd/{id}")
 	public ResponseEntity<?> patchPassword(@PathVariable Long id, @RequestParam(required = true) String passwd) {
 		try {
@@ -193,7 +210,7 @@ public class UserController {
 
 	// @PreAuthorize("#username == authentication.principal.username")
 	@GetMapping("/pofile")
-	public ResponseEntity<UsuarioDto> myProfile() {
+	public ResponseEntity<ProfileDto> myProfile() {
 		return ResponseEntity.ok(userService.getUserProfile());
 	}
 }

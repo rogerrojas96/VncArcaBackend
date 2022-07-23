@@ -50,7 +50,7 @@ public class AnimalRefugioServiceImp implements IAnimalRefugioService {
 
 	@Override
 	public List<AnimalRefugioResponse> getAnimalesNoAdoptados(Pageable pageable) {
-		Page<AnimalRefugio> animales = animalRepository.getAnimalesPorestadoAdopcion(false, pageable);
+		Page<AnimalRefugio> animales = animalRepository.findAnimalRefugioByAdoptado(false, pageable);
 		return toListResponse(animales);
 	}
 

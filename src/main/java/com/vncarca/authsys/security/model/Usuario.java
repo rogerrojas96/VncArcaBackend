@@ -1,6 +1,5 @@
 package com.vncarca.authsys.security.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vncarca.arcasys.persona.model.Persona;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +23,6 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE usuarios SET deleted = true WHERE id=?")
 public class Usuario implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -45,8 +42,7 @@ public class Usuario implements Serializable {
 	private Boolean enabled=Boolean.TRUE;
 
 	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "persona_id", nullable = false)
 	private Persona persona;
 
@@ -76,5 +72,16 @@ public class Usuario implements Serializable {
 		this.password = password;
 		this.persona = persona;
 		this.roles = roles;
+	}
+
+	/**
+	 * @param id
+	 * @param username
+	 * @param password
+	 */
+	public Usuario(Long id, String username, String password) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
 	}
 }

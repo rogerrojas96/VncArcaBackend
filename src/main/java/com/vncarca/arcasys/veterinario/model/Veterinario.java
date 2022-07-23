@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -54,8 +55,12 @@ public class Veterinario implements Serializable {
 		this.cargo = cargo;
 		this.persona = persona;
 	}
-	
+
 	//Para soft delete
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "veterinario")
-	private List<Cita> citas;
+	private List<Cita> citas = new ArrayList<>();
+
+	public void setCitas(List<Cita> citas) {
+		this.citas.addAll(citas);
+	}
 }

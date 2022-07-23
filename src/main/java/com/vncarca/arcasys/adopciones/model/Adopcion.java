@@ -39,17 +39,17 @@ public class Adopcion implements Serializable{
     @Column(nullable = false, columnDefinition = "text")
     private String descripcion;
 
-    @ManyToOne( fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_adoptante", nullable = false)
     private Adoptante adoptante;
 
-    @OneToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name="id_animal",nullable = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_animal", nullable = false)
     private AnimalRefugio animal;
 
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) default 0")
-    private Boolean deleted=Boolean.FALSE;
+    private Boolean deleted = Boolean.FALSE;
 
     public Adopcion(Date fechaAdopcion, String descripcion, Adoptante adoptante, AnimalRefugio animal) {
         this.fechaAdopcion = fechaAdopcion;
@@ -57,7 +57,12 @@ public class Adopcion implements Serializable{
         this.adoptante = adoptante;
         this.animal = animal;
     }
+
     //SoftDelete
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "adopcion")
     private List<SeguimientoAdopcion> seguimientoAdopciones;
+
+    public void setSeguimientoAdopciones(List<SeguimientoAdopcion> seguimientoAdopciones) {
+        this.seguimientoAdopciones.addAll(seguimientoAdopciones);
+    }
 }
