@@ -6,6 +6,7 @@ import com.vncarca.arcasys.usuario.model.UsuarioDto;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoExtends;
 import com.vncarca.arcasys.usuario.model.UsuarioDtoResponse;
 import com.vncarca.arcasys.usuario.services.UserService;
+import com.vncarca.authsys.security.dto.LoginResponse;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -150,7 +151,7 @@ public class UserController {
 		try {
 			ProfileDto userToUpdate = userService.findMyProfyleById(id);
 			userToUpdate = usuario;
-			ProfileDto usuarioUpdate = userService.updateProfile(userToUpdate);
+			LoginResponse usuarioUpdate = userService.updateProfile(userToUpdate);
 			return new CustomResponseEntity(HttpStatus.CREATED, "Perfil actualizado con exito", usuarioUpdate).response();
 		} catch (DataAccessException e) {
 			throw new DataAccessException("Error al actualizar cuenta de usuario ", e) {

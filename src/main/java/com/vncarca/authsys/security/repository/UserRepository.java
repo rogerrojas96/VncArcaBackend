@@ -27,13 +27,11 @@ public interface UserRepository extends JpaRepository<Usuario, Long> {
 	@Query("update Usuario u set u.enabled = ?1 where u.id = ?2")
 	public void setStatus(Boolean enabled, Long id);
 
-	/**
-	 * @param username
-	 * @param id
-	 * @return
-	 */
-	@Transactional()
 	@Modifying(clearAutomatically = true)
-	@Query("update Usuario u set u.username=?1  where u.id = ?2")
+	@Query(value = "update  usuarios_roles  set usuario_id =?1, rol_id=?2  where usuario_id in (select ?3 from usuarios )", nativeQuery = true)
+	void updateUsuarioRoles(Long usuario_id, Long rol_id, Long id);
+
+	@Modifying(clearAutomatically = true)
+	@Query("update Usuario u set u.username=?1 ,u.deleted=false where u.id = ?2")
 	void updateProfile(String username, Long id);
 }
